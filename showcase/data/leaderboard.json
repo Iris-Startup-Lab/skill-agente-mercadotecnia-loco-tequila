@@ -1,0 +1,80 @@
+{
+  "last_updated": "2026-08-14",
+  "source": "Design Arena & Industry Benchmarks",
+  "source_url": "https://www.designarena.ai/leaderboard?tab=image",
+  "categories": ["Todos", "Ultra Realismo", "Botellas & Cristal", "Tipografía & Etiquetas", "Arte & Editorial"],
+  "models": [
+    {
+      "rank": 1,
+      "name": "FLUX.1 [pro] / FLUX.2",
+      "developer": "Black Forest Labs",
+      "elo_score": 1285,
+      "badge": "Líder Global 2026",
+      "category": "Botellas & Cristal",
+      "tags": ["Fotorrealismo", "Refracción de Líquidos", "Cristal", "Paisajes Agaveros"],
+      "loco_rating": "⭐⭐⭐⭐⭐ (Recomendación #1)",
+      "recommendation": "Insuperable para la silueta estilizada de Loco Tequila, el brillo del cristal de obsidiana y las gotas de condensación en copas de degustación.",
+      "settings_tip": "Aspect ratio 4:5 o 1:1, guidance_scale: 3.5, 30-50 steps. No sobrecargar con palabras redundantes como 'photorealistic'."
+    },
+    {
+      "rank": 2,
+      "name": "Midjourney v6.1",
+      "developer": "Midjourney",
+      "elo_score": 1272,
+      "badge": "Maestría Editorial",
+      "category": "Arte & Editorial",
+      "tags": ["Claroscuro", "Texturas Artesanales", "Lujo", "Editorial"],
+      "loco_rating": "⭐⭐⭐⭐⭐ (Recomendación #1 en Estilo)",
+      "recommendation": "La mejor opción para capturar el misticismo del Paisaje Agavero al atardecer en El Arenal, Hacienda La Providencia y tomas editoriales dramáticas.",
+      "settings_tip": "Usar parámetros --ar 4:5 --style raw --v 6.1 --s 250 para evitar sobre-estilización de fantasía."
+    },
+    {
+      "rank": 3,
+      "name": "Google Imagen 3",
+      "developer": "Google DeepMind",
+      "elo_score": 1258,
+      "badge": "Fidelidad Fotográfica",
+      "category": "Ultra Realismo",
+      "tags": ["Color Natural", "Fidelidad", "Luz Natural", "Terruño"],
+      "loco_rating": "⭐⭐⭐⭐½",
+      "recommendation": "Excelente para destacar los tonos rojos cochinilla, tierra volcánica y el agua cristalina del Bosque de la Primavera sin saturación artificial.",
+      "settings_tip": "Excelente respuesta a descripciones de composición y lentes fotográficos (85mm f/1.4 lens, shallow depth of field)."
+    },
+    {
+      "rank": 4,
+      "name": "Ideogram 2.0",
+      "developer": "Ideogram",
+      "elo_score": 1245,
+      "badge": "Líder en Tipografía",
+      "category": "Tipografía & Etiquetas",
+      "tags": ["Texto en Botella", "Etiquetas de Lujo", "Tipografía Nítida"],
+      "loco_rating": "⭐⭐⭐⭐½",
+      "recommendation": "La herramienta predilecta si el prompt requiere renderizar textualmente el nombre 'Loco Tequila' o el tagline 'Espíritu de Origen' sobre la botella o etiqueta.",
+      "settings_tip": "Poner los textos entre comillas dobles \"Loco Tequila\" y usar estilo Realistic/Design."
+    },
+    {
+      "rank": 5,
+      "name": "Recraft v3",
+      "developer": "Recraft",
+      "elo_score": 1238,
+      "badge": "Consistencia de Marca",
+      "category": "Arte & Editorial",
+      "tags": ["Branding", "Control de Color HEX", "Composición Limpia"],
+      "loco_rating": "⭐⭐⭐⭐",
+      "recommendation": "Ideal para aplicar con precisión los códigos de color exactos de Loco Tequila (#6E1E28, #9B1C31, #A96C43) y mantener consistencia visual.",
+      "settings_tip": "Seleccionar el preset 'Editorial / Digital Art Luxury' e inyectar paleta de color personalizada."
+    },
+    {
+      "rank": 6,
+      "name": "Stable Diffusion 3.5 Large",
+      "developer": "Stability AI",
+      "elo_score": 1226,
+      "badge": "Máximo Control Técnico",
+      "category": "Ultra Realismo",
+      "tags": ["LoRAs Propios", "ControlNet", "Generación Offline"],
+      "loco_rating": "⭐⭐⭐⭐",
+      "recommendation": "Recomendado para equipos técnicos que entrenen un LoRA específico de la botella real de Loco Blanco, Ámbar o Hierofante para reproducción exacta.",
+      "settings_tip": "Utilizar con ComfyUI / Forge, DPM++ 2M Karras, CFG 4.5, Negative Prompt estricto."
+    }
+  ]
+}

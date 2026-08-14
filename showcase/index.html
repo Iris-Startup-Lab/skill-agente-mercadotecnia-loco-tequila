@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loco Tequila — Pasarela de Prompts & Copys</title>
+  <meta name="description" content="Showcase interactivo de campañas, prompts generativos ultra detallados y copys nativos para Loco Tequila.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/png" href="assets/Loco_Tequila_Logo_white.png">
+</head>
+<body>
+
+  <!-- Barra Superior Maroon Institucional (Design.md) -->
+  <header class="top-maroon-bar">
+    <div class="header-container">
+      <div class="brand-meta">
+        <div class="brand-logo-container">
+          <img src="assets/Loco_Tequila_Logo_white.png" alt="Loco Tequila Logo" class="brand-logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="brand-logo-fallback" style="display: none;">
+            <span class="logo-text-loco">LOCO</span>
+            <span class="logo-text-sub">TEQUILA</span>
+          </div>
+        </div>
+        <div class="header-titles">
+          <span class="super-tag">Espíritu de Origen · Pasarela Creativa</span>
+          <h1>DIRECCIÓN CREATIVA DE MERCADOTECNIA</h1>
+        </div>
+      </div>
+      <div class="header-actions">
+        <a href="#runway" class="nav-pill-btn active">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7"/></svg>
+          Pasarela
+        </a>
+        <a href="#leaderboard" class="nav-pill-btn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+          Leaderboard IA
+        </a>
+        <a href="#tips" class="nav-pill-btn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          Tips de Configuración
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenedor Principal -->
+  <main class="main-wrapper">
+
+    <!-- Hero / Contexto de Campaña -->
+    <section class="campaign-hero">
+      <div class="hero-meta-grid">
+        <div class="hero-title-area">
+          <span class="super-tag" style="color: var(--brand-gold); font-size: 11px; font-weight: 700; letter-spacing: 0.15em;">CAMPAÑA ACTIVA</span>
+          <h2 id="hero-campaign-title">Espíritu de Origen — Vendimia & Terruño</h2>
+          <p>Piezas publicitarias listas para publicar y prompts de ultra alta fidelidad para modelos de imagen.</p>
+        </div>
+        <div class="hero-badge-box">
+          <span class="label">Efeméride / Contexto</span>
+          <span class="value" id="hero-date-context">Día Nacional del Tequila</span>
+        </div>
+        <div class="hero-badge-box">
+          <span class="label">Anticipación</span>
+          <span class="value" id="hero-target-window">Próximos 30 días</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección 1: PASARELA (RUNWAY) DE PROMPTS & COPYS -->
+    <section id="runway" class="runway-section">
+      <div class="section-header-row">
+        <div>
+          <span class="super-tag" style="color: var(--text-muted); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;">SHOWCASE INTERACTIVO</span>
+          <h3>Pasarela de Campañas</h3>
+        </div>
+        <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+          <!-- Switch de vista: Ambos / Solo Prompt / Solo Copy -->
+          <div class="view-switch-group">
+            <button id="view-mode-all" class="view-switch-btn active" data-mode="all">✨ Ambos</button>
+            <button id="view-mode-prompt" class="view-switch-btn" data-mode="prompt">🎨 Solo Prompt</button>
+            <button id="view-mode-copy" class="view-switch-btn" data-mode="copy">📝 Solo Copy</button>
+          </div>
+          <div class="runway-controls">
+            <button id="btn-prev-concept" class="runway-nav-btn" aria-label="Concepto anterior">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <span id="concept-counter-display" class="concept-counter">1 / 4</span>
+            <button id="btn-next-concept" class="runway-nav-btn" aria-label="Concepto siguiente">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs rápidos de conceptos -->
+      <div id="concept-tabs-container" class="concept-tabs-track"></div>
+
+      <!-- Tarjeta Escenario de la Pasarela -->
+      <div class="runway-card-stage">
+        <!-- Header de la pieza -->
+        <div class="stage-header">
+          <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+            <span id="stage-sku-badge" class="sku-badge">Loco Blanco</span>
+            <span id="stage-inventiveness-badge" class="inventiveness-tag">Original</span>
+            <span id="stage-platform-badge" class="platform-tag">Instagram</span>
+          </div>
+          <div id="stage-persona-text" style="font-size: 12px; color: var(--text-muted);">
+            Persona: Leonardo
+          </div>
+        </div>
+
+        <!-- Cuerpo: Prompt Arriba, Copy Abajo -->
+        <div class="stage-body">
+          
+          <!-- Bloque Superior: PROMPT PARA IA -->
+          <div class="prompt-zone">
+            <div class="zone-title-bar">
+              <h4 id="prompt-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                Prompt Generativo Ultra Detallado (Text-to-Image)
+              </h4>
+              <button id="btn-copy-prompt" class="btn-copy">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copiar Prompt Completo
+              </button>
+            </div>
+
+            <!-- Caja de Texto del Prompt -->
+            <div id="prompt-text-display" class="prompt-text-box"></div>
+
+            <!-- Metadatos de Render -->
+            <div class="prompt-metadata-grid">
+              <div class="meta-chip">
+                <span class="chip-label">Aspect Ratio Recomendado</span>
+                <span id="meta-aspect-ratio" class="chip-val">4:5 (1080x1350)</span>
+              </div>
+              <div class="meta-chip">
+                <span class="chip-label">Configuración Óptica & Lente</span>
+                <span id="meta-camera" class="chip-val">85mm f/1.4</span>
+              </div>
+              <div class="meta-chip">
+                <span class="chip-label">Paleta Institucional</span>
+                <span id="meta-palette" class="chip-val">Crimson, Obsidian, Golden</span>
+              </div>
+              <div class="meta-chip">
+                <span class="chip-label">Filtro de Locura Genial</span>
+                <span id="meta-filter-just" class="chip-val">Aprobado</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Conector / Pasarela -->
+          <div class="runway-connector">
+            <span class="connector-badge">▼ Copy Nativo Vinculado a este Arte ▼</span>
+          </div>
+
+          <!-- Bloque Inferior: COPY NATIVO -->
+          <div class="copy-zone">
+            <div class="zone-title-bar">
+              <h4 id="copy-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E8A33D" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                Copy Listo para Publicar
+              </h4>
+              <button id="btn-copy-copy" class="btn-copy">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copiar Copy Completo
+              </button>
+            </div>
+
+            <!-- Caja de Texto del Copy -->
+            <div class="copy-content-box">
+              <div id="copy-headline-display" class="copy-headline"></div>
+              <div id="copy-body-display" class="copy-body-text"></div>
+
+              <!-- Keywords SEO/GEO -->
+              <div class="copy-keywords-row">
+                <span style="font-size: 11px; color: var(--text-muted); align-self: center; margin-right: 6px;">Keywords inyectadas:</span>
+                <div id="copy-keywords-container" style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
+              </div>
+
+              <!-- Hashtags -->
+              <div id="copy-hashtags-container" class="hashtags-row"></div>
+
+              <!-- Guardrails Legales -->
+              <div style="margin-top: 14px;">
+                <div class="guardrails-row">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  <span id="copy-legal-display">+18 | Evita el exceso</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección 2: LEADERBOARD DE HERRAMIENTAS DE IA (DESIGN ARENA) -->
+    <section id="leaderboard" class="leaderboard-section">
+      <div class="section-header-row">
+        <div>
+          <span class="super-tag" style="color: var(--text-muted); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;">EVALUACIÓN Y BENCHMARK</span>
+          <h3>Leaderboard de Herramientas de IA</h3>
+          <p style="color: var(--text-secondary); font-size: 13px; margin-top: 4px;">
+            Herramientas líderes según el ranking de <a href="https://www.designarena.ai/leaderboard?tab=image" target="_blank" style="color: var(--brand-gold); text-decoration: none; font-weight: 600;">Design Arena | Image Leaderboards</a> y benchmarks globales.
+          </p>
+        </div>
+      </div>
+
+      <div class="leaderboard-card">
+        <!-- Filtros por categoría -->
+        <div id="leaderboard-filters" class="filter-categories-bar"></div>
+
+        <!-- Grid de modelos -->
+        <div id="models-grid-container" class="models-grid"></div>
+      </div>
+    </section>
+
+    <!-- Sección 3: GUÍA TÉCNICA & TIPS DE CONFIGURACIÓN -->
+    <section id="tips" class="tips-section">
+      <div class="section-header-row">
+        <div>
+          <span class="super-tag" style="color: var(--text-muted); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;">ESTÁNDARES DE CALIDAD</span>
+          <h3>Tips Técnicos para Configuración de Imagen</h3>
+        </div>
+      </div>
+
+      <div class="tips-grid">
+        <!-- Aspect Ratios -->
+        <div class="tip-box">
+          <h4>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--brand-gold)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            Aspect Ratios por Plataforma
+          </h4>
+          <div class="ratio-list">
+            <div class="ratio-item">
+              <span class="ratio-name">4:5 (1080 × 1350)</span>
+              <span style="color: var(--text-muted);">Instagram / Facebook Feed</span>
+            </div>
+            <div class="ratio-item">
+              <span class="ratio-name">1:1 (1080 × 1080)</span>
+              <span style="color: var(--text-muted);">Post Cuadrado Tradicional</span>
+            </div>
+            <div class="ratio-item">
+              <span class="ratio-name">9:16 (1080 × 1920)</span>
+              <span style="color: var(--text-muted);">Stories / Reels / TikTok</span>
+            </div>
+            <div class="ratio-item">
+              <span class="ratio-name">16:9 (1920 × 1080)</span>
+              <span style="color: var(--text-muted);">LinkedIn Banner / YouTube</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Negative Prompts Obligatorios -->
+        <div class="tip-box">
+          <h4>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F87171" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+            Negative Prompts de Marca (+18)
+          </h4>
+          <div id="negative-prompt-text" class="negative-prompt-display">underage, minors, drunk, drunkenness, excessive drinking, cheap glass, competitor bottles, Casa Dragones bottle, Clase Azul bottle, text watermark, blurry, low resolution, plastic, cartoon, extra bottles</div>
+          <button id="btn-copy-negative" class="btn-copy" style="width: 100%; justify-content: center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copiar Negative Prompt Estricto
+          </button>
+        </div>
+
+        <!-- Iluminación & Atmósfera Editorial -->
+        <div class="tip-box">
+          <h4>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--brand-gold-bright)" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
+            Atmósfera & Estilo Visual
+          </h4>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">
+            Para lograr la distinción mítica de Loco Tequila:
+          </p>
+          <ul style="font-size: 12.5px; color: #D4D4D8; padding-left: 18px; line-height: 1.7;">
+            <li><strong>Luz Claroscuro:</strong> Sombras profundas en negro obsidiana con rayos cálidos dorados.</li>
+            <li><strong>Texturas de Terruño:</strong> Rocas volcánicas, tierra roja y hojas de agave en primer plano.</li>
+            <li><strong>Cristal y Gotas:</strong> Enfatizar refracción impecable y condensación sutil sin saturación de colores.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer Institucional -->
+  <footer class="site-footer">
+    <div style="max-width: 1400px; margin: 0 auto;">
+      <p style="margin-bottom: 6px; font-weight: 600; color: #FFFFFF;">
+        Loco Tequila — Espíritu de Origen. Espíritu Excepcional. El primer Tequila de Terruño.
+      </p>
+      <p style="font-size: 12px;">
+        Hacienda La Providencia, El Arenal, Jalisco. Sistema de diseño conforme a <a href="../designs/Design.md">Design.md</a>.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Contenedor para Toast Notifications -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

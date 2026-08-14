@@ -1,0 +1,112 @@
+{
+  "brand": "Loco Tequila",
+  "campaign_title": "Espíritu de Origen — Vendimia & Terruño",
+  "date_context": "Día Nacional del Tequila / Temporada de Cosecha",
+  "target_window": "Próximos 30 días",
+  "items": [
+    {
+      "id": 1,
+      "sku": "Loco Blanco",
+      "sku_token": "--p-blanco",
+      "sku_color": "#9B1C31",
+      "inventiveness": "Original",
+      "platform": "Instagram",
+      "target_persona": "Leonardo (Visionario, conocedor contemporáneo)",
+      "concept_title": "La Pureza Mineral de El Arenal",
+      "filter_justification": "Desafía la idea del tequila blanco genérico exponiendo la raíz mineral y el agua pura del Bosque de la Primavera.",
+      "prompt": {
+        "text": "Ultra luxury editorial photography of a bespoke Loco Blanco Tequila bottle positioned gracefully on a dark obsidian volcanic stone in the historic agave fields of El Arenal, Jalisco. Golden hour dramatic side lighting, warm sunset casting amber and crimson reflections on the pristine transparent liquid inside the bottle. High-end crystal tasting glass beside the bottle with delicate condensation droplets and subtle tequila legs. Deep rich contrast, shallow depth of field (85mm f/1.4 lens, f/2.0 aperture), cinematic luxury atmosphere, background showing subtle blue agave silhouettes under a cochineal red dusk sky. Shot on Hasselblad H6D-100c, 8k resolution, crisp glass textures, pristine liquid refraction, no text artifacts.",
+        "aspect_ratio": "4:5 (1080x1350 px)",
+        "negative_prompt": "underage, minors, drunk, drunkenness, excessive drinking, cheap glass, competitor bottles, Casa Dragones bottle, Clase Azul bottle, text watermark, blurry, low resolution, plastic, cartoon, extra bottles",
+        "camera_settings": "85mm f/1.4, ISO 100, 1/250s, natural golden hour rim light + studio black bounce reflector",
+        "color_palette": "Crimson (#9B1C31), Obsidian Black (#0E0E10), Golden Sun (#F2C14E), Raw Agave Blue"
+      },
+      "copy": {
+        "headline": "La pureza no se inventa: nace del terruño volcánico.",
+        "body": "En las faldas del volcán de Tequila, donde el agua cristalina del Bosque de la Primavera nutre agaves centenarios, nace Loco Blanco. Una destilación de autor sin atajos ni artificios: solo la mineralidad pura de El Arenal en su máxima expresión.\n\nPara quienes no siguen tendencias, sino orígenes excepcionales.",
+        "keywords": ["tequila blanco premium", "tequila de terruño", "destilado de autor", "Locura Genial"],
+        "call_to_action": "Descubre la colección completa en el enlace de nuestra biografía.",
+        "legal": "+18 | Evita el exceso",
+        "hashtags": ["#EspírituDeOrigen", "#LocoTequila", "#TequilaDeTerruño", "#ElArenalJalisco", "#DestiladoDeAutor"]
+      }
+    },
+    {
+      "id": 2,
+      "sku": "Loco Ámbar",
+      "sku_token": "--p-ambar",
+      "sku_color": "#A96C43",
+      "inventiveness": "Locura Genial",
+      "platform": "LinkedIn",
+      "target_persona": "Alejandro (UHNWI, coleccionista, mentor)",
+      "concept_title": "La Alquimia de las 4 Barricas",
+      "filter_justification": "Provocación técnica: desafía la maduración convencional reposando en cuatro maderas distintas sin perder la pureza del terruño.",
+      "prompt": {
+        "text": "Cinematic luxury still life of the prestigious Loco Ámbar Tequila bottle set inside a private dimly lit architectural tasting cellar in Hacienda La Providencia. Dramatic chiaroscuro lighting sculpting the bottle's amber tones and rich golden reflections. Beside the bottle rests an exquisite snifter glass containing aged tequila, illuminated by a warm beam of spotlight highlighting velvety tears on the crystal. In the deep blurred background, authentic French and American oak barrel staves with refined textures. Deep crimson and obsidian shadow palette, high dynamic range, masterwork editorial composition, Hasselblad medium format look, rich tactile wood grain, glowing amber hues, 8k hyper-detailed.",
+        "aspect_ratio": "16:9 (1920x1080 px)",
+        "negative_prompt": "underage, minors, drunk, drunkenness, excessive drinking, cheap glass, competitor bottles, Casa Dragones bottle, Clase Azul bottle, text watermark, blurry, low resolution, cluttered, overexposed",
+        "camera_settings": "50mm f/1.8 lens, ISO 200, 1/125s, key light with soft grid + warm amber rim accent",
+        "color_palette": "Rich Amber (#A96C43), Deep Maroon (#6E1E28), Warm Gold (#E8A33D), Obsidian Shadow"
+      },
+      "copy": {
+        "headline": "La maduración también puede ser un acto de disrupción.",
+        "body": "El verdadero liderazgo no replica fórmulas establecidas; redefine los estándares de la categoría. Loco Ámbar desafía la maduración tradicional a través de un reposo inusual en cuatro barricas distintas, logrando un equilibrio sofisticado donde la madera enaltece el agave sin enmascarar su terruño.\n\nUna pieza para coleccionistas que aprecian la maestría artesanal y la visión fuera de serie.",
+        "keywords": ["tequila reposado 4 barricas", "tequila de colección para coleccionistas de arte", "Locura Genial", "maestría en sabores y aromas"],
+        "call_to_action": "Conoce los puntos de cata exclusiva para miembros de nuestra comunidad.",
+        "legal": "+18 | Evita el exceso",
+        "hashtags": ["#EspírituDeOrigen", "#LocoTequila", "#AltaGama", "#ColeccionistasDeArte", "#LiderazgoConPropósito"]
+      }
+    },
+    {
+      "id": 3,
+      "sku": "Loco Puro Corazón",
+      "sku_token": "--p-corazon",
+      "sku_color": "#9A9A9A",
+      "inventiveness": "Original",
+      "platform": "Instagram",
+      "target_persona": "Ana (HNWI, disruptiva, coleccionista de arte)",
+      "concept_title": "El Corte Tripartita Imposible",
+      "filter_justification": "Creatividad trascendental: aislar únicamente el centro del corazón de la destilación en una botella de líneas arquitectónicas puras.",
+      "prompt": {
+        "text": "High fashion luxury editorial product shot featuring the iconic Loco Puro Corazón bottle centered on a minimalist white sculpted marble pedestal with raw fractured volcanic stone edges. High contrast studio lighting, soft cochineal maroon gradient backdrop, flawless crystal refraction of the ultra-premium clear spirit. Elegant bespoke stemmed tulip tequila glass catching a sharp crystalline reflection. Ultra-refined composition, crisp edges, modern art gallery ambiance, luxury perfume-grade lighting, medium format Hasselblad 100MP, zero digital grain, ultra high fidelity.",
+        "aspect_ratio": "4:5 (1080x1350 px)",
+        "negative_prompt": "underage, minors, drunk, drunkenness, excessive drinking, cheap glass, competitor bottles, Casa Dragones bottle, Clase Azul bottle, text watermark, blurry, low resolution, noisy, dirty surfaces",
+        "camera_settings": "90mm Tilt-Shift lens, f/8 for total plane sharpness, strobe softbox overhead + dual strip lights with crimson gels",
+        "color_palette": "Cochineal Red (#6E1E28), Bone White (#FBF3DD), Pure Crystal Silver, Obsidian Charcoal"
+      },
+      "copy": {
+        "headline": "Solo el corazón del destilado. Nada menos.",
+        "body": "Cuando el arte contemporáneo y el legado destilador convergen, nace Loco Puro Corazón. Un corte infinitesimal de la destilación que extrae únicamente la esencia más noble y etérea del agave.\n\nDiseñado para quienes entienden que el verdadero lujo radica en lo que se decide no incluir.",
+        "keywords": ["tequila blanco de lujo", "tequila disruptivo", "tequila y arte contemporáneo mexicano", "tequila objeto de arte"],
+        "call_to_action": "Disponible en reservas limitadas para conocedores.",
+        "legal": "+18 | Evita el exceso",
+        "hashtags": ["#EspírituDeOrigen", "#LocoPuroCorazón", "#ArteContemporáneo", "#LuxurySpirits", "#TequilaDeColección"]
+      }
+    },
+    {
+      "id": 4,
+      "sku": "Loco Hierofante",
+      "sku_token": "--p-269",
+      "sku_color": "#1F1F1F",
+      "inventiveness": "Locura Genial",
+      "platform": "Facebook",
+      "target_persona": "Alejandro / Ana (Círculo EÓN Hierofante)",
+      "concept_title": "El Objeto de Arte Tripartita",
+      "filter_justification": "Unión insólita de escultura de autor (Jan Hendrix & Iker Ortiz) con la más alta alquimia de tequila añejo de terruño.",
+      "prompt": {
+        "text": "Museum gallery presentation of the ultra-exclusive Loco Hierofante art bottle created in collaboration with Jan Hendrix and Iker Ortiz. The sculpted masterpiece bottle with oxidized silver and volcanic basalt textures rests inside an illuminated glass museum vitrine. Dramatic pinpoint beam lighting falling strictly from above, casting intricate artistic shadows on a polished dark obsidian floor. Surrounding atmosphere dark and reverent, deep burgundy velvet ambient tones, exquisite museum depth of field, ultra-luxury tactile textures, 8k resolution, Leica SL2 50mm Summilux look.",
+        "aspect_ratio": "1:1 (1080x1080 px)",
+        "negative_prompt": "underage, minors, drunk, drunkenness, excessive drinking, cheap glass, competitor bottles, Casa Dragones bottle, Clase Azul bottle, text watermark, blurry, low resolution, crowded, kitsch",
+        "camera_settings": "50mm f/1.4, ISO 50, 1/160s, narrow beam ceiling spotlight (CRI 98) + subtle floor rim bounce",
+        "color_palette": "Deep Obsidian (#0E0E10), Volcanic Silver (#9A9A9A), Burgundy Wine (#5A1822), Platinum"
+      },
+      "copy": {
+        "headline": "Donde el tequila trasciende su naturaleza para convertirse en obra de arte.",
+        "body": "Loco Hierofante no es solo un destilado excepcional; es una escultura tripartita concebida junto a los maestros Jan Hendrix e Iker Ortiz. Una pieza numerada de culto que inaugura una nueva dimensión para el coleccionismo internacional.\n\nPertenecer al círculo EÓN Hierofante es custodiar un fragmento del alma de El Arenal.",
+        "keywords": ["obra de arte tripartita", "círculo de membresía EÓN Hierofante", "tequila objeto de arte", "tequila de colección para coleccionistas de arte"],
+        "call_to_action": "Solicita acceso privado a la curaduría EÓN.",
+        "legal": "+18 | Evita el exceso",
+        "hashtags": ["#EspírituDeOrigen", "#LocoHierofante", "#JanHendrix", "#IkerOrtiz", "#ObjetoDeArte", "#EÓNHierofante"]
+      }
+    }
+  ]
+}
