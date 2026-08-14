@@ -17,7 +17,7 @@ Este documento contiene las reglas de comportamiento, protocolo de ejecución y 
    - Si se usa un benchmark de la industria: marcar como `[REFERENCIA DE INDUSTRIA]`.
    - Si es una estimación: marcar con asterisco (`*`).
    - Nunca alucinar cifras de alcance o conversiones no proporcionadas.
-5. **Auditoría de Metadatos (OneDrive/SharePoint):** El conector de Microsoft 365 MCP solo lee metadatos (nombres, fechas y carpetas). El agente **DEBE preguntar activamente** al usuario si desea leer la carpeta para conocer los nombres de campañas pasadas (máximo 10 archivos a partir de la fecha concurrente), ofreciéndole además la opción de **adjuntar 1 a 3 imágenes de ejemplo directamente en el chat** si requiere análisis visual estético.
+5. **Auditoría de Metadatos y Pregunta Obligatoria de Muestras (OneDrive/SharePoint):** El conector de Microsoft 365 MCP solo lee metadatos (nombres, fechas y carpetas). El agente **DEBE preguntar activamente** si desea leer la carpeta para conocer los nombres de campañas pasadas (máx. 10 archivos) y, **posterior a ver la lista de archivos, DEBE PREGUNTAR OBLIGATORIAMENTE al usuario si desea adjuntar 1 a 3 imágenes de muestra en el chat** para análisis visual antes de idear.
 6. **Exclusión de Comandos Git:** El agente **NO DEBE** ejecutar comandos de Git (`git add`, `git commit`, `git status`, etc.) ni gestionar el control de versiones. La gestión de Git es responsabilidad exclusiva del usuario.
 7. **Pregunta Obligatoria de Fechas Festivas:** El agente **DEBE PREGUNTAR SIEMPRE** al usuario qué fecha festiva o efeméride desea tomar en cuenta antes de idear. Nunca debe asumir una fecha automáticamente ni saltarse este paso de confirmación interactiva.
 
@@ -57,9 +57,11 @@ sequenceDiagram
     Agente->>Usuario: Presentar fechas festivas detectadas y PREGUNTAR OBLIGATORIAMENTE cuál tomar en cuenta
     Usuario->>Agente: Confirma fecha elegida, producto, red(es), medio e inventiva
     opt Hay link OneDrive/SharePoint
-        Agente->>Usuario: Preguntar si lee metadatos (máx. 10) para conocer nombres pasados + ofrecer adjuntar imágenes en chat
-        Usuario->>Agente: Confirma lectura y/o adjunta imágenes
-        Agente->>Ref: Ejecutar sub-skill leer-imagenes-onedrive (nombres y fechas de campañas)
+        Agente->>Usuario: Preguntar si lee metadatos (máx. 10) para conocer nombres pasados
+        Usuario->>Agente: Confirma lectura
+        Agente->>Ref: Ejecutar sub-skill leer-imagenes-onedrive (obtiene lista de nombres)
+        Agente->>Usuario: Presenta nombres detectados y PREGUNTA OBLIGATORIAMENTE si desea adjuntar 1 a 3 imágenes de muestra en el chat
+        Usuario->>Agente: Adjunta imágenes o confirma continuar sin adjuntar
     end
     Agente->>Ref: Consultar matriz de plataformas y glosario SEO/GEO
     Agente->>Agente: Aplicar Filtro de Locura Genial

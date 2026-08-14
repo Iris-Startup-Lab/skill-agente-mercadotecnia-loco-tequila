@@ -110,48 +110,18 @@ La skill entrega el resultado como **texto normal de la conversación** (sin blo
 
 Al finalizar la respuesta en texto markdown, el agente **DEBE generar un Artefacto HTML autónomo (Claude Artifact)** con la Pasarela Web interactiva.
 
-### Reglas técnicas obligatorias para el artefacto HTML:
-1. **100% Autocontenido:** No debe realizar llamadas `fetch()` a archivos externos. Todos los datos de la campaña generada deben inyectarse directamente en una variable JavaScript en línea: `const CAMPAIGN = { ... }`.
-2. **Sistema de Diseño e Identidad Visual (`designs/Design.md`):**
-   - Estilos CSS embebidos en `<style>` utilizando la banda institucional maroon (`--brand-maroon` `#6E1E28`), fondo dark luxury (`#0A0A0C`, `#121216`), fuentes Google Fonts (*Cinzel*, *Outfit*, *Plus Jakarta Sans*) y acentos dorados (`#F2C14E`).
-   - **Logotipo Institucional en el Header:** Debe incluir la insignia oficial de **LOCO TEQUILA** (mediante tipografía de lujo *Cinzel* en blanco hueso con acento *TEQUILA* en *Outfit* dorado y subtítulo *Espíritu de Origen*) para garantizar que el logo siempre se visualice nítido y elegante sin depender de rutas locales de imagen en la nube.
-3. **Controles de Pasarela y Alternancia:**
-   - **Tabs de Conceptos:** Selector con píldoras de color por SKU (Idea 1, Idea 2, Idea 3...) y botones Anterior $\leftarrow$ y Siguiente $\rightarrow$.
-   - **Switch de Modo de Vista:** Botones para alternar entre `[✨ Ambos (Pasarela)]`, `[🎨 Solo Prompt]` y `[📝 Solo Copy]`.
-4. **Tarjetas de Contenido:**
-   - **Zona de Prompt (Arriba):** Muestra el prompt ultra detallado, chips de configuración (aspect ratio, lente, paleta) y botón interactivo para **Copiar Prompt**.
-   - **Zona de Copy (Abajo):** Muestra titular, cuerpo, keywords SEO/GEO, hashtags, guardrail `+18 | Evita el exceso` y botón interactivo para **Copiar Copy**.
-5. **Leaderboard de IA ([Design Arena](https://www.designarena.ai/leaderboard?tab=image)):** Grid interactivo con ranking de modelos (*FLUX.1 pro, Midjourney v6.1, Google Imagen 3, Ideogram 2.0, Recraft v3, SD 3.5 Large*) con filtros por categoría.
-6. **Tips de Configuración:** Tabla de aspect ratios y botón con un clic para copiar el Negative Prompt estricto de marca.
-7. **Función de Copiado Universal (Compatible con iframes y Claude Artifacts):**
-   Para garantizar que los botones "Copiar Prompt" y "Copiar Copy" funcionen dentro del sandbox del iframe de Claude, el `<script>` DEBE usar el método de `textarea` temporal con `document.execCommand('copy')`:
-   ```javascript
-   function copyToClipboard(text, toastMsg, buttonEl) {
-     if (!text) return;
-     let ok = false;
-     try {
-       const ta = document.createElement("textarea");
-       ta.value = text;
-       ta.style.position = "fixed";
-       ta.style.left = "-9999px";
-       ta.style.opacity = "0";
-       document.body.appendChild(ta);
-       ta.focus();
-       ta.select();
-       ok = document.execCommand("copy");
-       document.body.removeChild(ta);
-     } catch (e) { ok = false; }
+Para garantizar que el artefacto funcione al 100% (renderice el logo oficial, muestre los prompts generados, responda a los clics de filtros/paginador y copie al portapapeles), el agente **DEBE utilizar la estructura y funciones de [showcase-template.html](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/showcase-template.html)**:
 
-     if (!ok && navigator.clipboard && navigator.clipboard.writeText) {
-       navigator.clipboard.writeText(text).then(() => showToast(toastMsg));
-     } else if (ok) {
-       showToast(toastMsg);
-     }
-     if (buttonEl) {
-       const orig = buttonEl.innerHTML;
-       buttonEl.innerHTML = "✓ ¡Copiado!";
-       setTimeout(() => { buttonEl.innerHTML = orig; }, 2000);
-     }
-   }
-   ```
-8. **Feedback Visual:** Notificaciones flotantes tipo *Toast* confirmando cada copiado al portapapeles.
+### Reglas obligatorias para la generación del HTML:
+1. **Inyección Directa de Datos (`const CAMPAIGN`):** Inyectar el array completo de conceptos generados (título, SKU, plataforma, target persona, prompt ultra detallado con lente/aspect ratio/negative prompt, copy nativo con titular/cuerpo/keywords/hashtags/legal, y justificación del filtro).
+2. **Pre-renderizado en el HTML:** Escribir el texto del primer prompt en `#prompt-text-display` y del primer copy en `#copy-headline-display` / `#copy-body-display` para asegurar visibilidad inmediata.
+3. **Logotipo Oficial:** Usar el archivo oficial de logo vectorial `showcase/assets/Loco_Tequila_Logo_white.svg` (o `assets/Loco_Tequila_Logo_white.svg` / `imagenes/Loco_Tequila_Logo_white.svg`) en el header de la pasarela.
+4. **Controles Interactivos con `onclick` Directo:**
+   - Switch de Modo de Vista: `onclick="setViewMode('all')"` (✨ Ambos), `onclick="setViewMode('prompt')"` (🎨 Solo Prompt), `onclick="setViewMode('copy')"` (📝 Solo Copy).
+   - Paginador de Conceptos: `onclick="prevConcept()"` y `onclick="nextConcept()"`.
+   - Píldoras de Tabs: `onclick="selectConcept(idx)"`.
+5. **Copiado Universal sin Errores:**
+   - Botón Prompt: `onclick="copyCurrentPrompt(this)"`.
+   - Botón Copy: `onclick="copyCurrentCopy(this)"`.
+   - Utilizar la función `copyUniversal(text, btn, msg)` con `<textarea>` temporal y `document.execCommand('copy')` para garantizar funcionamiento en el sandbox de iframes de Claude.
+6. **Feedback Visual:** Notificaciones flotantes tipo *Toast* confirmando cada copiado al portapapeles.

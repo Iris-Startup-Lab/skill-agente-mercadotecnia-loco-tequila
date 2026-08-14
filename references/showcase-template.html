@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loco Tequila — Pasarela Creativa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --brand-maroon: #6E1E28;
+      --brand-maroon-dark: #4A121A;
+      --brand-gold: #D4AF37;
+      --brand-gold-bright: #F2C14E;
+      --bg-dark: #0A0A0C;
+      --bg-card: #121216;
+      --bg-card-elevated: #18181E;
+      --text-primary: #FFFFFF;
+      --text-secondary: #B0B0C0;
+      --text-muted: #707080;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-gold: rgba(212, 175, 55, 0.35);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
+      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-primary);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      line-height: 1.6;
+      padding-bottom: 60px;
+    }
+    /* Top Bar */
+    .top-bar {
+      background: linear-gradient(180deg, var(--brand-maroon) 0%, var(--brand-maroon-dark) 100%);
+      border-bottom: 2px solid var(--brand-gold);
+      padding: 16px 24px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    }
+    .header-content {
+      max-width: 1300px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .logo-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--brand-gold);
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+    }
+    .logo-badge svg {
+      height: 38px;
+      width: auto;
+    }
+    .titles .tag {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--brand-gold-bright);
+      font-weight: 700;
+    }
+    .titles h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: #FFFFFF;
+      letter-spacing: 0.08em;
+    }
+    /* Main Layout */
+    .main-content {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 28px 20px;
+    }
+    /* Hero */
+    .campaign-hero {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      margin-bottom: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .hero-info h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 22px;
+      color: #FFFFFF;
+      margin-bottom: 6px;
+    }
+    .hero-info p {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+    .hero-chips {
+      display: flex;
+      gap: 14px;
+    }
+    .hero-chip {
+      background: var(--bg-card-elevated);
+      border: 1px solid var(--border-subtle);
+      padding: 10px 18px;
+      border-radius: var(--radius-md);
+      text-align: center;
+    }
+    .hero-chip .lbl {
+      font-size: 10px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      display: block;
+    }
+    .hero-chip .val {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--brand-gold-bright);
+    }
+    /* Controls Bar */
+    .controls-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .controls-bar h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 20px;
+      color: #FFFFFF;
+    }
+    .action-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .view-switch {
+      display: flex;
+      background: var(--bg-card-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      padding: 3px;
+      gap: 4px;
+    }
+    .view-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .view-btn:hover { color: #FFFFFF; }
+    .view-btn.active {
+      background: var(--brand-maroon);
+      color: #FFFFFF;
+      border: 1px solid var(--brand-gold);
+    }
+    .pager {
+      display: flex;
+      align-items: center;
+      background: var(--bg-card-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      padding: 3px 10px;
+      gap: 8px;
+    }
+    .pager-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      cursor: pointer;
+      font-size: 16px;
+      padding: 4px 8px;
+      transition: var(--transition);
+    }
+    .pager-btn:hover { color: var(--brand-gold-bright); transform: scale(1.15); }
+    .pager-counter {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--brand-gold-bright);
+      min-width: 40px;
+      text-align: center;
+    }
+    /* Concept Tabs */
+    .tabs-track {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+    }
+    .tab-pill {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      padding: 8px 18px;
+      border-radius: var(--radius-full);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tab-pill:hover { background: var(--bg-card-elevated); color: #FFFFFF; }
+    .tab-pill.active {
+      background: linear-gradient(135deg, var(--brand-maroon) 0%, #852230 100%);
+      color: #FFFFFF;
+      border-color: var(--brand-gold-bright);
+      box-shadow: 0 4px 15px rgba(110, 30, 40, 0.4);
+    }
+    .tab-pill .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    /* Stage Card */
+    .stage-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      margin-bottom: 36px;
+    }
+    .stage-card-header {
+      background: var(--bg-card-elevated);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .badges-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .sku-badge {
+      background: #E8A33D;
+      color: #0A0A0C;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .inv-badge {
+      border: 1px solid var(--brand-gold);
+      color: var(--brand-gold-bright);
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .plat-badge {
+      background: rgba(255, 255, 255, 0.08);
+      color: #FFFFFF;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .persona-tag {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .stage-content {
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    /* Prompt Zone */
+    .prompt-box {
+      background: #0E0E12;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      padding: 22px;
+    }
+    .box-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .box-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--brand-gold-bright);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .btn-copy {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #FFFFFF;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-copy:hover {
+      background: var(--brand-maroon);
+      border-color: var(--brand-gold-bright);
+      transform: translateY(-1px);
+    }
+    .btn-copy.copied {
+      background: #1B5E20 !important;
+      border-color: #4CAF50 !important;
+      color: #FFFFFF !important;
+    }
+    .prompt-text {
+      background: #060608;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      font-family: 'JetBrains Mono', Consolas, monospace;
+      font-size: 13px;
+      color: #ECECF1;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+      min-height: 80px;
+    }
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .meta-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+    }
+    .meta-item .m-lbl {
+      font-size: 10px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      display: block;
+    }
+    .meta-item .m-val {
+      font-size: 12px;
+      font-weight: 600;
+      color: #FFFFFF;
+    }
+    /* Divider */
+    .flow-connector {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: -10px 0;
+    }
+    .flow-badge {
+      background: var(--bg-card-elevated);
+      border: 1px solid var(--border-gold);
+      color: var(--brand-gold-bright);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 16px;
+      border-radius: var(--radius-full);
+      letter-spacing: 0.08em;
+    }
+    /* Copy Zone */
+    .copy-box {
+      background: #111116;
+      border: 1px solid rgba(232, 163, 61, 0.15);
+      border-radius: var(--radius-md);
+      padding: 22px;
+    }
+    .copy-headline {
+      font-family: 'Cinzel', serif;
+      font-size: 17px;
+      color: #FFFFFF;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+    .copy-body {
+      font-size: 14px;
+      color: #D8D8E2;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      margin-bottom: 16px;
+    }
+    .keywords-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .kw-tag {
+      background: rgba(212, 175, 55, 0.12);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      color: var(--brand-gold-bright);
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .hashtags-row {
+      font-size: 12px;
+      color: #9D9DAE;
+      margin-bottom: 14px;
+      font-weight: 500;
+    }
+    .legal-row {
+      font-size: 11px;
+      color: var(--text-muted);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 10px;
+      font-weight: 600;
+    }
+    /* Utility */
+    .zone-hidden { display: none !important; }
+    /* Toast */
+    .toast-box {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1B5E20;
+      color: #FFFFFF;
+      padding: 12px 20px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+      display: none;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <header class="top-bar">
+    <div class="header-content">
+      <div class="brand-group">
+        <div class="logo-badge" style="background: transparent; border: none; padding: 0;">
+          <img src="assets/Loco_Tequila_Logo_white.svg" alt="Loco Tequila Logo" style="height: 46px; width: auto; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));">
+        </div>
+        <div class="titles">
+          <span class="tag">Espíritu de Origen · Pasarela Creativa</span>
+          <h1>DIRECCIÓN CREATIVA DE MERCADOTECNIA</h1>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-content">
+
+    <!-- Hero Context -->
+    <section class="campaign-hero">
+      <div class="hero-info">
+        <span class="tag" style="color: var(--brand-gold); font-size: 11px; font-weight: 700; text-transform: uppercase;">CAMPAÑA ACTIVA</span>
+        <h2 id="hero-campaign-title">ESPÍRITU DE ORIGEN — CAMPAÑA INTEGRAL</h2>
+        <p id="hero-campaign-subtitle">Prompts ultra detallados para modelos de imagen y copies listos para publicar.</p>
+      </div>
+      <div class="hero-chips">
+        <div class="hero-chip">
+          <span class="lbl">EFEMÉRIDE / FECHA</span>
+          <span id="hero-date-val" class="val">Día del Tequila</span>
+        </div>
+        <div class="hero-chip">
+          <span class="lbl">ANTICIPACIÓN</span>
+          <span class="val">Próximos 30 días</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Controls -->
+    <div class="controls-bar">
+      <div>
+        <span style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.15em; font-weight: 700;">SHOWCASE INTERACTIVO</span>
+        <h3>Pasarela de Campañas</h3>
+      </div>
+      <div class="action-controls">
+        <div class="view-switch">
+          <button id="view-btn-all" class="view-btn active" onclick="setViewMode('all')">✨ Ambos</button>
+          <button id="view-btn-prompt" class="view-btn" onclick="setViewMode('prompt')">🎨 Solo Prompt</button>
+          <button id="view-btn-copy" class="view-btn" onclick="setViewMode('copy')">📝 Solo Copy</button>
+        </div>
+        <div class="pager">
+          <button class="pager-btn" onclick="prevConcept()" aria-label="Anterior">◀</button>
+          <span id="concept-counter" class="pager-counter">1 / 1</span>
+          <button class="pager-btn" onclick="nextConcept()" aria-label="Siguiente">▶</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Concept Tabs -->
+    <div id="tabs-container" class="tabs-track"></div>
+
+    <!-- Stage Card -->
+    <div class="stage-card">
+      <div class="stage-card-header">
+        <div class="badges-row">
+          <span id="stage-sku" class="sku-badge">Loco Blanco</span>
+          <span id="stage-inv" class="inv-badge">Original</span>
+          <span id="stage-plat" class="plat-badge">Instagram</span>
+        </div>
+        <div id="stage-persona" class="persona-tag">Persona: Leonardo</div>
+      </div>
+
+      <div class="stage-content">
+
+        <!-- PROMPT ZONE -->
+        <div id="zone-prompt" class="prompt-box">
+          <div class="box-top">
+            <span class="box-title">📦 Prompt Generativo Ultra Detallado (Text-to-Image)</span>
+            <button class="btn-copy" onclick="copyCurrentPrompt(this)">
+              📋 Copiar Prompt Completo
+            </button>
+          </div>
+          <div id="prompt-text-display" class="prompt-text">Cargando prompt...</div>
+          <div class="meta-grid">
+            <div class="meta-item">
+              <span class="m-lbl">Aspect Ratio Recomendado</span>
+              <span id="meta-ar" class="m-val">4:5 (1080x1350)</span>
+            </div>
+            <div class="meta-item">
+              <span class="m-lbl">Configuración Óptica & Lente</span>
+              <span id="meta-cam" class="m-val">85mm f/1.4</span>
+            </div>
+            <div class="meta-item">
+              <span class="m-lbl">Paleta Institucional</span>
+              <span id="meta-pal" class="m-val">Crimson, Obsidian, Golden</span>
+            </div>
+            <div class="meta-item">
+              <span class="m-lbl">Filtro de Locura Genial</span>
+              <span id="meta-fil" class="m-val">Aprobado</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- FLOW CONNECTOR -->
+        <div id="zone-connector" class="flow-connector">
+          <span class="flow-badge">▼ Copy Nativo Vinculado al Arte ▼</span>
+        </div>
+
+        <!-- COPY ZONE -->
+        <div id="zone-copy" class="copy-box">
+          <div class="box-top">
+            <span class="box-title" style="color: #E8A33D;">📝 Copy Listo para Publicar</span>
+            <button class="btn-copy" onclick="copyCurrentCopy(this)">
+              📋 Copiar Copy Completo
+            </button>
+          </div>
+          <div id="copy-headline-display" class="copy-headline">Cargando titular...</div>
+          <div id="copy-body-display" class="copy-body">Cargando cuerpo de texto...</div>
+          <div id="copy-keywords-container" class="keywords-row"></div>
+          <div id="copy-hashtags-display" class="hashtags-row"></div>
+          <div id="copy-legal-display" class="legal-row">+18 · Evita el exceso · #EspírituDeOrigen</div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Toast Notification -->
+  <div id="toast-msg" class="toast-box">✓ Copiado al portapapeles con éxito</div>
+
+  <script>
+    // DATASET DE CAMPAÑA (Se reemplaza dinámicamente con los datos generados)
+    const CAMPAIGN = {
+      title: "ESPÍRITU DE ORIGEN — VENDIMIA & TERRUÑO",
+      subtitle: "Piezas publicitarias listas para publicar y prompts de ultra alta fidelidad para modelos de imagen.",
+      date_context: "Día Nacional del Tequila",
+      items: [
+        {
+          sku: "Loco Blanco",
+          sku_color: "#E8A33D",
+          platform: "Instagram",
+          inventiveness: "Original",
+          target_persona: "Leonardo (Conocedor & Sibarita)",
+          concept_title: "El Alma Cristalina de El Arenal",
+          prompt: {
+            text: "Luxury editorial product photography of Loco Tequila Blanco bottle resting on raw black obsidian volcanic rock with faint morning mist in El Arenal Jalisco, warm golden hour sun rays piercing through blue agave fields in the background, sharp crystal reflections, condensation droplets on pure glass, 85mm medium format look, hyper-detailed, Hasselblad capture, cinematic chiaroscuro, natural earthy tones, vibrant cochineal crimson subtle backlighting --ar 4:5 --no underage, drunkenness, cheap glass, text watermark, blurry, low resolution",
+            aspect_ratio: "4:5 (1080x1350)",
+            camera_settings: "85mm f/1.4, ISO 100, 1/250s",
+            color_palette: "Crimson, Obsidian, Golden Agave",
+            negative_prompt: "underage, drunkenness, cheap glass, watermark, low quality"
+          },
+          copy: {
+            headline: "La pureza no se inventa: nace del terruño indomable de El Arenal.",
+            body: "Entre piedras de obsidiana y agua de manantial volcánico, Loco Blanco no sigue tendencias: honra el origen. Doble destilación lenta en alambiques de cobre para quienes entienden que el verdadero lujo reside en la autenticidad radical.",
+            call_to_action: "Descubre la máxima expresión del agave en loco-tequila.com.",
+            keywords: ["#tequila de terruño", "#LocuraGenial", "#tequila blanco premium", "#grupo selecto de conocedores"],
+            hashtags: ["#LocoTequila", "#EspírituDeOrigen", "#TequilaBlanco", "#LuxurySpirits", "#ElArenal"],
+            legal: "+18 · Evita el exceso · #EspírituDeOrigen"
+          },
+          filter_justification: "Cumple con el principio de autenticidad radical y territorio mítico."
+        }
+      ]
+    };
+
+    let currentIndex = 0;
+    let currentMode = "all";
+
+    function initApp() {
+      if (!CAMPAIGN || !CAMPAIGN.items || CAMPAIGN.items.length === 0) return;
+      document.getElementById("hero-campaign-title").textContent = CAMPAIGN.title;
+      document.getElementById("hero-campaign-subtitle").textContent = CAMPAIGN.subtitle;
+      document.getElementById("hero-date-val").textContent = CAMPAIGN.date_context;
+      renderTabs();
+      renderCurrentConcept();
+    }
+
+    function renderTabs() {
+      const container = document.getElementById("tabs-container");
+      container.innerHTML = "";
+      CAMPAIGN.items.forEach((item, idx) => {
+        const btn = document.createElement("button");
+        btn.className = `tab-pill ${idx === currentIndex ? 'active' : ''}`;
+        btn.innerHTML = `<span class="dot" style="background:${item.sku_color}"></span> ${item.sku} — ${item.platform}`;
+        btn.onclick = () => { selectConcept(idx); };
+        container.appendChild(btn);
+      });
+      document.getElementById("concept-counter").textContent = `${currentIndex + 1} / ${CAMPAIGN.items.length}`;
+    }
+
+    function selectConcept(idx) {
+      currentIndex = idx;
+      renderTabs();
+      renderCurrentConcept();
+    }
+
+    function nextConcept() {
+      currentIndex = (currentIndex + 1) % CAMPAIGN.items.length;
+      renderTabs();
+      renderCurrentConcept();
+    }
+
+    function prevConcept() {
+      currentIndex = (currentIndex - 1 + CAMPAIGN.items.length) % CAMPAIGN.items.length;
+      renderTabs();
+      renderCurrentConcept();
+    }
+
+    function setViewMode(mode) {
+      currentMode = mode;
+      document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
+      const btnMap = { all: "view-btn-all", prompt: "view-btn-prompt", copy: "view-btn-copy" };
+      if (document.getElementById(btnMap[mode])) {
+        document.getElementById(btnMap[mode]).classList.add("active");
+      }
+      const pZone = document.getElementById("zone-prompt");
+      const cZone = document.getElementById("zone-copy");
+      const conn = document.getElementById("zone-connector");
+
+      if (mode === "all") {
+        pZone.classList.remove("zone-hidden");
+        cZone.classList.remove("zone-hidden");
+        conn.classList.remove("zone-hidden");
+      } else if (mode === "prompt") {
+        pZone.classList.remove("zone-hidden");
+        cZone.classList.add("zone-hidden");
+        conn.classList.add("zone-hidden");
+      } else if (mode === "copy") {
+        pZone.classList.add("zone-hidden");
+        cZone.classList.remove("zone-hidden");
+        conn.classList.add("zone-hidden");
+      }
+    }
+
+    function renderCurrentConcept() {
+      const item = CAMPAIGN.items[currentIndex];
+      if (!item) return;
+
+      document.getElementById("stage-sku").textContent = item.sku;
+      document.getElementById("stage-sku").style.backgroundColor = item.sku_color;
+      document.getElementById("stage-inv").textContent = item.inventiveness;
+      document.getElementById("stage-plat").textContent = item.platform;
+      document.getElementById("stage-persona").textContent = `Persona: ${item.target_persona}`;
+
+      // Prompt
+      document.getElementById("prompt-text-display").textContent = item.prompt.text;
+      document.getElementById("meta-ar").textContent = item.prompt.aspect_ratio;
+      document.getElementById("meta-cam").textContent = item.prompt.camera_settings;
+      document.getElementById("meta-pal").textContent = item.prompt.color_palette;
+      document.getElementById("meta-fil").textContent = item.filter_justification;
+
+      // Copy
+      document.getElementById("copy-headline-display").textContent = item.copy.headline;
+      document.getElementById("copy-body-display").textContent = item.copy.body;
+
+      const kwContainer = document.getElementById("copy-keywords-container");
+      kwContainer.innerHTML = item.copy.keywords.map(k => `<span class="kw-tag">${k}</span>`).join("");
+      document.getElementById("copy-hashtags-display").textContent = item.copy.hashtags.join(" ");
+      document.getElementById("copy-legal-display").textContent = `${item.copy.call_to_action} · ${item.copy.legal}`;
+    }
+
+    function copyCurrentPrompt(btn) {
+      const item = CAMPAIGN.items[currentIndex];
+      const text = item ? item.prompt.text : document.getElementById("prompt-text-display").innerText;
+      copyUniversal(text, btn, "✓ Prompt copiado al portapapeles");
+    }
+
+    function copyCurrentCopy(btn) {
+      const item = CAMPAIGN.items[currentIndex];
+      const text = item ? `${item.copy.headline}\n\n${item.copy.body}\n\n${item.copy.call_to_action}\n\n${item.copy.hashtags.join(" ")}\n\n${item.copy.legal}` : document.getElementById("copy-body-display").innerText;
+      copyUniversal(text, btn, "✓ Copy nativo copiado al portapapeles");
+    }
+
+    function copyUniversal(text, btn, msg) {
+      if (!text) return;
+      let ok = false;
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.left = "-9999px";
+        ta.style.top = "-9999px";
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        ok = document.execCommand("copy");
+        document.body.removeChild(ta);
+      } catch (e) { ok = false; }
+
+      if (!ok && navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).catch(() => {});
+      }
+
+      if (btn) {
+        const originalText = btn.innerHTML;
+        btn.classList.add("copied");
+        btn.innerHTML = "✓ ¡Copiado!";
+        setTimeout(() => {
+          btn.classList.remove("copied");
+          btn.innerHTML = originalText;
+        }, 1800);
+      }
+      showToast(msg);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById("toast-msg");
+      toast.textContent = msg;
+      toast.style.display = "block";
+      setTimeout(() => { toast.style.display = "none"; }, 2500);
+    }
+
+    // Inicializar inmediatamente
+    initApp();
+  </script>
+</body>
+</html>

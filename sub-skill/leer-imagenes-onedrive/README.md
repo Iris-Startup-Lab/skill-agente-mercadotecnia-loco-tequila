@@ -16,11 +16,8 @@ Requiere el plugin **Microsoft 365** activo (MCP) con la herramienta `sharepoint
 
 ### Paso 1: Preguntar confirmación de lectura de metadatos
 
-Al recibir el link de OneDrive/SharePoint (o al solicitarlo):
-1. **Pregunta activamente al usuario:**
-   > *"He recibido el enlace de OneDrive/SharePoint. ¿Deseas que lea los documentos y archivos de la carpeta para conocer los **nombres y temáticas de campañas pasadas**? (Límite de hasta 10 archivos a partir de la fecha más reciente)."*
-2. **Ofrecer adjuntar imágenes de ejemplo (Opcional para el usuario):**
-   > *"Nota: El conector de Microsoft 365 solo lee metadatos de texto y nombres de archivo. Si deseas que analice la **composición visual, iluminación o diseño exacto** para evitar repetir estilos visuales, puedes adjuntar libremente 1 a 3 imágenes de ejemplo directamente aquí en el chat 📎."*
+Al recibir el link de OneDrive/SharePoint (o al solicitarlo), **pregunta activamente al usuario:**
+> *"He recibido el enlace de OneDrive/SharePoint. ¿Deseas que lea los documentos y archivos de la carpeta para conocer los **nombres y temáticas de campañas pasadas**? (Límite de hasta 10 archivos a partir de la fecha más reciente)."*
 
 ### Paso 2: Identificar y buscar la carpeta
 
@@ -32,15 +29,14 @@ Al recibir el link de OneDrive/SharePoint (o al solicitarlo):
 1. Usa `Microsoft 365:read_resource` con el `uri` de la carpeta encontrada para listar los elementos.
 2. Filtra los archivos de imagen/publicidad (`.jpg`, `.jpeg`, `.png`, `.gif`, `.webp`, `.pdf`).
 3. Ordénalos por fecha de modificación (más reciente primero) y toma hasta un máximo de 10 archivos.
+4. *Manejo de Graph API:* Si `read_resource` arroja error de conversión binaria al intentar abrir un archivo individual, usa los nombres de archivo y fechas extraídos sin bloquear la ejecución.
 
-### Paso 4: Manejo de la limitación técnica de Graph API
+### Paso 4: Presentar nombres y PREGUNTAR OBLIGATORIAMENTE por imágenes de muestra
 
-> ⚠️ **Regla de oro ante errores de binarios:**
-> Si al intentar inspeccionar un archivo individual `.jpg`/`.png` con `read_resource`, Graph API arroja el error `Internal Graph API error (Format conversion failed)`:
-> - **NUNCA detener el flujo ni pedir reintentos al usuario.**
-> - Utiliza directamente la **lista de nombres de archivo y fechas** obtenida en el Paso 3 (ej. `facebook_loco_tequila_1.jpg`, `instagram_loco_blanco_verano.png`).
-> - Notifica brevemente: *"Se identificaron las siguientes piezas previas: [Lista de nombres]. Usaré estos temas como referencia para no duplicar conceptos."*
-> - Avanza inmediatamente a la confirmación de fechas festivas y producto.
+Inmediatamente tras obtener la lista de archivos de la carpeta, el agente **DEBE reportar los nombres detectados y PREGUNTAR SIEMPRE de forma obligatoria:**
+> *"Se identificaron las siguientes piezas de campañas previas en OneDrive: [Lista de nombres de archivos]. Para analizar la composición visual, iluminación o diseño exacto y evitar repetir estilos visuales, **¿deseas adjuntar en este chat 1 a 3 imágenes de ejemplo/muestra antes de continuar?** 📎"*
+
+**El agente NO DEBE continuar con la ideación ni con la redacción hasta que el usuario responda (adjuntando las imágenes o indicando que desea continuar sin adjuntar).**
 
 ---
 

@@ -148,9 +148,10 @@ flowchart TD
     C --> D[Preguntar Obligatoriamente al Usuario qué Fecha Elegir]
     D --> E[Confirmar Producto del Portafolio]
     E --> F{¿Hay Link OneDrive/SharePoint?}
-    F -- Sí --> G1[Preguntar Lectura de Nombres de Campañas + Ofrecer Adjuntar Imágenes en Chat]
+    F -- Sí --> G1[Preguntar si Leer Nombres de Campañas Pasadas]
     G1 --> G2[Extraer Metadatos vía Sub-Skill]
-    G2 --> H[Definir Medio: Imagen / Video / Ambos]
+    G2 --> G3[Preguntar Obligatoriamente si Desea Adjuntar Imágenes de Muestra en Chat]
+    G3 --> H[Definir Medio: Imagen / Video / Ambos]
     F -- No --> H
     H --> I[Ideación según Nivel de Inventiva]
     I --> J[Redactar Copys Nativos + Keywords SEO/GEO]
