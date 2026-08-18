@@ -42,7 +42,7 @@ Skill de dirección creativa y mercadotecnia digital end-to-end para **Loco Tequ
 agente-mercadotecnia-loco-tequila/
 ├── SKILL.md                               # Instrucción maestra de la skill
 ├── README.md                              # Documentación general y técnica
-├── AGENTS.md                              # Protocolo y directrices de ejecución para agentes IA
+├── AGENTS.md                              # Protocolo operativo (NO se autocarga fuera de este repo; solo apunta a references/)
 ├── .gitignore                             # Reglas de exclusión de Git
 │
 ├── designs/                               # Tokens y guías de diseño institucional
@@ -56,9 +56,13 @@ agente-mercadotecnia-loco-tequila/
 │   ├── fechas-alcohol.md                  # Calendario de fechas de bebidas y prioridades de marca
 │   ├── output-template.md                 # Plantilla estándar de salida de campañas y prompts
 │   ├── platforms-process.md               # Matriz por red social y proceso de adaptación
+│   ├── curaduria-modelos-imagen.json      # Curaduría propia de generadores por familia (sin Elo ni ranking)
 │   ├── productos.md                       # Fichas técnicas del portafolio (Blanco, Ámbar, etc.)
+│   ├── prompt-standards.md                # Campos obligatorios de prompts, negatives y prompt ejemplar
 │   ├── qa-checklist.md                    # Lista de verificación de calidad antes de entrega
-│   └── seo-geo-glossary.md                # Glosario maestro de keywords y estrategia GEO
+│   ├── seo-geo-glossary.md                # Glosario maestro de keywords y estrategia GEO
+│   ├── showcase-rules.md                  # Procedimiento de generación de la Pasarela Web (paso 11)
+│   └── showcase-template.html             # Template de la Pasarela: solo se sustituye su bloque CAMPAIGN
 │
 ├── showcase/                              # Pasarela web interactiva (Showcase / Runway)
 │   ├── index.html                         # Vista principal de la pasarela y leaderboard
@@ -68,6 +72,9 @@ agente-mercadotecnia-loco-tequila/
 │   └── data/                              # Datasets JSON de campañas y leaderboard
 │
 └── sub-skill/                             # Sub-habilidades modulares
+    ├── obtener-leaderboard-imagen/
+    │   ├── README.md                      # Sub-skill del ranking en vivo de generadores (API Design Arena)
+    │   └── obtener_leaderboard.py         # Consulta la API y cruza con la curaduría de marca
     ├── leer-imagenes-onedrive/
     │   └── README.md                      # Sub-skill para auditar imágenes previas en OneDrive/SharePoint
     └── obtener-feriados-oficiales-no-oficiales/
@@ -125,7 +132,8 @@ Antes de generar una campaña, la skill solicita o valida los siguientes paráme
 | `{{producto}}` | Loco Blanco, Loco Ámbar, Loco Puro Corazón, Loco Áureo, Loco Hierofante, Portafolio Completo | Expresión de tequila a promocionar |
 | `{{medio}}` | Imagen, Video, Ambas | Define el tipo de prompts generativos a producir |
 | `{{referencias_visuales}}` | Link de OneDrive / SharePoint *(Opcional)* | Auditoría de metadatos (pregunta al usuario si desea leer la carpeta para extraer nombres de campañas pasadas, máx. 10, y ofrece adjuntar 1 a 3 imágenes de ejemplo en el chat) |
-| `{{numero_ideas}}` | Entero (por defecto `3`) | Cantidad de conceptos a idear por plataforma |
+| `{{numero_ideas}}` | Entero (por defecto `3`) | Cantidad de conceptos a idear por plataforma. **Tope: `redes × numero_ideas` ≤ 6 conceptos**; si se excede, se reduce y se declara en las notas. Evita que la calidad de los prompts se diluya al elegir todas las redes |
+| `{{mostrar_leaderboard}}` | `sí` \| `no` *(por defecto `no`)* | **Opcional.** Se pregunta junto con `{{medio}}`: si el usuario quiere ver el ranking en vivo de generadores de IA para ejecutar los prompts. Nunca bloquea la entrega |
 | `{{inventiva}}` | `Original` \| `Locura Genial` (por defecto `Original`) | Grado de audacia conceptual |
 
 ---
@@ -190,7 +198,7 @@ flowchart TD
 La carpeta `showcase/` contiene una aplicación web interactiva diseñada para presentar las campañas publicitarias generadas de forma visual y ejecutiva:
 
 - **Estructura tipo Pasarela:** Muestra cada concepto con su **Prompt generativo** (arriba, con parámetros de render y botón de copiado rápido) y su **Copy nativo** correspondiente (abajo, con hashtags y guardrails legales).
-- **Leaderboard de Modelos IA:** Integra un ranking actualizado de herramientas de generación de imágenes basado en [Design Arena | Leaderboards](https://www.designarena.ai/leaderboard?tab=image) (*FLUX.1 [pro], Midjourney v6.1, Google Imagen 3, Ideogram 2.0, Recraft v3, SD 3.5 Large*), evaluando su rendimiento específico para botellas de cristal, paisajes agaveros y tipografía.
+- **Leaderboard de Modelos IA:** Integra un ranking actualizado de herramientas de generación de imágenes basado en [Design Arena | Leaderboards](https://www.designarena.ai/leaderboard/image) (*FLUX.1 [pro], Midjourney v6.1, Google Imagen 3, Ideogram 2.0, Recraft v3, SD 3.5 Large*), evaluando su rendimiento específico para botellas de cristal, paisajes agaveros y tipografía.
 - **Guía Técnica de Configuración:** Aspect ratios por plataforma, negative prompts obligatorios y consejos de iluminación claroscuro.
 - **Tokens de Diseño:** Implementada con la identidad visual institucional de `designs/Design.md` (banda `--brand-maroon` `#6E1E28`, modo dark luxury y el logo oficial `imagenes/Loco_Tequila_Logo_white.png`).
 

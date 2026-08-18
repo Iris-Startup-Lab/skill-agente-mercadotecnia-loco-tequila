@@ -1,0 +1,204 @@
+{
+  "_doc": "Curaduría propia de Loco Tequila sobre generadores de imagen. Está indexada por FAMILIA de modelo, no por versión exacta, para que sobreviva al cambio constante de versiones en el ranking. La consume sub-skill/obtener-leaderboard-imagen/obtener_leaderboard.py, que la cruza con el ranking en vivo de Design Arena para producir showcase/data/leaderboard.json. Los campos de aquí son juicio propio y NO provienen de ninguna fuente externa; el elo/winRate SÍ provienen de la API y no se escriben a mano.",
+  "familias": {
+    "flux": {
+      "developer": "Black Forest Labs",
+      "badge": "Cristal y Refracción",
+      "category": "Botellas & Cristal",
+      "tags": ["Fotorrealismo", "Refracción de Líquidos", "Cristal", "Paisajes Agaveros"],
+      "loco_rating": "⭐⭐⭐⭐⭐",
+      "recommendation": "Insuperable para la silueta estilizada de la botella, el brillo del cristal sobre obsidiana y las gotas de condensación en copas de degustación.",
+      "settings_tip": "Aspect ratio 4:5 o 1:1, guidance_scale 3.5, 30–50 steps. No sobrecargar con palabras redundantes como 'photorealistic'."
+    },
+    "gpt-image": {
+      "developer": "OpenAI",
+      "badge": "Seguimiento de Instrucciones",
+      "category": "Arte & Editorial",
+      "tags": ["Prompt Largo", "Composición Compleja", "Texto Legible"],
+      "loco_rating": "⭐⭐⭐⭐⭐",
+      "recommendation": "El más fiel a prompts largos y con muchas condiciones: ideal cuando el concepto exige varios elementos simultáneos (botella + fecha festiva + escenografía + paleta) sin que ignore ninguno.",
+      "settings_tip": "Redactar el prompt en prosa ordenada por prioridad visual. Tolera bien instrucciones negativas escritas en lenguaje natural."
+    },
+    "imagen": {
+      "developer": "Google DeepMind",
+      "badge": "Fidelidad Fotográfica",
+      "category": "Ultra Realismo",
+      "tags": ["Color Natural", "Fidelidad", "Luz Natural", "Terruño"],
+      "loco_rating": "⭐⭐⭐⭐½",
+      "recommendation": "Excelente para los tonos rojo cochinilla, tierra volcánica y la luz natural del Paisaje Agavero sin saturación artificial.",
+      "settings_tip": "Responde muy bien a la descripción de lentes y composición fotográfica (85mm f/1.4, shallow depth of field)."
+    },
+    "gemini": {
+      "developer": "Google DeepMind",
+      "badge": "Iteración y Edición",
+      "category": "Ultra Realismo",
+      "tags": ["Edición Conversacional", "Consistencia", "Rapidez"],
+      "loco_rating": "⭐⭐⭐⭐½",
+      "recommendation": "El mejor para iterar sobre una toma ya aprobada: permite ajustar luz, fondo o encuadre conservando la botella, sin regenerar desde cero.",
+      "settings_tip": "Partir de una imagen base y pedir cambios acotados de uno en uno. Útil para derivar los recortes por red (4:5, 9:16, 16:9) de un mismo maestro."
+    },
+    "ideogram": {
+      "developer": "Ideogram",
+      "badge": "Líder en Tipografía",
+      "category": "Tipografía & Etiquetas",
+      "tags": ["Texto en Botella", "Etiquetas de Lujo", "Tipografía Nítida"],
+      "loco_rating": "⭐⭐⭐⭐½",
+      "recommendation": "La herramienta predilecta si el prompt exige renderizar textualmente 'Loco Tequila' o el tagline 'Espíritu de Origen' sobre la botella o la etiqueta.",
+      "settings_tip": "Poner los textos entre comillas dobles \"Loco Tequila\" y usar estilo Realistic/Design."
+    },
+    "recraft": {
+      "developer": "Recraft",
+      "badge": "Consistencia de Marca",
+      "category": "Arte & Editorial",
+      "tags": ["Branding", "Control de Color HEX", "Composición Limpia"],
+      "loco_rating": "⭐⭐⭐⭐",
+      "recommendation": "Ideal para aplicar con precisión los códigos de color institucionales (#6E1E28, #9B1C31, #A96C43) y mantener consistencia visual entre piezas de una misma campaña.",
+      "settings_tip": "Preset 'Editorial / Digital Art Luxury' e inyectar la paleta de marca como color personalizado."
+    },
+    "seedream": {
+      "developer": "ByteDance",
+      "badge": "Estética Editorial",
+      "category": "Arte & Editorial",
+      "tags": ["Claroscuro", "Lujo", "Editorial", "Retrato de Producto"],
+      "loco_rating": "⭐⭐⭐⭐",
+      "recommendation": "Buen rendimiento en bodegón de lujo con luz dura y sombra marcada; útil para el claroscuro editorial de la marca.",
+      "settings_tip": "Especificar explícitamente el esquema de luz (single hard key light, deep shadow) para evitar iluminación plana."
+    },
+    "krea": {
+      "developer": "Krea",
+      "badge": "Control Estético",
+      "category": "Arte & Editorial",
+      "tags": ["Estilo Dirigido", "Referencias Visuales", "Texturas"],
+      "loco_rating": "⭐⭐⭐⭐",
+      "recommendation": "Útil cuando ya existe una referencia estética de campaña previa (OneDrive) y se busca continuidad de estilo sin repetir el diseño.",
+      "settings_tip": "Cargar referencia de estilo y bajar su peso para inspirarse sin clonar la pieza anterior."
+    },
+    "riverflow": {
+      "developer": "Sourceful",
+      "badge": "Diseño Gráfico y Packaging",
+      "category": "Tipografía & Etiquetas",
+      "tags": ["Packaging", "Etiquetas", "Diseño Gráfico"],
+      "loco_rating": "⭐⭐⭐⭐",
+      "recommendation": "Orientado a diseño gráfico y packaging: candidato para explorar variantes de etiqueta o presentación de estuche.",
+      "settings_tip": "Describir el soporte físico (etiqueta, estuche, caja) y el acabado (mate, hot stamping, relieve)."
+    },
+    "qwen": {
+      "developer": "Alibaba",
+      "badge": "Texto Bilingüe",
+      "category": "Tipografía & Etiquetas",
+      "tags": ["Texto en Imagen", "Bilingüe", "Composición"],
+      "loco_rating": "⭐⭐⭐½",
+      "recommendation": "Alternativa cuando se requiere texto legible en la pieza y las opciones de tipografía no están disponibles.",
+      "settings_tip": "Indicar el texto exacto entre comillas y su ubicación en el encuadre."
+    },
+    "grok": {
+      "developer": "xAI",
+      "badge": "Velocidad",
+      "category": "Ultra Realismo",
+      "tags": ["Rapidez", "Exploración", "Bocetos"],
+      "loco_rating": "⭐⭐⭐",
+      "recommendation": "Para explorar rápido muchas variantes de un concepto antes de invertir en el render final.",
+      "settings_tip": "Usar en fase de bocetaje; el acabado final conviene ejecutarlo en un modelo de mayor fidelidad."
+    },
+    "mai-image": {
+      "developer": "Microsoft AI",
+      "badge": "Integración Office",
+      "category": "Arte & Editorial",
+      "tags": ["Accesible", "Flujo Corporativo", "Rapidez"],
+      "loco_rating": "⭐⭐⭐",
+      "recommendation": "Conveniente si el equipo ya trabaja dentro del ecosistema Microsoft 365 (el mismo que la skill usa para auditar campañas previas en OneDrive). Calidad suficiente para bocetos, no para la pieza final.",
+      "settings_tip": "Prompt descriptivo y directo; no espera parámetros tipo --ar, definir el encuadre en palabras."
+    },
+    "stable-diffusion": {
+      "developer": "Stability AI",
+      "badge": "Máximo Control Técnico",
+      "category": "Ultra Realismo",
+      "tags": ["LoRAs Propios", "ControlNet", "Generación Offline"],
+      "loco_rating": "⭐⭐⭐⭐",
+      "recommendation": "Recomendado si el equipo entrena un LoRA de la botella real de Loco Blanco, Ámbar o Hierofante para reproducción exacta y repetible.",
+      "settings_tip": "ComfyUI / Forge, DPM++ 2M Karras, CFG 4.5, negative prompt estricto."
+    },
+    "midjourney": {
+      "developer": "Midjourney",
+      "badge": "Maestría Editorial",
+      "category": "Arte & Editorial",
+      "tags": ["Claroscuro", "Texturas Artesanales", "Lujo", "Editorial"],
+      "loco_rating": "⭐⭐⭐⭐⭐",
+      "recommendation": "La mejor opción para el misticismo del Paisaje Agavero al atardecer en El Arenal y las tomas editoriales dramáticas de la Hacienda La Providencia.",
+      "settings_tip": "--ar 4:5 --style raw --v 6.1 --s 250 para evitar sobre-estilización de fantasía."
+    },
+    "dalle": {
+      "developer": "OpenAI",
+      "badge": "Legado",
+      "category": "Arte & Editorial",
+      "tags": ["Accesible", "Conceptual"],
+      "loco_rating": "⭐⭐½",
+      "recommendation": "Superado por gpt-image para esta marca. Solo si no hay acceso a otra opción.",
+      "settings_tip": "Prompt corto y directo; no responde bien a especificaciones de lente."
+    },
+
+    "veo": {
+      "developer": "Google DeepMind",
+      "badge": "Video con Audio Nativo",
+      "category": "Video Cinematográfico",
+      "tags": ["Audio Nativo", "Cinematográfico", "Coherencia Temporal"],
+      "loco_rating": "⭐⭐⭐⭐⭐",
+      "recommendation": "El más completo para el spot de marca: genera audio junto al video, lo que evita el desfase entre imagen y dirección sonora del prompt. Fuerte en movimiento de cámara descrito en lenguaje natural.",
+      "settings_tip": "Describir el movimiento de cámara por escena (slow dolly in, static tripod) y la dirección sonora explícitamente. Respeta bien duraciones cortas de 8 s por toma."
+    },
+    "sora": {
+      "developer": "OpenAI",
+      "badge": "Narrativa Multiescena",
+      "category": "Video Cinematográfico",
+      "tags": ["Multiescena", "Continuidad", "Narrativa"],
+      "loco_rating": "⭐⭐⭐⭐½",
+      "recommendation": "Conviene cuando el concepto exige varias escenas encadenadas con continuidad (la jima, el alambique, el servicio) en una sola generación.",
+      "settings_tip": "Entregar el desglose por escena con marcas de tiempo tal como lo produce la skill; responde mejor a estructura explícita que a un párrafo único."
+    },
+    "kling": {
+      "developer": "Kuaishou",
+      "badge": "Movimiento Físico Realista",
+      "category": "Video Cinematográfico",
+      "tags": ["Física de Líquidos", "Servido", "Cámara Lenta"],
+      "loco_rating": "⭐⭐⭐⭐",
+      "recommendation": "El más sólido para el momento del servido: caída del destilado, hielo y condensación con física creíble. Útil para la toma de producto en movimiento.",
+      "settings_tip": "Pedir cámara lenta explícita para el servido y acotar la toma a una sola acción por generación."
+    },
+    "minimax": {
+      "developer": "MiniMax",
+      "badge": "Estética Editorial en Movimiento",
+      "category": "Video Cinematográfico",
+      "tags": ["Claroscuro", "Lujo", "Bodegón en Movimiento"],
+      "loco_rating": "⭐⭐⭐⭐",
+      "recommendation": "Buen rendimiento en bodegón de lujo con luz dura y sombra marcada: traslada bien el claroscuro editorial de la marca al video.",
+      "settings_tip": "Especificar el esquema de luz (single hard key light, deep shadow) para evitar iluminación plana."
+    },
+    "seedance": {
+      "developer": "ByteDance",
+      "badge": "Formato Vertical",
+      "category": "Video Cinematográfico",
+      "tags": ["9:16", "TikTok", "Ritmo Rápido"],
+      "loco_rating": "⭐⭐⭐½",
+      "recommendation": "Orientado a vertical y ritmo corto: candidato natural para las piezas de TikTok donde el gancho ocurre en los primeros 2 segundos.",
+      "settings_tip": "Trabajar en 9:16 desde el prompt y concentrar la acción en el arranque de la toma."
+    },
+    "ltx": {
+      "developer": "Lightricks",
+      "badge": "Iteración Rápida",
+      "category": "Video Cinematográfico",
+      "tags": ["Rapidez", "Bocetos", "Exploración"],
+      "loco_rating": "⭐⭐⭐",
+      "recommendation": "Para bocetar el movimiento de una idea antes de invertir en el render final en un modelo de mayor fidelidad.",
+      "settings_tip": "Usar en fase de exploración; el acabado final conviene ejecutarlo en otro modelo."
+    },
+    "runway": {
+      "developer": "Runway",
+      "badge": "Control de Post",
+      "category": "Video Cinematográfico",
+      "tags": ["Herramientas de Edición", "Control de Cámara", "Flujo Profesional"],
+      "loco_rating": "⭐⭐⭐⭐",
+      "recommendation": "Preferible cuando la pieza necesita retoque posterior dentro de la misma herramienta (extender tomas, ajustar movimiento) y no solo una generación suelta.",
+      "settings_tip": "Aprovechar los controles de cámara de la interfaz en lugar de describir todo el movimiento en el prompt."
+    }
+  }
+}

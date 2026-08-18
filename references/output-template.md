@@ -61,18 +61,26 @@ La skill entrega el resultado como **texto normal de la conversación** (sin blo
 
 ## Prompts ultra detallados para IA generativa
 
-### 🎨 PROMPT DE IMAGEN — [nombre del concepto]
+> **Antes de escribir estos bloques, leer `references/prompt-standards.md`.** Los 7 campos de su §1 son obligatorios; un prompt al que le falte cualquiera de ellos no está terminado y se reescribe. Con 3+ redes destino, aplicar la regla de **prompt maestro + variantes de encuadre** (§4) en lugar de un prompt distinto por red.
 
-> **Prompt principal:**
-> [Prompt en inglés o español según la herramienta, ultra detallado, describiendo: sujeto/producto, encuadre y composición, iluminación y hora del día, paleta de color de marca (rojo cochinilla / vino profundo, hueso-marfil, negro y plata), atmósfera, texto/elementos gráficos, estilo fotográfico o artístico, y referencia a la fecha festiva anclada.]
+### 🎨 PROMPT MAESTRO DE IMAGEN — [nombre del concepto]
+
+> **Prompt principal (los 7 campos, en una sola cadena):**
+> [Sujeto: SKU exacto + cristalería] · [Escena y anclaje concreto de la fecha festiva] · [Lente `Nmm f/N` + tipo de plano + profundidad de campo] · [Iluminación nombrada: hora del día o esquema de estudio] · [≥2 colores institucionales por nombre: cochineal crimson / deep wine / bone-ivory / obsidian black / volcanic silver] · [Estilo: referencia fotográfica o artística concreta, no adjetivos genéricos] · [`--ar X:Y`]
 >
-> **Negative prompt (si aplica):**
-> [texto no deseado, marcas de agua, menores de edad, consumo excesivo, imitación de botellas de competidores, etc.]
+> **Negative prompt (obligatorio, cadena base íntegra):**
+> `underage, minors, drunk, drunkenness, excessive drinking, cheap glass, competitor bottles, Casa Dragones bottle, Clase Azul bottle, text watermark, blurry, low resolution` + [lo específico del concepto]
 >
-> **Parámetros técnicos sugeridos:**
-> - Relación de aspecto: [1:1 / 4:5 / 9:16 / 16:9]
+> **Parámetros técnicos:**
+> - Lente / cámara: [`85mm f/1.4, ISO 100, 1/250s`]
+> - Paleta declarada: [colores usados]
 > - Estilo/modelo sugerido: [fotografía editorial / render / ilustración]
 > - Variaciones: [número de variaciones a generar]
+>
+> **Variantes de encuadre por red** (solo si hay 3+ redes; 1–2 líneas cada una, referidas al maestro):
+> - Instagram `--ar 4:5`: [qué cambia en el recorte/plano]
+> - TikTok `--ar 9:16`: [qué cambia]
+> - YouTube `--ar 16:9`: [qué cambia]
 
 ### 🎬 PROMPT DE VIDEO — [nombre del concepto]
 
@@ -106,22 +114,14 @@ La skill entrega el resultado como **texto normal de la conversación** (sin blo
 
 ---
 
-## 🖥️ Pasarela Web Interactiva (Showcase HTML / Claude Artifact)
+## 🖥️ Pasarela Web Interactiva (paso 11 — obligatorio)
 
-Al finalizar la respuesta en texto markdown, el agente **DEBE generar un Artefacto HTML autónomo (Claude Artifact)** con la Pasarela Web interactiva.
+Al cerrar la respuesta en markdown, el agente **DEBE** entregar además la Pasarela Web. Son dos acciones con rastro comprobable, no una casilla:
 
-Para garantizar que el artefacto funcione al 100% (renderice el logo oficial, muestre los prompts generados, responda a los clics de filtros/paginador y copie al portapapeles), el agente **DEBE utilizar la estructura y funciones de [showcase-template.html](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/showcase-template.html)**:
+1. Copiar `references/showcase-template.html` a **`showcase/campaign-<YYYY-MM-DD>-<slug>.html`**.
+2. Sustituir **únicamente** el bloque `const CAMPAIGN = { … };` (líneas 609–639 del template) por el dataset de los conceptos generados.
+3. Publicar el archivo con la herramienta `Artifact` y entregar el link al usuario.
 
-### Reglas obligatorias para la generación del HTML:
-1. **Inyección Directa de Datos (`const CAMPAIGN`):** Inyectar el array completo de conceptos generados (título, SKU, plataforma, target persona, prompt ultra detallado con lente/aspect ratio/negative prompt, copy nativo con titular/cuerpo/keywords/hashtags/legal, y justificación del filtro).
-2. **Pre-renderizado en el HTML:** Escribir el texto del primer prompt en `#prompt-text-display` y del primer copy en `#copy-headline-display` / `#copy-body-display` para asegurar visibilidad inmediata.
-3. **Logotipo Oficial:** Usar el archivo oficial de logo vectorial `showcase/assets/Loco_Tequila_Logo_white.svg` (o `assets/Loco_Tequila_Logo_white.svg` / `imagenes/Loco_Tequila_Logo_white.svg`) en el header de la pasarela.
-4. **Controles Interactivos con `onclick` Directo:**
-   - Switch de Modo de Vista: `onclick="setViewMode('all')"` (✨ Ambos), `onclick="setViewMode('prompt')"` (🎨 Solo Prompt), `onclick="setViewMode('copy')"` (📝 Solo Copy).
-   - Paginador de Conceptos: `onclick="prevConcept()"` y `onclick="nextConcept()"`.
-   - Píldoras de Tabs: `onclick="selectConcept(idx)"`.
-5. **Copiado Universal sin Errores:**
-   - Botón Prompt: `onclick="copyCurrentPrompt(this)"`.
-   - Botón Copy: `onclick="copyCurrentCopy(this)"`.
-   - Utilizar la función `copyUniversal(text, btn, msg)` con `<textarea>` temporal y `document.execCommand('copy')` para garantizar funcionamiento en el sandbox de iframes de Claude.
-6. **Feedback Visual:** Notificaciones flotantes tipo *Toast* confirmando cada copiado al portapapeles.
+**Nunca reescribir el template completo** (~26 KB): todo el CSS, el HTML estructural y las funciones (`initApp`, `renderTabs`, `selectConcept`, `prevConcept`/`nextConcept`, `setViewMode`, `renderCurrentConcept`, `copyCurrentPrompt`, `copyCurrentCopy`, `copyUniversal`, `showToast`) se heredan intactos y ya funcionan. Los tokens que eso ahorra son los que necesitan los prompts de imagen.
+
+El esquema del dataset, el manejo del logo (data-URI base64, **no** el SVG de 2.2 MB) y el resto del procedimiento están en **`references/showcase-rules.md`**. La verificación correspondiente está en `references/qa-checklist.md`.

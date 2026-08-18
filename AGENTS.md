@@ -17,9 +17,13 @@ Este documento contiene las reglas de comportamiento, protocolo de ejecución y 
    - Si se usa un benchmark de la industria: marcar como `[REFERENCIA DE INDUSTRIA]`.
    - Si es una estimación: marcar con asterisco (`*`).
    - Nunca alucinar cifras de alcance o conversiones no proporcionadas.
-5. **Auditoría de Metadatos y Pregunta Obligatoria de Muestras (OneDrive/SharePoint):** El conector de Microsoft 365 MCP solo lee metadatos (nombres, fechas y carpetas). El agente **DEBE preguntar activamente** si desea leer la carpeta para conocer los nombres de campañas pasadas (máx. 10 archivos) y, **posterior a ver la lista de archivos, DEBE PREGUNTAR OBLIGATORIAMENTE al usuario si desea adjuntar 1 a 3 imágenes de muestra en el chat** para análisis visual antes de idear.
-6. **Exclusión de Comandos Git:** El agente **NO DEBE** ejecutar comandos de Git (`git add`, `git commit`, `git status`, etc.) ni gestionar el control de versiones. La gestión de Git es responsabilidad exclusiva del usuario.
-7. **Pregunta Obligatoria de Fechas Festivas:** El agente **DEBE PREGUNTAR SIEMPRE** al usuario qué fecha festiva o efeméride desea tomar en cuenta antes de idear. Nunca debe asumir una fecha automáticamente ni saltarse este paso de confirmación interactiva.
+5. **Auditoría de piezas previas (OneDrive/SharePoint) — vía Word:** el conector de Microsoft 365 no lee imágenes binarias, pero **sí lee `.docx`**. Un flujo de Power Automate deposita en la carpeta un Word de análisis por cada pieza, con su ficha visual y su prompt (ver `references/ingenieria-inversa-imagen.md`). Esa es la **vía principal**.
+   - **El agente DEBE PEDIR SIEMPRE el link de la carpeta al usuario.** No existe una carpeta fija: cambia en cada campaña. Prohibido asumir una ruta, reutilizar la de una conversación anterior, deducirla del nombre del producto o buscarla a ciegas con `sharepoint_folder_search`.
+   - **En la misma pregunta, DEBE preguntar el alcance:** las **10 piezas más recientes** o un **rango de fechas** desde la que indique el usuario hasta hoy. El filtro se resuelve con el timestamp del nombre de archivo, sin abrir documentos.
+   - Si el usuario declina, se omite la auditoría y se avanza sin bloquear. Lo obligatorio es **preguntar**, no obtener la carpeta.
+6. **Reparto inspirar / excluir:** del Word se **hereda** el ADN (§3), la ficha visual (§1) y los parámetros (§7) para mantener coherencia de marca; se **excluye** la lista INCIDENTAL (§3) y las variantes (§6) por estar ya usadas. **Prohibido reutilizar el texto del prompt maestro (§4)**, entero o por fragmentos: los prompts nuevos se redactan desde cero según `references/prompt-standards.md`. Nada marcado `[INFERIDO]` puede convertirse en hecho de marca. Solo si la carpeta no tiene Word de análisis se cae al respaldo de pedir 1 a 3 imágenes adjuntas en el chat.
+7. **Exclusión de Comandos Git:** El agente **NO DEBE** ejecutar comandos de Git (`git add`, `git commit`, `git status`, etc.) ni gestionar el control de versiones. La gestión de Git es responsabilidad exclusiva del usuario.
+8. **Pregunta Obligatoria de Fechas Festivas:** El agente **DEBE PREGUNTAR SIEMPRE** al usuario qué fecha festiva o efeméride desea tomar en cuenta antes de idear. Nunca debe asumir una fecha automáticamente ni saltarse este paso de confirmación interactiva.
 
 ---
 
@@ -56,12 +60,21 @@ sequenceDiagram
     Agente->>Ref: Consultar fechas-alcohol.md y prioridades de marca
     Agente->>Usuario: Presentar fechas festivas detectadas y PREGUNTAR OBLIGATORIAMENTE cuál tomar en cuenta
     Usuario->>Agente: Confirma fecha elegida, producto, red(es), medio e inventiva
-    opt Hay link OneDrive/SharePoint
-        Agente->>Usuario: Preguntar si lee metadatos (máx. 10) para conocer nombres pasados
-        Usuario->>Agente: Confirma lectura
-        Agente->>Ref: Ejecutar sub-skill leer-imagenes-onedrive (obtiene lista de nombres)
-        Agente->>Usuario: Presenta nombres detectados y PREGUNTA OBLIGATORIAMENTE si desea adjuntar 1 a 3 imágenes de muestra en el chat
-        Usuario->>Agente: Adjunta imágenes o confirma continuar sin adjuntar
+    Agente->>Usuario: PIDE OBLIGATORIAMENTE el link de la carpeta + el alcance (¿10 más recientes o desde qué fecha?)
+    Note over Agente,Usuario: La carpeta cambia en cada campaña: nunca asumirla ni reutilizarla
+    alt El usuario pega el link
+        Usuario->>Agente: Link de la carpeta + alcance
+        Agente->>Ref: Ejecutar sub-skill leer-imagenes-onedrive
+        Note over Agente,Ref: Triage por nombre de archivo (plataforma + fecha), sin abrir documentos
+        Agente->>Ref: Leer los .docx de análisis seleccionados
+        Agente->>Usuario: Reporta piezas detectadas, el ADN a heredar y la lista de exclusión (INCIDENTAL)
+        opt La carpeta no tiene Word de análisis
+            Agente->>Usuario: Respaldo — pregunta si desea adjuntar 1 a 3 imágenes de muestra en el chat
+            Usuario->>Agente: Adjunta imágenes o confirma continuar sin adjuntar
+        end
+    else El usuario declina
+        Usuario->>Agente: "No aplica"
+        Note over Agente: Omite la auditoría y avanza sin bloquear
     end
     Agente->>Ref: Consultar matriz de plataformas y glosario SEO/GEO
     Agente->>Agente: Aplicar Filtro de Locura Genial
@@ -74,15 +87,17 @@ sequenceDiagram
 
 ## 4. Estándares de Generación de Prompts para IA Generativa
 
-Al redactar los **prompts ultra detallados** para herramientas como Midjourney, Imagen, Sora o Runway, el agente debe incluir rigurosamente:
+> ⚠️ **Fuente de verdad movida.** Estos estándares viven ahora en **`references/prompt-standards.md`**, que sí se carga cuando la skill se invoca desde cualquier directorio de trabajo. Este archivo (`AGENTS.md`) **no entra en contexto automáticamente** si el cwd no es este repositorio, por lo que no debe contener normas que la skill necesite para operar.
 
-1. **Sujeto / Producto:** Especificar la botella y copa/vaso oficial (ej. Loco Blanco con su silueta estilizada, botella de Loco Hierofante con su obra de Jan Hendrix e Iker Ortiz).
-2. **Composición y Encuadre:** Distancia focal, encuadre (primer plano, plano medio, plano cenital), ángulo de cámara, profundidad de campo (*shallow depth of field*).
-3. **Iluminación y Atmósfera:** Luz natural dorada de atardecer en el Paisaje Agavero, iluminación de estudio editorial claroscuro, contrastes dramáticos.
-4. **Paleta de Color Institucional:** Rojo cochinilla, vino profundo, blanco hueso / marfil, negro obsidiana y plata volcánica.
-5. **Estilo Visual:** Fotografía editorial de ultra lujo (*luxury editorial photography, Hasselblad medium format look*).
-6. **Negative Prompts Obligatorios:**
-   `underage, minors, drunk, drunkenness, excessive drinking, cheap glass, competitor bottles, Casa Dragones bottle, Clase Azul bottle, text watermark, blurry, low resolution`.
+Resumen no normativo (el detalle, los 7 campos obligatorios, la regla de escala y el prompt ejemplar están en la referencia):
+
+- Sujeto/producto con SKU exacto y cristalería oficial.
+- Composición con distancia focal y apertura explícitas.
+- Iluminación nombrada (hora del día o esquema de estudio).
+- Paleta institucional: rojo cochinilla, vino profundo, hueso-marfil, negro obsidiana, plata volcánica.
+- Estilo visual con referencia concreta (*luxury editorial photography, Hasselblad medium format look*).
+- Relación de aspecto explícita (`--ar`).
+- Negative prompt base íntegro (menores, embriaguez, cristalería barata, botellas de competidores, watermark, baja resolución).
 
 ---
 
@@ -110,14 +125,22 @@ Toda respuesta final debe estructurarse estrictamente siguiendo la plantilla de 
 
 ---
 
-## 7. Pasarela Web y Leaderboard Dinámico (Design Arena)
+## 7. Pasarela Web Interactiva
 
-1. **Generación Obligatoria de la Pasarela HTML:** Al finalizar cada campaña, el agente **DEBE generar el artefacto interactivo HTML** autocontenido con los estilos de `designs/Design.md`, exhibiendo cada Prompt arriba y su Copy nativo abajo con botones de copiado, junto al Leaderboard de IA y tips técnicos.
-2. **Sincronización en Disco Local (si aplica):** En entornos con acceso al sistema de archivos local, actualizar `showcase/data/campaign.json` y `showcase/data/leaderboard.json`.
-3. **Consulta en Vivo de Design Arena:** Consultar periódicamente el leaderboard de [Design Arena | Leaderboards](https://www.designarena.ai/leaderboard?tab=image) para mantener el ranking vigente de modelos (FLUX, Midjourney, Imagen 3, Ideogram 2, Recraft v3, SD 3.5 Large).
-4. **Resiliencia ante Limitaciones de Microsoft 365 MCP / Graph API:**
-   - Si `read_resource` arroja error de conversión de formato al leer imágenes binarias (`.jpg`, `.png`), **NUNCA detener el flujo ni bloquearse**.
-   - Utilizar los nombres de archivos y fechas detectados como referencia de contexto para no repetir esas campañas anteriores y avanzar inmediatamente a la ideación.
-5. **Copiado Universal en Iframes (Claude Artifacts):** La pasarela HTML debe implementar la función `copyToClipboard` con `document.execCommand('copy')` y `textarea` temporal oculto para garantizar que los botones de copiado funcionen dentro de los iframes y sandboxes restringidos de Claude.
+> ⚠️ **Fuente de verdad movida.** El procedimiento completo vive ahora en **`references/showcase-rules.md`** por la misma razón que §4.
+
+Resumen no normativo:
+
+- El entregable son **dos acciones verificables**: escribir `showcase/campaign-<fecha>-<slug>.html` y publicarlo con la herramienta `Artifact`, entregando el link.
+- Se genera **copiando** `references/showcase-template.html` y sustituyendo **solo** el bloque `const CAMPAIGN = {…}`. Nunca se reescribe el template completo.
+- El logo va como data-URI base64 (`showcase/assets/logo_base64.txt`); el SVG pesa 2.2 MB y su ruta relativa se rompe al publicar.
+- El copiado al portapapeles ya está resuelto en el template (`copyUniversal()` con `<textarea>` temporal y `document.execCommand('copy')`); no reimplementarlo.
+- El template por campaña **no tiene** secciones de leaderboard ni tips técnicos: no hay que improvisarlas por entrega. Añadirlas es un cambio al template, hecho una vez.
+- **El leaderboard de generadores es un EXTRA informativo y OPCIONAL**, no parte del entregable: le dice al usuario con qué herramienta conviene ejecutar los prompts. **Se ofrece en la pregunta del paso 6** (junto con `{{medio}}`) y solo se ejecuta si el usuario acepta (`{{mostrar_leaderboard}}`); si dijo no o no contestó, se omite y no se vuelve a preguntar. Ya está implementado en `showcase/index.html` + `app.js`. Fuente: <https://www.designarena.ai/leaderboard/image>. El HTML no sirve (app Next.js con render en cliente), pero **sí hay API**: ejecutar `sub-skill/obtener-leaderboard-imagen/obtener_leaderboard.py` (arenas `image` y `video`; `--actualizar-showcase` para persistirlo) y obtener Elo y win rate reales. **Nunca escribir posiciones ni Elo de memoria**; si el script no corre, omitir el bloque o marcarlo `[no disponible]`. Nunca bloquea la entrega.
+
+### Resiliencia ante limitaciones de Microsoft 365 MCP / Graph API
+
+- Si `read_resource` arroja error de conversión de formato al leer imágenes binarias (`.jpg`, `.png`), **NUNCA detener el flujo ni bloquearse**.
+- Utilizar los nombres de archivos y fechas detectados como referencia de contexto para no repetir esas campañas anteriores y avanzar inmediatamente a la ideación.
 
 

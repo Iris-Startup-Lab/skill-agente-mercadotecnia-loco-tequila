@@ -453,6 +453,86 @@
     }
     /* Utility */
     .zone-hidden { display: none !important; }
+
+    /* Selector de medio (Imagen / Video) y desglose de escenas */
+    .box-top-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .media-switch {
+      display: flex;
+      gap: 4px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      padding: 3px;
+    }
+    .media-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+    .media-btn:hover { color: #FFFFFF; }
+    .media-btn.active {
+      background: var(--brand-maroon);
+      color: #FFFFFF;
+      box-shadow: 0 0 0 1px var(--border-gold);
+    }
+    .media-badge {
+      display: inline-block;
+      margin-left: 8px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 2px 6px;
+      border-radius: var(--radius-sm);
+      background: rgba(212, 175, 55, 0.15);
+      border: 1px solid var(--border-gold);
+      color: var(--brand-gold-bright);
+      vertical-align: middle;
+    }
+    .scenes-block {
+      margin-top: 16px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border-subtle);
+      border-left: 3px solid var(--brand-gold);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+    }
+    .scenes-title {
+      display: block;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--brand-gold-bright);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .scenes-list {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--text-secondary);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+    .scenes-list li { margin-bottom: 6px; }
+    .scenes-list .scene-time {
+      color: var(--brand-gold-bright);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      margin-right: 6px;
+    }
     /* Toast */
     .toast-box {
       position: fixed;
@@ -479,7 +559,9 @@
     <div class="header-content">
       <div class="brand-group">
         <div class="logo-badge" style="background: transparent; border: none; padding: 0;">
-          <img src="assets/Loco_Tequila_Logo_white.svg" alt="Loco Tequila Logo" style="height: 46px; width: auto; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));">
+          <!-- LOGO: sustituir src por el data-URI completo de showcase/assets/logo_base64.txt (18 KB).
+               NO usar assets/Loco_Tequila_Logo_white.svg: pesa 2.2 MB y su ruta relativa se rompe al publicar. -->
+          <img src="__LOGO_BASE64__" alt="Loco Tequila" style="height: 46px; width: auto; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));">
         </div>
         <div class="titles">
           <span class="tag">Espíritu de Origen · Pasarela Creativa</span>
@@ -550,23 +632,34 @@
         <!-- PROMPT ZONE -->
         <div id="zone-prompt" class="prompt-box">
           <div class="box-top">
-            <span class="box-title">📦 Prompt Generativo Ultra Detallado (Text-to-Image)</span>
-            <button class="btn-copy" onclick="copyCurrentPrompt(this)">
-              📋 Copiar Prompt Completo
-            </button>
+            <span id="prompt-box-title" class="box-title">📦 Prompt Generativo Ultra Detallado (Text-to-Image)</span>
+            <div class="box-top-actions">
+              <!-- Switch de medio: se genera solo con los medios que el concepto realmente tiene -->
+              <div id="media-switch" class="media-switch"></div>
+              <button class="btn-copy" onclick="copyCurrentPrompt(this)">
+                📋 Copiar Prompt Completo
+              </button>
+            </div>
           </div>
           <div id="prompt-text-display" class="prompt-text">Cargando prompt...</div>
+
+          <!-- Desglose por escena: solo visible en medio video -->
+          <div id="scenes-block" class="scenes-block zone-hidden">
+            <span class="scenes-title">🎬 Desglose por escena</span>
+            <ol id="scenes-list" class="scenes-list"></ol>
+          </div>
+
           <div class="meta-grid">
             <div class="meta-item">
               <span class="m-lbl">Aspect Ratio Recomendado</span>
               <span id="meta-ar" class="m-val">4:5 (1080x1350)</span>
             </div>
             <div class="meta-item">
-              <span class="m-lbl">Configuración Óptica & Lente</span>
+              <span id="meta-lbl-2" class="m-lbl">Configuración Óptica &amp; Lente</span>
               <span id="meta-cam" class="m-val">85mm f/1.4</span>
             </div>
             <div class="meta-item">
-              <span class="m-lbl">Paleta Institucional</span>
+              <span id="meta-lbl-3" class="m-lbl">Paleta Institucional</span>
               <span id="meta-pal" class="m-val">Crimson, Obsidian, Golden</span>
             </div>
             <div class="meta-item">
@@ -605,7 +698,9 @@
   <div id="toast-msg" class="toast-box">✓ Copiado al portapapeles con éxito</div>
 
   <script>
-    // DATASET DE CAMPAÑA (Se reemplaza dinámicamente con los datos generados)
+    // ===== CAMPAIGN:START — sustituir TODO lo que hay entre estos dos marcadores. =====
+    // Es la ÚNICA parte del archivo que se reescribe. El resto (CSS, HTML, funciones)
+    // se hereda intacto: ver references/showcase-rules.md.
     const CAMPAIGN = {
       title: "ESPÍRITU DE ORIGEN — VENDIMIA & TERRUÑO",
       subtitle: "Piezas publicitarias listas para publicar y prompts de ultra alta fidelidad para modelos de imagen.",
@@ -634,12 +729,53 @@
             legal: "+18 · Evita el exceso · #EspírituDeOrigen"
           },
           filter_justification: "Cumple con el principio de autenticidad radical y territorio mítico."
+        },
+        {
+          sku: "Loco Ámbar",
+          sku_color: "#A96C43",
+          platform: "TikTok",
+          inventiveness: "Locura Genial",
+          target_persona: "Ana (Disruptiva, arte contemporáneo)",
+          concept_title: "El Reposo Que Nadie Vio",
+          // Concepto con AMBOS medios: el switch 🎨/🎬 aparece y la pestaña marca IMG+VID.
+          prompt: {
+            text: "Cinematic luxury still life of Loco Ámbar bottle inside a dimly lit tasting cellar at Hacienda La Providencia, dramatic editorial studio chiaroscuro with a single hard key light sculpting the amber tones, four distinct oak barrel staves blurred in the background, 50mm f/1.8, medium close-up, shallow depth of field, deep wine and obsidian black palette with volcanic silver accents, luxury editorial photography Hasselblad medium format look --ar 9:16 --no underage, minors, drunk, drunkenness, excessive drinking, cheap glass, competitor bottles, Casa Dragones bottle, Clase Azul bottle, text watermark, blurry, low resolution",
+            aspect_ratio: "9:16 (1080x1920)",
+            camera_settings: "50mm f/1.8, ISO 200, 1/125s",
+            color_palette: "Deep Wine, Obsidian Black, Volcanic Silver",
+            negative_prompt: "underage, minors, drunk, drunkenness, excessive drinking, cheap glass, competitor bottles, Casa Dragones bottle, Clase Azul bottle, text watermark, blurry, low resolution"
+          },
+          prompt_video: {
+            text: "Vertical 9:16 cinematic sequence following the four-barrel resting process of Loco Ámbar at Hacienda La Providencia. Editorial chiaroscuro throughout, deep wine and obsidian palette with volcanic silver highlights, 50mm f/1.8 look, luxury documentary grade.",
+            aspect_ratio: "9:16 (1080x1920)",
+            duration: "24 s",
+            camera_movement: "Escena 1 dolly in lento · Escena 2 tripié fijo · Escena 3 deriva a mano",
+            audio: "Percusión de barro en crescendo, sin voz en off. Sin licencia comercial especificada.",
+            scenes: [
+              { time: "0–3 s", description: "Gancho: primer plano de la duela de roble abriéndose, polvo de madera suspendido en un haz de luz dura." },
+              { time: "3–12 s", description: "Cuatro barricas distintas en sucesión rítmica; cada corte revela un tono de ámbar más profundo." },
+              { time: "12–20 s", description: "La botella de Loco Ámbar entra en cuadro sobre piedra volcánica; el líquido atrapa la luz lateral." },
+              { time: "20–24 s", description: "Cierre sobre el tagline en pantalla y la leyenda +18 · Evita el exceso." }
+            ],
+            negative_prompt: "underage, minors, drunk, drunkenness, excessive drinking, cheap glass, competitor bottles, Casa Dragones bottle, Clase Azul bottle, text watermark, blurry, low resolution"
+          },
+          copy: {
+            headline: "Cuatro maderas. Un solo carácter.",
+            body: "La maduración convencional busca suavizar. Loco Ámbar busca revelar: cuatro barricas distintas, cada una discutiendo con el agave hasta que el agave gana.",
+            call_to_action: "Conoce el reposo completo en loco-tequila.com.",
+            keywords: ["#tequila reposado 4 barricas", "#tequila disruptivo", "#LocuraGenial"],
+            hashtags: ["#LocoTequila", "#EspírituDeOrigen", "#TequilaReposado", "#HaciendaLaProvidencia"],
+            legal: "+18 · Evita el exceso · #EspírituDeOrigen"
+          },
+          filter_justification: "Provocación técnica con propósito: desafía la maduración convencional sin sacrificar el terruño."
         }
       ]
     };
+    // ===== CAMPAIGN:END =====
 
     let currentIndex = 0;
     let currentMode = "all";
+    let currentMedia = "image"; // "image" | "video" — medio de prompt activo
 
     function initApp() {
       if (!CAMPAIGN || !CAMPAIGN.items || CAMPAIGN.items.length === 0) return;
@@ -650,17 +786,56 @@
       renderCurrentConcept();
     }
 
+    // Medios disponibles en un concepto: "image" si trae prompt, "video" si trae prompt_video.
+    function mediosDe(item) {
+      const m = [];
+      if (item && item.prompt && item.prompt.text) m.push("image");
+      if (item && item.prompt_video && item.prompt_video.text) m.push("video");
+      return m;
+    }
+
+    // Etiqueta corta para la pestaña: IMG, VID o IMG+VID.
+    function etiquetaMedios(item) {
+      const m = mediosDe(item);
+      if (m.length === 2) return "IMG+VID";
+      if (m.length === 1) return m[0] === "video" ? "VID" : "IMG";
+      return "—";
+    }
+
     function renderTabs() {
       const container = document.getElementById("tabs-container");
       container.innerHTML = "";
       CAMPAIGN.items.forEach((item, idx) => {
         const btn = document.createElement("button");
         btn.className = `tab-pill ${idx === currentIndex ? 'active' : ''}`;
-        btn.innerHTML = `<span class="dot" style="background:${item.sku_color}"></span> ${item.sku} — ${item.platform}`;
+        btn.innerHTML = `<span class="dot" style="background:${item.sku_color}"></span> ${item.sku} — ${item.platform}<span class="media-badge">${etiquetaMedios(item)}</span>`;
         btn.onclick = () => { selectConcept(idx); };
         container.appendChild(btn);
       });
       document.getElementById("concept-counter").textContent = `${currentIndex + 1} / ${CAMPAIGN.items.length}`;
+    }
+
+    // Cambia entre prompt de imagen y de video dentro del mismo concepto.
+    function setMedia(medio) {
+      currentMedia = medio;
+      renderCurrentConcept();
+    }
+
+    function renderMediaSwitch(item) {
+      const cont = document.getElementById("media-switch");
+      const medios = mediosDe(item);
+      cont.innerHTML = "";
+      // Con un solo medio el switch no aporta: se oculta.
+      if (medios.length < 2) { cont.classList.add("zone-hidden"); return; }
+      cont.classList.remove("zone-hidden");
+      const etiquetas = { image: "🎨 Imagen", video: "🎬 Video" };
+      medios.forEach(m => {
+        const b = document.createElement("button");
+        b.className = `media-btn ${m === currentMedia ? "active" : ""}`;
+        b.textContent = etiquetas[m];
+        b.onclick = () => { setMedia(m); };
+        cont.appendChild(b);
+      });
     }
 
     function selectConcept(idx) {
@@ -717,11 +892,50 @@
       document.getElementById("stage-plat").textContent = item.platform;
       document.getElementById("stage-persona").textContent = `Persona: ${item.target_persona}`;
 
-      // Prompt
-      document.getElementById("prompt-text-display").textContent = item.prompt.text;
-      document.getElementById("meta-ar").textContent = item.prompt.aspect_ratio;
-      document.getElementById("meta-cam").textContent = item.prompt.camera_settings;
-      document.getElementById("meta-pal").textContent = item.prompt.color_palette;
+      // Prompt — según el medio activo (imagen o video)
+      const medios = mediosDe(item);
+      if (!medios.includes(currentMedia)) currentMedia = medios[0] || "image";
+      renderMediaSwitch(item);
+
+      const esVideo = currentMedia === "video";
+      const p = esVideo ? item.prompt_video : item.prompt;
+      const scenesBlock = document.getElementById("scenes-block");
+      const scenesList = document.getElementById("scenes-list");
+
+      document.getElementById("prompt-box-title").textContent = esVideo
+        ? "🎬 Prompt Generativo Ultra Detallado (Text-to-Video)"
+        : "📦 Prompt Generativo Ultra Detallado (Text-to-Image)";
+
+      if (!p) {
+        document.getElementById("prompt-text-display").textContent =
+          "Este concepto no incluye prompt de " + (esVideo ? "video" : "imagen") + ".";
+        ["meta-ar", "meta-cam", "meta-pal"].forEach(id => {
+          document.getElementById(id).textContent = "[no disponible]";
+        });
+        scenesBlock.classList.add("zone-hidden");
+      } else {
+        document.getElementById("prompt-text-display").textContent = p.text;
+        document.getElementById("meta-ar").textContent = p.aspect_ratio || "[no disponible]";
+
+        // El segundo y tercer slot cambian de significado según el medio.
+        document.getElementById("meta-lbl-2").textContent = esVideo ? "Duración" : "Configuración Óptica & Lente";
+        document.getElementById("meta-cam").textContent =
+          (esVideo ? p.duration : p.camera_settings) || "[no disponible]";
+        document.getElementById("meta-lbl-3").textContent = esVideo ? "Movimiento de Cámara" : "Paleta Institucional";
+        document.getElementById("meta-pal").textContent =
+          (esVideo ? p.camera_movement : p.color_palette) || "[no disponible]";
+
+        // Desglose por escena, solo en video
+        const escenas = Array.isArray(p.scenes) ? p.scenes : [];
+        if (esVideo && escenas.length) {
+          scenesList.innerHTML = escenas.map(s =>
+            `<li><span class="scene-time">${s.time || ""}</span>${s.description || ""}</li>`
+          ).join("");
+          scenesBlock.classList.remove("zone-hidden");
+        } else {
+          scenesBlock.classList.add("zone-hidden");
+        }
+      }
       document.getElementById("meta-fil").textContent = item.filter_justification;
 
       // Copy
@@ -736,8 +950,21 @@
 
     function copyCurrentPrompt(btn) {
       const item = CAMPAIGN.items[currentIndex];
-      const text = item ? item.prompt.text : document.getElementById("prompt-text-display").innerText;
-      copyUniversal(text, btn, "✓ Prompt copiado al portapapeles");
+      if (!item) {
+        copyUniversal(document.getElementById("prompt-text-display").innerText, btn, "✓ Prompt copiado al portapapeles");
+        return;
+      }
+      const esVideo = currentMedia === "video";
+      const p = esVideo ? item.prompt_video : item.prompt;
+      if (!p || !p.text) { showToast("⚠ Este concepto no tiene prompt de " + (esVideo ? "video" : "imagen")); return; }
+
+      // Se copia el prompt completo del medio activo: texto + escenas + negative prompt.
+      const partes = [p.text];
+      if (esVideo && Array.isArray(p.scenes) && p.scenes.length) {
+        partes.push("\nESCENAS:\n" + p.scenes.map(s => `${s.time || ""} ${s.description || ""}`.trim()).join("\n"));
+      }
+      if (p.negative_prompt) partes.push("\nNEGATIVE PROMPT:\n" + p.negative_prompt);
+      copyUniversal(partes.join("\n"), btn, `✓ Prompt de ${esVideo ? "video" : "imagen"} copiado al portapapeles`);
     }
 
     function copyCurrentCopy(btn) {
