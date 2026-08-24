@@ -37,6 +37,14 @@ feriados*.json
 temp/
 scratch/
 
+# Medios generados con OpenRouter (borradores de trabajo, no piezas aprobadas)
+outputs/
+
+# Credenciales — la API Key de OpenRouter NUNCA se versiona
+*.key
+.env.local
+openrouter*.txt
+
 # Testing & Coverage
 .pytest_cache/
 .coverage

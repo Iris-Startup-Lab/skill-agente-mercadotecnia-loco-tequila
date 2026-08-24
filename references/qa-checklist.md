@@ -54,3 +54,18 @@ Este bloque **no se satisface marcando casillas**: son acciones con rastro compr
 - [ ] Si `{{medio}}` es solo video, se omitió el objeto `prompt` en lugar de dejarlo vacío (la etiqueta de la pestaña debe leerse `VID`, no `IMG+VID`).
 - [ ] El logo va como data-URI base64 (`showcase/assets/logo_base64.txt`), no como ruta relativa al SVG de 2.2 MB.
 - [ ] Se publicó con la herramienta `Artifact` y el link se entregó al usuario — o, si la herramienta no está disponible, se informó la ruta del archivo escrito.
+
+## Solo si se generaron piezas con OpenRouter (paso 12b)
+
+Este bloque **no aplica** si el usuario no pidió el extra. Si lo pidió, todos son obligatorios.
+
+- [ ] El usuario **pidió explícitamente** generar las piezas. No se generó por iniciativa propia.
+- [ ] La API Key **no** quedó escrita en ningún archivo del repositorio, ni impresa en la salida, ni guardada en memoria persistente.
+- [ ] Los prompts se leyeron de la pasarela con `--action extract-prompts`. **Ninguno se reescribió de memoria ni a mano.**
+- [ ] El modelo salió del catálogo en vivo (`--action list-models`), no de memoria.
+- [ ] Se corrió `--dry-run` y **se le mostró el costo estimado al usuario antes de gastar**.
+- [ ] La cantidad generada respeta el techo real (`max_imagenes` / `max_videos`), no el total de conceptos.
+- [ ] Si el medio fue "ambas": se generaron **primero las imágenes** y después los videos.
+- [ ] Cada pieza se entregó con **las tres cosas**: archivo, copy de la pasarela y prompt + especificaciones.
+- [ ] **Todo aviso del script se trasladó al usuario** (`aviso_duracion`, `aviso_aspect_ratio`, `aviso_costo`, `aviso_catalogo`). Ningún recorte de duración o de aspecto quedó sin declarar.
+- [ ] Cada pieza generada se revisó contra los guardrails de marca; las que los violan se descartaron y se dijo por qué.

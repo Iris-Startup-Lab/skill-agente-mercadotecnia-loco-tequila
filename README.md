@@ -15,6 +15,8 @@ Skill de dirección creativa y mercadotecnia digital end-to-end para **Loco Tequ
 7. [Memoria de Marca y Guardrails Innegociables](#-memoria-de-marca-y-guardrails-innegociables)
 8. [Sub-Skills Integradas](#-sub-skills-integradas)
 9. [Glosario SEO / GEO y Personas](#-glosario-seo--geo-y-personas)
+10. [Pasarela Web Interactiva](#-10-pasarela-web-interactiva-showcase--runway)
+11. [Generación de Medios con OpenRouter](#-11-generación-de-medios-con-openrouter-extra-opcional)
 
 ---
 
@@ -27,10 +29,12 @@ Skill de dirección creativa y mercadotecnia digital end-to-end para **Loco Tequ
 - Generar prompts ultra detallados para modelos generativos de imagen y video acordes con la estética y paleta de la marca.
 - Conectarse mediante Microsoft 365 / OneDrive / SharePoint para auditar piezas anteriores e inspirarse sin repetir diseños.
 - Integrar estrategia SEO y optimización para motores generativos (GEO).
+- **Ejecutar los prompts** contra los modelos de imagen/video de OpenRouter, como extra posterior a la entrega, si el usuario lo pide y aporta su API Key.
 
 ### NO Hace:
 - Publicar o programar contenido directamente en redes.
 - Gestionar pautas publicitarias o presupuestos de medios.
+- Generar imágenes o videos **sin autorización explícita del usuario y sin su API Key** (el consumo se cobra a su cuenta de OpenRouter).
 - Trabajar con marcas de la competencia (Casa Dragones, Clase Azul, etc.).
 - Romper o alterar los hechos históricos y técnicos establecidos de la marca.
 
@@ -71,7 +75,14 @@ agente-mercadotecnia-loco-tequila/
 │   ├── assets/                            # Recursos locales (logo oficial)
 │   └── data/                              # Datasets JSON de campañas y leaderboard
 │
+├── outputs/                               # (git-ignored) Medios generados con OpenRouter
+│   ├── images/                            # Imágenes generadas — borradores, no piezas aprobadas
+│   └── videos/                            # Videos generados
+│
 └── sub-skill/                             # Sub-habilidades modulares
+    ├── generar-medios-openrouter/
+    │   ├── README.md                      # Sub-skill que EJECUTA los prompts de la pasarela (paso 12b)
+    │   └── generar_medios.py              # Genera imágenes/videos vía OpenRouter desde el HTML de campaña
     ├── obtener-leaderboard-imagen/
     │   ├── README.md                      # Sub-skill del ranking en vivo de generadores (API Design Arena)
     │   └── obtener_leaderboard.py         # Consulta la API y cruza con la curaduría de marca
@@ -133,8 +144,18 @@ Antes de generar una campaña, la skill solicita o valida los siguientes paráme
 | `{{medio}}` | Imagen, Video, Ambas | Define el tipo de prompts generativos a producir |
 | `{{referencias_visuales}}` | Link de OneDrive / SharePoint *(Opcional)* | Auditoría de metadatos (pregunta al usuario si desea leer la carpeta para extraer nombres de campañas pasadas, máx. 10, y ofrece adjuntar 1 a 3 imágenes de ejemplo en el chat) |
 | `{{numero_ideas}}` | Entero (por defecto `3`) | Cantidad de conceptos a idear por plataforma. **Tope: `redes × numero_ideas` ≤ 6 conceptos**; si se excede, se reduce y se declara en las notas. Evita que la calidad de los prompts se diluya al elegir todas las redes |
-| `{{mostrar_leaderboard}}` | `sí` \| `no` *(por defecto `no`)* | **Opcional.** Se pregunta junto con `{{medio}}`: si el usuario quiere ver el ranking en vivo de generadores de IA para ejecutar los prompts. Nunca bloquea la entrega |
 | `{{inventiva}}` | `Original` \| `Locura Genial` (por defecto `Original`) | Grado de audacia conceptual |
+
+### Parámetros de los extras (se piden **después** de entregar la pasarela)
+
+| Parámetro | Tipo / Opciones | Descripción |
+|---|---|---|
+| `{{mostrar_leaderboard}}` | `sí` \| `no` *(por defecto `no`)* | **Opcional.** Ranking en vivo de generadores de IA, para saber con qué herramienta ejecutar los prompts. Nunca bloquea la entrega |
+| `{{generar_medios}}` | `sí` \| `no` *(por defecto `no`)* | **Opcional.** Si la skill debe **ejecutar** los prompts con OpenRouter |
+| `{{openrouter_api_key}}` | `sk-or-v1-…` | API Key del usuario. **Nunca se escribe en un archivo, no se imprime, no se guarda en memoria y no se reutiliza entre conversaciones** |
+| `{{medio_a_generar}}` | Imagen, Video, Ambas | Si es *ambas*: **primero las imágenes, después los videos** |
+| `{{cantidad_a_generar}}` | Entero ≥ 1 | Mínimo 1, máximo los conceptos de la pasarela **que tengan ese medio** (`max_imagenes` / `max_videos`), no el total de conceptos |
+| `{{modelo_openrouter}}` | Id de OpenRouter | Elegido por el usuario del **catálogo en vivo**. Nunca de memoria: los ids cambian |
 
 ---
 
@@ -166,6 +187,16 @@ flowchart TD
     J --> K[Generar Prompts Ultra Detallados para IA]
     K --> L[Verificación de Guardrails y QA Checklist]
     L --> M[Entrega con Plantilla + Pasarela Web HTML]
+    M --> N{Extras opcionales — la entrega ya está completa}
+    N -- Top de modelos --> O[Leaderboard en vivo vía API Design Arena]
+    N -- Generar con OpenRouter --> P[Pedir API Key del usuario]
+    N -- Ninguno --> Z[Fin]
+    P -- Sin API Key --> O
+    P -- Con API Key --> Q[Leer prompts de la pasarela: extract-prompts]
+    Q --> R[Preguntar medio, cantidad y modelo del catálogo en vivo]
+    R --> S[dry-run: mostrar COSTO ESTIMADO antes de gastar]
+    S --> T[Generar: imágenes primero, luego videos]
+    T --> U[Revisar guardrails y entregar pieza + copy + prompt/especificaciones]
 ```
 
 ---
@@ -203,4 +234,41 @@ La carpeta `showcase/` contiene una aplicación web interactiva diseñada para p
 - **Tokens de Diseño:** Implementada con la identidad visual institucional de `designs/Design.md` (banda `--brand-maroon` `#6E1E28`, modo dark luxury y el logo oficial `imagenes/Loco_Tequila_Logo_white.png`).
 
 Para visualizarla, abre directamente `showcase/index.html` en tu navegador web.
+
+---
+
+## 🎨 11. Generación de Medios con OpenRouter (extra opcional)
+
+Una vez entregada la pasarela, la skill puede **ejecutar** los prompts que acaba de escribir contra los modelos de imagen y video de [OpenRouter](https://openrouter.ai), y devolver cada pieza junto con su copy y sus especificaciones. Es un **extra posterior a la entrega**: se ofrece, no se impone, y el consumo se cobra a la cuenta del usuario.
+
+Detalle completo en [`sub-skill/generar-medios-openrouter/README.md`](sub-skill/generar-medios-openrouter/README.md).
+
+```powershell
+conda activate skills_env
+
+# 1. Catálogo en vivo (no requiere API Key)
+python sub-skill/generar-medios-openrouter/generar_medios.py --action list-models --type image
+
+# 2. Leer los prompts de la pasarela ya generada (no requiere API Key)
+python sub-skill/generar-medios-openrouter/generar_medios.py --action extract-prompts `
+  --from-showcase showcase/campaign-2026-09-16-independencia-locura.html
+
+# 3. Ensayo SIN costo: prompts, aspecto, duración y costo estimado
+$env:OPENROUTER_API_KEY = "sk-or-v1-..."
+python sub-skill/generar-medios-openrouter/generar_medios.py `
+  --from-showcase showcase/campaign-2026-09-16-independencia-locura.html `
+  --type image --model google/gemini-3-pro-image --first 3 --dry-run
+
+# 4. Generar de verdad (quitar --dry-run)
+```
+
+**Puntos que conviene tener presentes:**
+
+- **La API Key es una credencial de pago.** Se pasa por `$env:OPENROUTER_API_KEY`, nunca se versiona ni se imprime. `.gitignore` ya excluye `outputs/`, `*.key` y `openrouter*.txt`.
+- **`--dry-run` es obligatorio antes de gastar:** resuelve todo y estima el costo sin llamar a la API.
+- **Los prompts no se reescriben:** se leen del HTML de campaña, así que se ejecuta exactamente lo que se entregó.
+- **Los flags de Midjourney (`--ar`, `--no`) se convierten en parámetros** y se quitan del texto: los modelos de OpenRouter los leerían como texto y podrían renderizarlos dentro de la imagen.
+- **Las duraciones de video son conjuntos discretos, no rangos.** Veo 3.1 acepta solo 4/6/8 s; Sora 2 Pro 4/8/12/16/20 s. El script encaja duración y aspecto a lo que el modelo admite y **declara el ajuste**.
+- **Un prompt de video de 24 s no se genera completo:** se obtiene un fragmento. El script lo dice en lugar de entregar 8 segundos como si fueran el spot.
+- **El precio de video es por segundo** (de USD ~0.11/s en Kling v3.0 Pro a USD 0.50/s en Sora 2 Pro a 1080p), de ahí el tope de costo de 10 s ajustable con `--max-duration`.
 
