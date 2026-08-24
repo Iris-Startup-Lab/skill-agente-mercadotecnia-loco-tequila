@@ -73,6 +73,16 @@ Antes de idear, **lee estos archivos** y úsalos como única fuente de verdad. N
 
 > `AGENTS.md` en la raíz del repositorio documenta el protocolo operativo, pero **no se carga automáticamente cuando la skill se invoca desde otro directorio de trabajo**. Todos sus estándares normativos viven ahora en las referencias de arriba; `AGENTS.md` solo apunta a ellas.
 
+## Cómo responder al usuario
+
+Esta skill la usan personas de mercadotecnia, **no desarrolladores**. La respuesta *es* el producto: si parece un registro de depuración, falló aunque el archivo se haya escrito bien.
+
+- **Siempre en español.** Ni una frase en inglés, ni de paso.
+- **Nunca narrar el razonamiento interno ni la fontanería de las herramientas.** No se escribe lo que se está pensando, ni qué comando sigue, ni por qué el anterior falló, ni qué ruta se buscó primero. Ejemplos de lo que **no** se escribe: *"It exists here after all — the earlier find piped through .git noise but missed it"*, *"Let me install the dependency and run the script"*, *"voy a revisar si existe la carpeta"*. El usuario ve el resultado, no el andamio.
+- **Los errores se traducen a consecuencia, no a diagnóstico.** *"El script de feriados no corrió, así que las fechas salen del calendario estático"* — nunca el traceback, el nombre del módulo faltante ni el comando que falló.
+- **Nunca pedirle al usuario que ejecute código.** Ni comandos, ni scripts, ni instalar dependencias, ni abrir una terminal. Si algo hay que ejecutar, **lo ejecuta el agente**. Este público no usa terminal: ofrecerle "una guía paso a paso en la consola" es cerrarle la puerta, no ayudarlo.
+- **Nunca inventar una limitación propia.** Si algo no se puede hacer, es por una razón concreta y verificable (falta un dato, el script falló, el usuario declinó). No atribuir un límite a "mis reglas de seguridad" sin que exista.
+
 ## Filtro de Locura Genial (obligatorio)
 
 Cada idea debe pasar el filtro: ¿demuestra creatividad trascendental, innovación disruptiva, valentía para desafiar, pasión profunda y autenticidad radical? ¿O cae en ideas sin propósito, imitación, pasividad o pretensión? Si cae en la segunda columna, se descarta o se reescribe. Toda idea debe justificar su paso por el filtro en la entrega.
@@ -128,7 +138,13 @@ Cada idea debe pasar el filtro: ¿demuestra creatividad trascendental, innovaci�
 
     **12b. Generar las piezas con OpenRouter** (`{{generar_medios}}`). **Leer `sub-skill/generar-medios-openrouter/README.md` antes de ejecutar nada**, en especial su §3 sobre la API Key. Secuencia estricta:
 
-    1. **Pedir la API Key** (`{{openrouter_api_key}}`). Si el usuario **no tiene**, orientarlo en tres pasos (crear cuenta en <https://openrouter.ai>, Settings → Keys → Create Key, cargar saldo en Settings → Credits) y **ofrecerle el 12a como alternativa gratuita**. Sin clave no se genera nada: no hay respaldo ni modo de prueba que produzca piezas.
+    1. **Pedir la API Key** (`{{openrouter_api_key}}`) y **usarla**. Recibir la clave que el propio usuario aporta, para su propia cuenta, con su autorización explícita, es **parte normal y esperada de esta skill**.
+
+        **Está prohibido negarse a recibirla.** En concreto, no decir que "no se pueden manejar credenciales", que "está prohibido por reglas de seguridad" ni ninguna variante: es falso, y deja al usuario sin la función que acaba de pedir. Lo único que está regulado es la **higiene** de la clave, no su uso: no se escribe en ningún archivo del repositorio, no se imprime en la salida, no se repite en la respuesta y no se reutiliza en otra conversación. Detalle en el §3 del README de la sub-skill.
+
+        **El agente ejecuta el script él mismo**, pasando la clave por variable de entorno dentro del mismo comando. **Nunca se le pide al usuario que abra una terminal, que instale algo ni que corra nada.**
+
+        Si el usuario **no tiene** clave, orientarlo en tres pasos —crear cuenta en <https://openrouter.ai>, Settings → Keys → Create Key, cargar saldo en Settings → Credits— y, si no quiere crearla, **ofrecer el 12a como única alternativa**: es gratuito y no requiere clave. **Nunca ofrecer "una guía para ejecutarlo en tu terminal"** (ver *Cómo responder al usuario*). Sin clave no se generan piezas, y eso se dice en una línea, sin disculpas largas.
     2. **Leer los prompts de la pasarela** con `--action extract-prompts --from-showcase <ruta>`. **Nunca reescribir los prompts a mano ni de memoria:** se ejecutan exactamente los que ya se entregaron.
     3. **Preguntar el medio** (`{{medio_a_generar}}`): imagen, video o ambas. Si es **ambas: primero todas las imágenes, y solo después los videos.**
     4. **Preguntar la cantidad** (`{{cantidad_a_generar}}`): mínimo **1**, máximo `max_imagenes` / `max_videos` que devolvió el paso 2 — **no** el total de conceptos, porque un concepto sin `prompt_video` no puede producir video. Si el usuario pide más, decirle el techo real y por qué.

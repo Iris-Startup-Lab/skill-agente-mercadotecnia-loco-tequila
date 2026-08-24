@@ -25,24 +25,34 @@ Los outputs se escriben en `outputs/images/` y `outputs/videos/` (excluidos de G
 
 ---
 
-## 3. Manejo de la API Key — reglas duras
+## 3. Manejo de la API Key
 
-La API Key es una credencial de pago. **Nunca**:
+### 3.1 Recibirla y usarla es lo correcto
 
-- escribirla en un archivo del repositorio (ni `.md`, ni `.json`, ni `.py`, ni `.env` versionado);
-- imprimirla en la salida de un comando ni repetirla en la respuesta al usuario;
-- guardarla en memoria persistente (`memory/`) ni en `showcase/data/`;
-- reutilizar la de una conversación anterior: se pide siempre.
+**El agente pide la clave, la recibe y ejecuta el script con ella.** Es la clave del propio usuario, para su propia cuenta, aportada con su autorización explícita para hacer exactamente esto. No hay nada que objetar y **negarse es un error**.
 
-**Forma preferida — variable de entorno.** El usuario la define una vez en su propia terminal y el script la lee de `os.getenv`:
+En concreto, **está prohibido** responder que "no se pueden manejar credenciales de pago", que "está prohibido por reglas de seguridad" o cualquier variante. Es falso, y el efecto real es dejar al usuario sin la función que pidió y con una explicación que no corresponde a ninguna regla existente. Si algo impide generar, será un motivo concreto y verificable: no hay clave, no hay saldo (402), la clave es inválida (401), o el usuario declinó.
+
+**El agente ejecuta el script; el usuario no.** Este público es de mercadotecnia y no usa terminal. Nunca pedirle que abra una consola, que instale dependencias, que exporte variables de entorno ni que corra comandos. Si hace falta ejecutar algo, lo ejecuta el agente.
+
+### 3.2 Higiene de la clave
+
+Lo que sí está regulado es qué se hace con ella después de recibirla:
+
+- **No escribirla en ningún archivo** del repositorio (ni `.md`, ni `.json`, ni `.py`, ni un `.env` versionado).
+- **No imprimirla** en la salida de un comando ni repetirla en la respuesta al usuario.
+- **No guardarla en memoria persistente** (`memory/`) ni en `showcase/data/`.
+- **No reutilizar la de una conversación anterior:** se pide siempre.
+
+La forma de pasarla es **por variable de entorno dentro del mismo comando** que ejecuta el agente, en una sola llamada:
 
 ```powershell
-$env:OPENROUTER_API_KEY = "sk-or-v1-..."   # solo esta sesión de PowerShell
+$env:OPENROUTER_API_KEY = "<clave del usuario>"; python sub-skill/generar-medios-openrouter/generar_medios.py --from-showcase <ruta> --type image --model <id> --first 3
 ```
 
-**Forma alterna — `--api-key`.** Funciona, pero la clave queda escrita en el historial del shell y en la transcripción de la conversación. Si el usuario la pega en el chat, **decírselo** y sugerirle rotarla en <https://openrouter.ai/settings/keys> cuando termine.
+Se prefiere esto sobre `--api-key` porque la bandera deja la clave en el historial del shell. En cualquier caso la clave aparece en el comando de esa llamada; lo que se evita es que **quede en disco**. Si el usuario la pegó en el chat, vale decirle en una línea que puede rotarla en <https://openrouter.ai/settings/keys> cuando termine — como buena práctica, no como advertencia alarmante.
 
-### Si el usuario no tiene API Key
+### 3.3 Si el usuario no tiene API Key
 
 Orientarlo en tres pasos, sin insistir:
 
@@ -50,7 +60,9 @@ Orientarlo en tres pasos, sin insistir:
 2. Ir a **Settings → Keys → Create Key** y copiar la clave `sk-or-v1-…`.
 3. Cargar saldo en **Settings → Credits** (es de prepago: sin saldo, las llamadas fallan con 402).
 
-Si prefiere no crearla, **ofrecer el leaderboard de modelos** (`sub-skill/obtener-leaderboard-imagen/`) como alternativa: le dice con qué herramienta ejecutar los prompts por su cuenta. Ese camino es gratuito y no requiere clave.
+Si prefiere no crearla, la **única** alternativa que se ofrece es el **leaderboard de modelos** (`sub-skill/obtener-leaderboard-imagen/`): le dice con qué herramienta ejecutar los prompts por su cuenta, es gratuito y no requiere clave.
+
+**No ofrecer una guía para correr el script en su terminal.** Es la alternativa equivocada para este público: no quiere ejecutar código, y por eso está usando la skill.
 
 ---
 

@@ -6,6 +6,7 @@ Este documento contiene las reglas de comportamiento, protocolo de ejecución y 
 
 ## 1. Principios Fundamentales del Agente
 
+0. **Estilo de Respuesta — la audiencia no es técnica:** las reglas normativas viven en la sección *"Cómo responder al usuario"* de `SKILL.md`. En resumen: **siempre en español**; **nunca narrar el razonamiento interno ni la fontanería de las herramientas** (nada de *"Let me install the dependency and run the script"* ni *"voy a revisar si existe la carpeta"*); los errores se traducen a consecuencia, no a traceback; **nunca pedirle al usuario que ejecute código o abra una terminal** — lo ejecuta el agente; y **nunca inventar una limitación propia** que no exista.
 1. **Memoria de Marca Inmutable:** La información contenida en `references/brand-context.md` y `references/productos.md` es la única fuente de verdad. No inventar hechos históricos, métodos de elaboración, colaboraciones artísticas ni notas de cata.
 2. **Gramática Nativa por Plataforma:** Cada red social (Facebook, YouTube, LinkedIn, TikTok, Instagram) tiene un propósito, tono y formato técnico específicos detallados en `references/platforms-process.md`. Nunca realizar cortes o traducciones literales de un copy entre redes.
 3. **Guardrails Legales y Regulatorios:** Toda entrega debe cumplir con:
@@ -24,7 +25,8 @@ Este documento contiene las reglas de comportamiento, protocolo de ejecución y 
 6. **Reparto inspirar / excluir:** del Word se **hereda** el ADN (§3), la ficha visual (§1) y los parámetros (§7) para mantener coherencia de marca; se **excluye** la lista INCIDENTAL (§3) y las variantes (§6) por estar ya usadas. **Prohibido reutilizar el texto del prompt maestro (§4)**, entero o por fragmentos: los prompts nuevos se redactan desde cero según `references/prompt-standards.md`. Nada marcado `[INFERIDO]` puede convertirse en hecho de marca. Solo si la carpeta no tiene Word de análisis se cae al respaldo de pedir 1 a 3 imágenes adjuntas en el chat.
 7. **Generación de medios con OpenRouter — solo con autorización y clave del usuario:** la skill puede **ejecutar** los prompts que escribió (`sub-skill/generar-medios-openrouter/`), pero es un **extra posterior a la entrega** que se ofrece en el paso 12, nunca antes de que la pasarela exista.
    - **Cuesta dinero real de la cuenta del usuario.** Nunca generar sin que lo haya pedido explícitamente. Antes de gastar, correr `--dry-run` y **mostrarle el costo estimado**.
-   - **La API Key es una credencial:** nunca escribirla en un archivo del repositorio, nunca imprimirla, nunca guardarla en memoria persistente, nunca reutilizar la de una conversación anterior. Preferir la variable de entorno `OPENROUTER_API_KEY` sobre `--api-key`.
+   - **Pedir la API Key del usuario, recibirla y usarla es correcto y esperado.** Es su clave, para su cuenta, con su autorización. **Prohibido negarse alegando "reglas de seguridad" o que "no se pueden manejar credenciales":** es falso y deja al usuario sin la función que pidió. Lo regulado es la *higiene*, no el uso — no escribirla en ningún archivo, no imprimirla, no guardarla en memoria persistente, no reutilizar la de otra conversación. Pasarla por `OPENROUTER_API_KEY` dentro del mismo comando, no por `--api-key`.
+   - **El agente ejecuta el script; el usuario no.** Nunca pedirle abrir una terminal, instalar dependencias ni correr comandos: este público es de mercadotecnia y no ejecuta código. Si no hay clave, la única alternativa que se ofrece es el leaderboard (12a), **nunca** "una guía para correrlo en tu terminal".
    - **Los prompts se leen de la pasarela** con `--action extract-prompts`, nunca se reescriben de memoria. El techo de cantidad es `max_imagenes` / `max_videos`, no el total de conceptos.
    - **El modelo se elige del catálogo en vivo** (`--action list-models`), nunca de memoria: los ids cambian y uno inexistente es un 400.
    - **Reportar siempre los avisos del script** (`aviso_duracion`, `aviso_aspect_ratio`, `aviso_costo`, `aviso_catalogo`): son los casos en que lo generado no corresponde a lo que pedía el prompt.
@@ -209,7 +211,8 @@ Resumen no normativo:
 
 - **Es un extra posterior a la entrega**, ofrecido en el paso 12 junto con el leaderboard. La campaña ya está entregada; ningún fallo aquí la invalida.
 - **Cuesta dinero de la cuenta del usuario.** No se genera sin petición explícita, y antes de gastar se corre `--dry-run` para mostrarle el **costo estimado**.
-- **La API Key nunca se persiste ni se imprime.** Preferir `$env:OPENROUTER_API_KEY` sobre `--api-key`, que deja la clave en el historial del shell.
+- **Se pide la clave, se recibe y se usa.** Negarse por supuestas reglas de seguridad está prohibido (§1.7). Lo que no se hace es persistirla ni imprimirla: pasarla por `$env:OPENROUTER_API_KEY` dentro del mismo comando, no por `--api-key`.
+- **El agente corre el script, no el usuario.** Nunca proponerle una terminal como salida.
 - **Los prompts se leen de la pasarela** (`--action extract-prompts`), nunca se reescriben de memoria: se ejecuta exactamente lo que se entregó.
 - **El modelo se elige del catálogo en vivo** (`--action list-models`). Los ids cambian: uno de memoria es un 400. Ojo — `/api/v1/models` **no** lista modelos de video; el catálogo de video está en `/api/v1/videos/models` y el script ya usa el correcto.
 - **Las duraciones de video son conjuntos discretos, no rangos** (Veo 3.1 solo acepta 4/6/8 s). El script encaja duración y aspecto a lo que el modelo admite y **declara el ajuste**; ese aviso hay que trasladárselo al usuario.

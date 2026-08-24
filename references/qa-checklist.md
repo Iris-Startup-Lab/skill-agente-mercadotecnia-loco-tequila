@@ -4,6 +4,16 @@ Toda pieza adaptada debe pasar este checklist antes de considerarse entregada.
 
 **Cómo se ejecuta:** es una autoverificación **interna** del paso 10. No genera preguntas al usuario. Si un ítem falla, el agente **corrige por su cuenta y vuelve a verificar**; el usuario ya confirmó los parámetros en los pasos 1–6 y completar un campo faltante es trabajo del agente, no una decisión de negocio. Solo se escala al usuario si la corrección exigiría inventar un hecho de marca o cambiar un parámetro que él eligió.
 
+## Estilo de la respuesta (audiencia no técnica)
+
+Se verifica sobre el texto que verá el usuario, antes de enviarlo.
+
+- [ ] Toda la respuesta está **en español**; no quedó ninguna frase en inglés.
+- [ ] **No hay narración del proceso interno ni de la fontanería de herramientas** (nada de "voy a revisar si existe", "el comando anterior falló porque", "let me install…"). Solo resultados.
+- [ ] Los fallos técnicos están expresados como **consecuencia** ("las fechas salen del calendario estático"), no como traceback, módulo faltante ni comando fallido.
+- [ ] **No se le pidió al usuario ejecutar código, instalar nada ni abrir una terminal.** Si algo había que ejecutar, lo ejecutó el agente.
+- [ ] **No se alegó ninguna limitación propia inexistente** ("no puedo manejar credenciales", "mis reglas de seguridad me lo impiden"). Si algo no se pudo hacer, la causa declarada es concreta y verificable.
+
 ## Marca, copy y cumplimiento
 
 - [ ] La pieza pasa el filtro de Locura Genial (columna "ES", no "NO ES").
@@ -60,6 +70,8 @@ Este bloque **no se satisface marcando casillas**: son acciones con rastro compr
 Este bloque **no aplica** si el usuario no pidió el extra. Si lo pidió, todos son obligatorios.
 
 - [ ] El usuario **pidió explícitamente** generar las piezas. No se generó por iniciativa propia.
+- [ ] **No se rechazó la API Key del usuario.** Si la aportó, se usó. No se alegó que "no se pueden manejar credenciales" ni ninguna regla de seguridad inexistente.
+- [ ] **El script lo corrió el agente.** No se le pidió al usuario ejecutarlo, ni se le ofreció "una guía para su terminal" como alternativa.
 - [ ] La API Key **no** quedó escrita en ningún archivo del repositorio, ni impresa en la salida, ni guardada en memoria persistente.
 - [ ] Los prompts se leyeron de la pasarela con `--action extract-prompts`. **Ninguno se reescribió de memoria ni a mano.**
 - [ ] El modelo salió del catálogo en vivo (`--action list-models`), no de memoria.
