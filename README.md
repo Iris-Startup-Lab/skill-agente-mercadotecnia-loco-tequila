@@ -22,7 +22,8 @@ Skill de dirección creativa y mercadotecnia digital end-to-end para **Loco Tequ
 
 ## 🎯 Propósito y Alcance
 
-### SÍ Hace:
+### SÍ Hace
+
 - Planear y redactar campañas publicitarias end-to-end para Loco Tequila.
 - Detectar automáticamente feriados oficiales y no oficiales de México cruzándolos con fechas clave de la industria de bebidas y temporadas prioritarias de marca.
 - Adaptar copys con gramática nativa según la red social de destino (Instagram, Facebook, YouTube, LinkedIn, TikTok).
@@ -31,7 +32,8 @@ Skill de dirección creativa y mercadotecnia digital end-to-end para **Loco Tequ
 - Integrar estrategia SEO y optimización para motores generativos (GEO).
 - **Ejecutar los prompts** contra los modelos de imagen/video de OpenRouter, como extra posterior a la entrega, si el usuario lo pide y aporta su API Key.
 
-### NO Hace:
+### NO Hace
+
 - Publicar o programar contenido directamente en redes.
 - Gestionar pautas publicitarias o presupuestos de medios.
 - Generar imágenes o videos **sin autorización explícita del usuario y sin su API Key** (el consumo se cobra a su cuenta de OpenRouter).
@@ -137,7 +139,7 @@ python sub-skill/obtener-feriados-oficiales-no-oficiales/obtener_feriados.py --y
 Antes de generar una campaña, la skill solicita o valida los siguientes parámetros:
 
 | Parámetro | Tipo / Opciones | Descripción |
-|---|---|---|
+| --- | --- | --- |
 | `{{plataformas_destino}}` | Facebook, YouTube, LinkedIn, TikTok, Instagram | Red(es) social(es) destino de la campaña |
 | `{{fechas_proximas}}` | Fechas festivas / efemérides | **Obligatorio:** Se detectan a 30 días y se pregunta siempre al usuario cuál desea elegir |
 | `{{producto}}` | Loco Blanco, Loco Ámbar, Loco Puro Corazón, Loco Áureo, Loco Hierofante, Portafolio Completo | Expresión de tequila a promocionar |
@@ -149,10 +151,10 @@ Antes de generar una campaña, la skill solicita o valida los siguientes paráme
 ### Parámetros de los extras (se piden **después** de entregar la pasarela)
 
 | Parámetro | Tipo / Opciones | Descripción |
-|---|---|---|
+| --- | --- | --- |
 | `{{mostrar_leaderboard}}` | `sí` \| `no` *(por defecto `no`)* | **Opcional.** Ranking en vivo de generadores de IA, para saber con qué herramienta ejecutar los prompts. Nunca bloquea la entrega |
 | `{{generar_medios}}` | `sí` \| `no` *(por defecto `no`)* | **Opcional.** Si la skill debe **ejecutar** los prompts con OpenRouter |
-| `{{openrouter_api_key}}` | `sk-or-v1-…` | API Key del usuario. **Nunca se escribe en un archivo, no se imprime, no se guarda en memoria y no se reutiliza entre conversaciones** |
+| `{{clave_configurada}}` | `sí` \| `no` | Disponibilidad de la API Key de OpenRouter (en `~/.openrouter/api_key.txt`, ingresada en el chat como texto simple o mediante archivo `.txt`) |
 | `{{medio_a_generar}}` | Imagen, Video, Ambas | Si es *ambas*: **primero las imágenes, después los videos** |
 | `{{cantidad_a_generar}}` | Entero ≥ 1 | Mínimo 1, máximo los conceptos de la pasarela **que tengan ese medio** (`max_imagenes` / `max_videos`), no el total de conceptos |
 | `{{modelo_openrouter}}` | Id de OpenRouter | Elegido por el usuario del **catálogo en vivo**. Nunca de memoria: los ids cambian |
@@ -189,10 +191,12 @@ flowchart TD
     L --> M[Entrega con Plantilla + Pasarela Web HTML]
     M --> N{Extras opcionales — la entrega ya está completa}
     N -- Top de modelos --> O[Leaderboard en vivo vía API Design Arena]
-    N -- Generar con OpenRouter --> P[Pedir API Key del usuario]
+    N -- Generar con OpenRouter --> P[check-key: ¿clave configurada?]
     N -- Ninguno --> Z[Fin]
-    P -- Sin API Key --> O
-    P -- Con API Key --> Q[Leer prompts de la pasarela: extract-prompts]
+    P -- No configurada --> P2[Indicar los 3 pasos: Bloc de notas y guardar]
+    P2 --> P
+    P -- Sin cuenta OpenRouter --> O
+    P -- Configurada --> Q[Leer prompts de la pasarela: extract-prompts]
     Q --> R[Preguntar medio, cantidad y modelo del catálogo en vivo]
     R --> S[dry-run: mostrar COSTO ESTIMADO antes de gastar]
     S --> T[Generar: imágenes primero, luego videos]
@@ -253,22 +257,23 @@ python sub-skill/generar-medios-openrouter/generar_medios.py --action list-model
 python sub-skill/generar-medios-openrouter/generar_medios.py --action extract-prompts `
   --from-showcase showcase/campaign-2026-09-16-independencia-locura.html
 
-# 3. Ensayo SIN costo: prompts, aspecto, duración y costo estimado
-$env:OPENROUTER_API_KEY = "sk-or-v1-..."
+# 3. Comprobar la configuración de la clave (sin exponerla)
+python sub-skill/generar-medios-openrouter/generar_medios.py --action check-key
+
+# 4. Ensayo SIN costo: prompts, aspecto, duración y costo estimado
 python sub-skill/generar-medios-openrouter/generar_medios.py `
   --from-showcase showcase/campaign-2026-09-16-independencia-locura.html `
   --type image --model google/gemini-3-pro-image --first 3 --dry-run
 
-# 4. Generar de verdad (quitar --dry-run)
+# 5. Generar de verdad (quitar --dry-run)
 ```
 
 **Puntos que conviene tener presentes:**
 
-- **La API Key es una credencial de pago.** Se pasa por `$env:OPENROUTER_API_KEY`, nunca se versiona ni se imprime. `.gitignore` ya excluye `outputs/`, `*.key` y `openrouter*.txt`.
+- **Manejo de la clave:** El script la lee de `~/.openrouter/api_key.txt`, de la variable de entorno o del parámetro `--api-key`. Si el usuario la ingresa en el chat, el agente la acepta y la configura de forma transparente. `.gitignore` excluye además `outputs/`, `*.key` y `openrouter*.txt`.
 - **`--dry-run` es obligatorio antes de gastar:** resuelve todo y estima el costo sin llamar a la API.
 - **Los prompts no se reescriben:** se leen del HTML de campaña, así que se ejecuta exactamente lo que se entregó.
 - **Los flags de Midjourney (`--ar`, `--no`) se convierten en parámetros** y se quitan del texto: los modelos de OpenRouter los leerían como texto y podrían renderizarlos dentro de la imagen.
 - **Las duraciones de video son conjuntos discretos, no rangos.** Veo 3.1 acepta solo 4/6/8 s; Sora 2 Pro 4/8/12/16/20 s. El script encaja duración y aspecto a lo que el modelo admite y **declara el ajuste**.
 - **Un prompt de video de 24 s no se genera completo:** se obtiene un fragmento. El script lo dice en lugar de entregar 8 segundos como si fueran el spot.
 - **El precio de video es por segundo** (de USD ~0.11/s en Kling v3.0 Pro a USD 0.50/s en Sora 2 Pro a 1080p), de ahí el tope de costo de 10 s ajustable con `--max-duration`.
-

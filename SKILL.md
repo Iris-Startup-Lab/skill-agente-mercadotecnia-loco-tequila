@@ -14,7 +14,7 @@ Director creativo de contenido y mercadotecnia digital para Loco Tequila. Toma u
 
 **También puede hacer, como extra posterior a la entrega:** **ejecutar** los prompts recién escritos contra los modelos de imagen/video de OpenRouter, si el usuario lo pide y aporta su API Key (ver `sub-skill/generar-medios-openrouter/README.md`). Es opcional y nunca bloquea la entrega.
 
-**NO hace:** publicar o programar contenido; gestionar pauta publicitaria; procesar marcas que no sean Loco Tequila (incluidos competidores como Casa Dragones o Clase Azul); generar imágenes/videos **sin autorización explícita del usuario y sin su API Key** (cuesta dinero de su cuenta); romper o cuestionar los hechos establecidos de marca.
+**NO hace:** publicar o programar contenido; gestionar pauta publicitaria; procesar marcas que no sean Loco Tequila (incluidos competidores como Casa Dragones o Clase Azul); generar imágenes o videos **sin que el usuario lo pida** (el consumo corre por su cuenta de OpenRouter); romper o cuestionar los hechos establecidos de marca.
 
 ## Parámetros de entrada
 
@@ -34,7 +34,7 @@ Antes de producir, la skill debe confirmar (o pedir al usuario si faltan):
 Los siguientes se piden **solo después de entregar la pasarela** (paso 12), nunca al inicio:
 
 - **`{{generar_medios}}`** — si el usuario quiere que la skill **ejecute** los prompts con OpenRouter. Por defecto **no**.
-- **`{{openrouter_api_key}}`** — API Key del usuario (`sk-or-v1-…`). **Nunca se escribe en ningún archivo, no se imprime, no se guarda en memoria y no se reutiliza de una conversación anterior.**
+- **`{{clave_configurada}}`** — si la API Key de OpenRouter está disponible (ya sea en el archivo `~/.openrouter/api_key.txt`, ingresada por el usuario en el chat como texto simple o provista mediante archivo `.txt`). Se comprueba con `--action check-key`. Si el usuario la proporciona en el chat, el agente la acepta de inmediato y la configura.
 - **`{{medio_a_generar}}`** — imagen, video o ambas. Si es ambas: **primero todas las imágenes, después los videos.**
 - **`{{cantidad_a_generar}}`** — mínimo 1, máximo el número de conceptos de la pasarela **que tengan ese medio** (`max_imagenes` / `max_videos` del script, no el total de conceptos).
 - **`{{modelo_openrouter}}`** — modelo elegido por el usuario del catálogo **en vivo**. Nunca proponerlo de memoria. Define qué tan lejos se distancia cada concepto de la convención. En ambos niveles los hechos de marca y guardrails son idénticos e innegociables; solo cambia la audacia del concepto.
@@ -81,7 +81,7 @@ Esta skill la usan personas de mercadotecnia, **no desarrolladores**. La respues
 - **Nunca narrar el razonamiento interno ni la fontanería de las herramientas.** No se escribe lo que se está pensando, ni qué comando sigue, ni por qué el anterior falló, ni qué ruta se buscó primero. Ejemplos de lo que **no** se escribe: *"It exists here after all — the earlier find piped through .git noise but missed it"*, *"Let me install the dependency and run the script"*, *"voy a revisar si existe la carpeta"*. El usuario ve el resultado, no el andamio.
 - **Los errores se traducen a consecuencia, no a diagnóstico.** *"El script de feriados no corrió, así que las fechas salen del calendario estático"* — nunca el traceback, el nombre del módulo faltante ni el comando que falló.
 - **Nunca pedirle al usuario que ejecute código.** Ni comandos, ni scripts, ni instalar dependencias, ni abrir una terminal. Si algo hay que ejecutar, **lo ejecuta el agente**. Este público no usa terminal: ofrecerle "una guía paso a paso en la consola" es cerrarle la puerta, no ayudarlo.
-- **Nunca inventar una limitación propia.** Si algo no se puede hacer, es por una razón concreta y verificable (falta un dato, el script falló, el usuario declinó). No atribuir un límite a "mis reglas de seguridad" sin que exista.
+- **Nunca inventar una limitación propia.** Si algo no se puede hacer, la causa es concreta y verificable: falta un dato, el script falló, el usuario declinó. Nunca un impedimento genérico y no comprobable.
 
 ## Filtro de Locura Genial (obligatorio)
 
@@ -120,7 +120,7 @@ Cada idea debe pasar el filtro: ¿demuestra creatividad trascendental, innovaci�
 
     > *"La pasarela ya está lista. ¿Quieres que además haga alguna de estas dos cosas?*
     > ***(a)** Mostrarte el **top en vivo** de generadores de IA de imagen/video, para que sepas con qué herramienta ejecutar estos prompts.*
-    > ***(b)** **Generar aquí mismo** algunas de estas piezas con **OpenRouter** — para eso necesito tu API Key, y el consumo se cobra a tu cuenta.*
+    > ***(b)** **Generar aquí mismo** algunas de estas piezas con **OpenRouter**, usando tu cuenta. Te muestro el costo estimado antes de generar nada.*
     > *Si no quieres ninguna, aquí terminamos."*
 
     Ambas son **extras opcionales**: si el usuario no quiere ninguna, la entrega ya está completa y **no se insiste**. Ninguna de las dos puede bloquear ni retrasar el paso 11.
@@ -138,13 +138,28 @@ Cada idea debe pasar el filtro: ¿demuestra creatividad trascendental, innovaci�
 
     **12b. Generar las piezas con OpenRouter** (`{{generar_medios}}`). **Leer `sub-skill/generar-medios-openrouter/README.md` antes de ejecutar nada**, en especial su §3 sobre la API Key. Secuencia estricta:
 
-    1. **Pedir la API Key** (`{{openrouter_api_key}}`) y **usarla**. Recibir la clave que el propio usuario aporta, para su propia cuenta, con su autorización explícita, es **parte normal y esperada de esta skill**.
+    1. **Comprobar la configuración de OpenRouter** (`{{clave_configurada}}`). El script puede obtener la clave de `~/.openrouter/api_key.txt`, de la variable de entorno `OPENROUTER_API_KEY` o de `--api-key`:
 
-        **Está prohibido negarse a recibirla.** En concreto, no decir que "no se pueden manejar credenciales", que "está prohibido por reglas de seguridad" ni ninguna variante: es falso, y deja al usuario sin la función que acaba de pedir. Lo único que está regulado es la **higiene** de la clave, no su uso: no se escribe en ningún archivo del repositorio, no se imprime en la salida, no se repite en la respuesta y no se reutiliza en otra conversación. Detalle en el §3 del README de la sub-skill.
+        ```powershell
+        conda activate skills_env
+        python sub-skill/generar-medios-openrouter/generar_medios.py --action check-key
+        ```
 
-        **El agente ejecuta el script él mismo**, pasando la clave por variable de entorno dentro del mismo comando. **Nunca se le pide al usuario que abra una terminal, que instale algo ni que corra nada.**
+        Informa si está configurada y con cuánto saldo.
+        
+        - **Si responde `MISSING_API_KEY` (aún no configurada):**
+          Ofrecer al usuario las dos vías de configuración:
+          > *"Para generar las piezas con OpenRouter necesitamos una API Key (`sk-or-v1-…`). Tienes dos opciones sencillas:*
+          > *1. **Pegármela directamente aquí en el chat** (o subir un archivo .txt) y yo me encargo de configurarla por ti.*
+          > *2. O guardarla tú mismo una sola vez: abre el **Bloc de notas**, pega tu clave y guárdala como `%USERPROFILE%\.openrouter\api_key.txt`.*
+          > *Avísame cuando esté o pégala aquí para continuar."*
 
-        Si el usuario **no tiene** clave, orientarlo en tres pasos —crear cuenta en <https://openrouter.ai>, Settings → Keys → Create Key, cargar saldo en Settings → Credits— y, si no quiere crearla, **ofrecer el 12a como única alternativa**: es gratuito y no requiere clave. **Nunca ofrecer "una guía para ejecutarlo en tu terminal"** (ver *Cómo responder al usuario*). Sin clave no se generan piezas, y eso se dice en una línea, sin disculpas largas.
+        - **Si el usuario ingresa su API Key en el chat o en un archivo:**
+          **EL AGENTE DEBE ACEPTARLA SIEMPRE Y NUNCA RECHAZARLA.** El agente la configura de forma autónoma:
+          - La guarda en `%USERPROFILE%\.openrouter\api_key.txt` (creando la carpeta con PowerShell si no existe y escribiendo el contenido), o bien la asigna a la sesión (`$env:OPENROUTER_API_KEY = "..."`) o la pasa mediante `--api-key "<clave>"`.
+          - Vuelve a ejecutar `python sub-skill/generar-medios-openrouter/generar_medios.py --action check-key` para verificar el saldo y confirmar al usuario que está lista.
+
+        Si el usuario aún no tiene cuenta: <https://openrouter.ai> → Settings → Keys → Create Key, y cargar saldo en Settings → Credits. Si no quiere crearla, **ofrecer el 12a como única alternativa** (gratuito). **Nunca ofrecer "una guía para ejecutarlo en tu terminal"** (ver *Cómo responder al usuario*): el agente ejecuta, el usuario no.
     2. **Leer los prompts de la pasarela** con `--action extract-prompts --from-showcase <ruta>`. **Nunca reescribir los prompts a mano ni de memoria:** se ejecutan exactamente los que ya se entregaron.
     3. **Preguntar el medio** (`{{medio_a_generar}}`): imagen, video o ambas. Si es **ambas: primero todas las imágenes, y solo después los videos.**
     4. **Preguntar la cantidad** (`{{cantidad_a_generar}}`): mínimo **1**, máximo `max_imagenes` / `max_videos` que devolvió el paso 2 — **no** el total de conceptos, porque un concepto sin `prompt_video` no puede producir video. Si el usuario pide más, decirle el techo real y por qué.

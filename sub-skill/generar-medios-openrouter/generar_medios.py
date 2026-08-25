@@ -150,6 +150,122 @@ FALLBACK_VIDEO_MODELS = [
 # Utilidades de archivos
 # ---------------------------------------------------------------------------
 
+def default_key_file() -> Path:
+    """Ruta por defecto del archivo de clave, FUERA del repositorio."""
+    return Path.home() / ".openrouter" / "api_key.txt"
+
+
+def resolve_api_key(
+    cli_key: Optional[str] = None,
+    key_file: Optional[str] = None,
+) -> Any:
+    """
+    Resuelve la API Key para interactuar con OpenRouter.
+
+    Orden de prioridad:
+      1. `--api-key` (explícito)
+      2. Variable de entorno `OPENROUTER_API_KEY`
+      3. Archivo de clave (por defecto `~/.openrouter/api_key.txt`)
+
+    Devuelve `(clave, origen)`. **Nunca** devuelve ni imprime la clave completa
+    en reportes (se enmascara para seguridad).
+    """
+    if cli_key and cli_key.strip():
+        return cli_key.strip(), "parametro --api-key"
+
+    env_key = os.getenv("OPENROUTER_API_KEY")
+    if env_key and env_key.strip():
+        return env_key.strip(), "variable de entorno OPENROUTER_API_KEY"
+
+    ruta = Path(key_file) if key_file else default_key_file()
+    try:
+        if ruta.is_file():
+            contenido = ruta.read_text(encoding="utf-8-sig", errors="replace").strip()
+            # Tolera que el usuario haya pegado `OPENROUTER_API_KEY=sk-or-...`
+            # o haya dejado líneas vacías / comentarios.
+            for linea in contenido.splitlines():
+                linea = linea.strip()
+                if not linea or linea.startswith("#"):
+                    continue
+                if "=" in linea and linea.split("=", 1)[0].strip().isupper():
+                    linea = linea.split("=", 1)[1].strip()
+                linea = linea.strip("'\"")
+                if linea:
+                    return linea, f"archivo {ruta}"
+    except OSError:
+        pass
+
+    return None, None
+
+
+def enmascarar(clave: Optional[str]) -> str:
+    """Representación segura para reportes: nunca revela la clave."""
+    if not clave:
+        return "[sin clave]"
+    return f"{clave[:7]}...{clave[-4:]} ({len(clave)} caracteres)" if len(clave) > 14 else "[clave corta]"
+
+
+def check_key(cli_key: Optional[str], key_file: Optional[str], validar: bool = True) -> Dict[str, Any]:
+    """
+    Informa si hay una clave disponible y de dónde sale, SIN imprimirla.
+    Con `validar`, confirma contra `GET /api/v1/key` que sirve y cuánto saldo queda.
+    """
+    clave, origen = resolve_api_key(cli_key, key_file)
+    ruta = Path(key_file) if key_file else default_key_file()
+
+    if not clave:
+        return {
+            "status": "error",
+            "code": "MISSING_API_KEY",
+            "clave_disponible": False,
+            "archivo_esperado": str(ruta).replace("\\", "/"),
+            "archivo_existe": ruta.is_file(),
+            "message": (
+                "No hay API Key disponible. El usuario puede proporcionarla en el chat "
+                "(para que el agente la configure de inmediato) o guardarla en el "
+                f"archivo {ruta} (con el Bloc de notas)."
+            ),
+        }
+
+    salida = {
+        "status": "success",
+        "clave_disponible": True,
+        "origen": origen,
+        "clave_enmascarada": enmascarar(clave),
+    }
+
+    if not validar:
+        return salida
+
+    try:
+        r = requests.get(f"{OPENROUTER_BASE_URL}/key", headers=_headers(clave), timeout=20)
+        if r.status_code == 401:
+            salida.update({
+                "status": "error", "code": "INVALID_KEY",
+                "message": "OpenRouter rechazó la clave (401). Puede estar revocada o mal copiada.",
+            })
+            return salida
+        r.raise_for_status()
+        d = (r.json() or {}).get("data") or {}
+        salida["verificada"] = True
+        salida["etiqueta"] = d.get("label")
+        salida["saldo_restante_usd"] = d.get("limit_remaining")
+        salida["consumo_total_usd"] = d.get("usage")
+        salida["es_nivel_gratuito"] = d.get("is_free_tier")
+        if d.get("limit_remaining") == 0:
+            salida["aviso_saldo"] = (
+                "La clave funciona pero el saldo está en 0: las llamadas fallarán "
+                "con 402. Hay que cargar créditos en Settings → Credits."
+            )
+    except requests.exceptions.RequestException as e:
+        salida["verificada"] = False
+        salida["aviso_verificacion"] = (
+            f"No se pudo verificar la clave contra OpenRouter ({e}). Se intentará "
+            "generar de todos modos."
+        )
+    return salida
+
+
 def ensure_output_dirs(base_dir: Path) -> Dict[str, Path]:
     img_dir = base_dir / "outputs" / "images"
     vid_dir = base_dir / "outputs" / "videos"
@@ -1152,14 +1268,17 @@ def main():
     parser = argparse.ArgumentParser(
         description="Generador de imágenes y videos ultracortos (OpenRouter) para Loco Tequila"
     )
-    parser.add_argument("--action", choices=["generate", "list-models", "extract-prompts"],
+    parser.add_argument("--action",
+                        choices=["generate", "list-models", "extract-prompts", "check-key"],
                         default="generate", help="Acción a realizar")
     parser.add_argument("--type", choices=["image", "video"], default="image",
                         help="Tipo de medio (image o video)")
     parser.add_argument("--prompt", default="", help="Prompt suelto (modo manual, sin pasarela)")
     parser.add_argument("--model", default="", help="Modelo oficial de OpenRouter a utilizar")
-    parser.add_argument("--api-key", default=os.getenv("OPENROUTER_API_KEY"),
-                        help="API Key de OpenRouter. PREFERIR la variable de entorno OPENROUTER_API_KEY")
+    parser.add_argument("--api-key", default=None,
+                        help="API Key de OpenRouter (ingresada en chat o pasada por el agente)")
+    parser.add_argument("--api-key-file", default=None,
+                        help=f"Archivo con la clave (por defecto {default_key_file()})")
     parser.add_argument("--from-showcase", default=None,
                         help="Ruta del HTML de campaña (showcase/campaign-*.html) del que se leen los prompts")
     parser.add_argument("--indices", default=None,
@@ -1182,9 +1301,18 @@ def main():
 
     args = parser.parse_args()
 
+    # La clave se RESUELVE, no se recibe: sale del archivo del usuario, de la
+    # variable de entorno o de --api-key, en ese orden inverso de preferencia.
+    api_key, origen_clave = resolve_api_key(args.api_key, args.api_key_file)
+
+    if args.action == "check-key":
+        resultado = check_key(args.api_key, args.api_key_file)
+        print(json.dumps(resultado, indent=2, ensure_ascii=False))
+        sys.exit(0 if resultado.get("status") == "success" else 1)
+
     # --- Acciones que no requieren API key ---
     if args.action == "list-models":
-        print(json.dumps(fetch_live_models(api_key=args.api_key, modality=args.type),
+        print(json.dumps(fetch_live_models(api_key=api_key, modality=args.type),
                          indent=2, ensure_ascii=False))
         return
 
@@ -1218,12 +1346,17 @@ def main():
         return
 
     # --- generate: requiere API key ---
-    if not args.dry_run and (not args.api_key or not args.api_key.strip()):
+    if not args.dry_run and not api_key:
+        ruta = Path(args.api_key_file) if args.api_key_file else default_key_file()
         print(json.dumps({
             "status": "error",
             "code": "MISSING_API_KEY",
-            "message": ("No se proporcionó la API Key de OpenRouter. Pídela al usuario y pásala "
-                        "por la variable de entorno OPENROUTER_API_KEY (preferido) o --api-key.")
+            "archivo_esperado": str(ruta).replace("\\", "/"),
+            "message": (
+                "No hay API Key disponible. El usuario puede ingresar su clave de OpenRouter "
+                f"en el chat o guardarla en el archivo {ruta}. "
+                "Verificar después con --action check-key."
+            ),
         }, indent=2, ensure_ascii=False))
         sys.exit(1)
 
@@ -1240,7 +1373,7 @@ def main():
             sys.exit(1)
         try:
             result = generate_from_campaign(
-                api_key=args.api_key or "", campaign_path=Path(args.from_showcase),
+                api_key=api_key or "", campaign_path=Path(args.from_showcase),
                 media_type=args.type, model=args.model, indices_spec=args.indices,
                 first=args.first, dirs=dirs, aspect_override=args.aspect_ratio,
                 duration_override=args.duration, max_duration=args.max_duration,
@@ -1263,13 +1396,13 @@ def main():
 
     if args.type == "image":
         result = generate_image(
-            api_key=args.api_key, prompt=args.prompt, model=args.model,
+            api_key=api_key, prompt=args.prompt, model=args.model,
             aspect_ratio=args.aspect_ratio or parse_aspect_ratio(args.prompt),
             output_dir=dirs["images"],
         )
     else:
         result = generate_video(
-            api_key=args.api_key, prompt=args.prompt, model=args.model,
+            api_key=api_key, prompt=args.prompt, model=args.model,
             duration_seconds=min(args.duration or 5, args.max_duration),
             aspect_ratio=args.aspect_ratio or "16:9", output_dir=dirs["videos"],
         )

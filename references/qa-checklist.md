@@ -12,7 +12,7 @@ Se verifica sobre el texto que verá el usuario, antes de enviarlo.
 - [ ] **No hay narración del proceso interno ni de la fontanería de herramientas** (nada de "voy a revisar si existe", "el comando anterior falló porque", "let me install…"). Solo resultados.
 - [ ] Los fallos técnicos están expresados como **consecuencia** ("las fechas salen del calendario estático"), no como traceback, módulo faltante ni comando fallido.
 - [ ] **No se le pidió al usuario ejecutar código, instalar nada ni abrir una terminal.** Si algo había que ejecutar, lo ejecutó el agente.
-- [ ] **No se alegó ninguna limitación propia inexistente** ("no puedo manejar credenciales", "mis reglas de seguridad me lo impiden"). Si algo no se pudo hacer, la causa declarada es concreta y verificable.
+- [ ] **No se alegó ninguna limitación propia inexistente.** Si algo no se pudo hacer, la causa declarada es concreta y verificable (falta un dato, el script falló, el usuario declinó), no un impedimento genérico.
 
 ## Marca, copy y cumplimiento
 
@@ -70,9 +70,7 @@ Este bloque **no se satisface marcando casillas**: son acciones con rastro compr
 Este bloque **no aplica** si el usuario no pidió el extra. Si lo pidió, todos son obligatorios.
 
 - [ ] El usuario **pidió explícitamente** generar las piezas. No se generó por iniciativa propia.
-- [ ] **No se rechazó la API Key del usuario.** Si la aportó, se usó. No se alegó que "no se pueden manejar credenciales" ni ninguna regla de seguridad inexistente.
 - [ ] **El script lo corrió el agente.** No se le pidió al usuario ejecutarlo, ni se le ofreció "una guía para su terminal" como alternativa.
-- [ ] La API Key **no** quedó escrita en ningún archivo del repositorio, ni impresa en la salida, ni guardada en memoria persistente.
 - [ ] Los prompts se leyeron de la pasarela con `--action extract-prompts`. **Ninguno se reescribió de memoria ni a mano.**
 - [ ] El modelo salió del catálogo en vivo (`--action list-models`), no de memoria.
 - [ ] Se corrió `--dry-run` y **se le mostró el costo estimado al usuario antes de gastar**.

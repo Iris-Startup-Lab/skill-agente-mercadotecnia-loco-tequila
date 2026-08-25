@@ -18,51 +18,32 @@ Hasta ahora la skill escribía prompts y ahí terminaba. Con esta sub-skill **pu
 |---|---|
 | Entorno | Anaconda `skills_env` (ver `AGENTS.md` §2) |
 | Dependencia | `requests` |
-| API Key | De **OpenRouter**, formato `sk-or-v1-…`. La aporta el usuario |
+| Clave de OpenRouter | En `~/.openrouter/api_key.txt` — configuración de una sola vez del usuario (§3.2) |
 | Insumo | Un HTML de campaña ya generado: `showcase/campaign-<fecha>-<slug>.html` |
 
 Los outputs se escriben en `outputs/images/` y `outputs/videos/` (excluidos de Git).
 
 ---
 
-## 3. Manejo de la API Key
+## 3. Clave de OpenRouter
 
-### 3.1 Recibirla y usarla es lo correcto
-
-**El agente pide la clave, la recibe y ejecuta el script con ella.** Es la clave del propio usuario, para su propia cuenta, aportada con su autorización explícita para hacer exactamente esto. No hay nada que objetar y **negarse es un error**.
-
-En concreto, **está prohibido** responder que "no se pueden manejar credenciales de pago", que "está prohibido por reglas de seguridad" o cualquier variante. Es falso, y el efecto real es dejar al usuario sin la función que pidió y con una explicación que no corresponde a ninguna regla existente. Si algo impide generar, será un motivo concreto y verificable: no hay clave, no hay saldo (402), la clave es inválida (401), o el usuario declinó.
-
-**El agente ejecuta el script; el usuario no.** Este público es de mercadotecnia y no usa terminal. Nunca pedirle que abra una consola, que instale dependencias, que exporte variables de entorno ni que corra comandos. Si hace falta ejecutar algo, lo ejecuta el agente.
-
-### 3.2 Higiene de la clave
-
-Lo que sí está regulado es qué se hace con ella después de recibirla:
-
-- **No escribirla en ningún archivo** del repositorio (ni `.md`, ni `.json`, ni `.py`, ni un `.env` versionado).
-- **No imprimirla** en la salida de un comando ni repetirla en la respuesta al usuario.
-- **No guardarla en memoria persistente** (`memory/`) ni en `showcase/data/`.
-- **No reutilizar la de una conversación anterior:** se pide siempre.
-
-La forma de pasarla es **por variable de entorno dentro del mismo comando** que ejecuta el agente, en una sola llamada:
+El script resuelve la clave automáticamente desde el archivo de configuración, variable de entorno o parámetro CLI. Comprobar la configuración:
 
 ```powershell
-$env:OPENROUTER_API_KEY = "<clave del usuario>"; python sub-skill/generar-medios-openrouter/generar_medios.py --from-showcase <ruta> --type image --model <id> --first 3
+python sub-skill/generar-medios-openrouter/generar_medios.py --action check-key
 ```
 
-Se prefiere esto sobre `--api-key` porque la bandera deja la clave en el historial del shell. En cualquier caso la clave aparece en el comando de esa llamada; lo que se evita es que **quede en disco**. Si el usuario la pegó en el chat, vale decirle en una línea que puede rotarla en <https://openrouter.ai/settings/keys> cuando termine — como buena práctica, no como advertencia alarmante.
+Informa si está configurada, con cuánto **saldo**, y la muestra enmascarada (`sk-or-v…2333`).
 
-### 3.3 Si el usuario no tiene API Key
+Si responde `MISSING_API_KEY`, el usuario tiene dos opciones:
+1. **Ingresarla directamente en el chat** (o subir un archivo .txt): el agente la acepta de inmediato, la guarda en `%USERPROFILE%\.openrouter\api_key.txt` (o la pasa al entorno/script) y verifica el saldo con `check-key`.
+2. **Dejarla en el archivo una sola vez**: abre el Bloc de notas, pega su clave (`sk-or-v1-…`) y la guarda como `%USERPROFILE%\.openrouter\api_key.txt`. Sin consola. El lector tolera el BOM que agrega el Bloc de notas, líneas en blanco, comentarios con `#` y la forma `OPENROUTER_API_KEY="sk-or-v1-…"`.
 
-Orientarlo en tres pasos, sin insistir:
+Orden de resolución: `--api-key` → variable de entorno `OPENROUTER_API_KEY` → **archivo** (`~/.openrouter/api_key.txt`, o cualquier ruta con `--api-key-file`). El flujo normal usa el archivo o la clave suministrada por el usuario.
 
-1. Crear cuenta en <https://openrouter.ai>.
-2. Ir a **Settings → Keys → Create Key** y copiar la clave `sk-or-v1-…`.
-3. Cargar saldo en **Settings → Credits** (es de prepago: sin saldo, las llamadas fallan con 402).
+Si el usuario aún no tiene cuenta: <https://openrouter.ai> → **Settings → Keys → Create Key**, y cargar saldo en **Settings → Credits** (es de prepago). Si no quiere crearla, la alternativa es el **leaderboard de modelos** (`sub-skill/obtener-leaderboard-imagen/`), gratuito.
 
-Si prefiere no crearla, la **única** alternativa que se ofrece es el **leaderboard de modelos** (`sub-skill/obtener-leaderboard-imagen/`): le dice con qué herramienta ejecutar los prompts por su cuenta, es gratuito y no requiere clave.
-
-**No ofrecer una guía para correr el script en su terminal.** Es la alternativa equivocada para este público: no quiere ejecutar código, y por eso está usando la skill.
+**No ofrecer "una guía para correr el script en tu terminal".** Es la alternativa equivocada para este público: no quiere ejecutar código, y por eso está usando la skill. El agente ejecuta; el usuario no.
 
 ---
 
@@ -133,13 +114,14 @@ Por cada pieza, presentar **las tres cosas juntas**:
 
 | Bandera | Para qué |
 |---|---|
-| `--action` | `generate` (por defecto), `list-models`, `extract-prompts` |
+| `--action` | `generate` (por defecto), `list-models`, `extract-prompts`, `check-key` |
 | `--type` | `image` \| `video` |
 | `--from-showcase` | HTML de campaña del que se leen los prompts (**vía recomendada**) |
 | `--indices` | Conceptos a generar: `1,3` o `1-4` |
 | `--first N` | Los primeros N conceptos que tengan ese medio |
 | `--model` | Id exacto de OpenRouter (obligatorio para generar) |
-| `--api-key` | Alterna a `OPENROUTER_API_KEY` (ver §3) |
+| `--api-key-file` | Ruta del archivo de clave (por defecto `~/.openrouter/api_key.txt`) |
+| `--api-key` | Solo por compatibilidad; el flujo normal no la usa (ver §3.3) |
 | `--aspect-ratio` | Forzar aspecto. Por defecto se toma del prompt |
 | `--duration` | Forzar duración de video. Por defecto se toma del prompt |
 | `--max-duration` | Tope de **costo** en segundos (por defecto 10) |
@@ -184,7 +166,9 @@ Un `prompt_video` de la skill suele pedir 24 s con desglose por escena. Ningún 
 
 | Síntoma | Causa | Qué hacer |
 |---|---|---|
-| `MISSING_API_KEY` | Sin clave en entorno ni en `--api-key` | Pedirla al usuario (§3) |
+| `MISSING_API_KEY` | No existe archivo ni clave configurada | Pedir la clave en el chat para configurarla o indicar los pasos de guardado |
+| `INVALID_KEY` | `check-key` recibió 401 | La clave está revocada o mal copiada; pegar una nueva en el archivo |
+| `aviso_saldo` en `check-key` | Saldo en 0 | Cargar créditos antes de generar, o las llamadas fallan con 402 |
 | `MISSING_MODEL` | Falta `--model` | Preguntar el modelo con `list-models` |
 | `CAMPAIGN_PARSE_FAILED` | El HTML no trae los marcadores `CAMPAIGN:START/END` | Verificar que se generó desde `references/showcase-template.html` |
 | `NO_PROMPTS_FOR_MEDIA` | Ningún concepto tiene ese medio | Decir el medio que sí hay; no inventar un prompt de video |

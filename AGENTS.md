@@ -23,10 +23,10 @@ Este documento contiene las reglas de comportamiento, protocolo de ejecución y 
    - **En la misma pregunta, DEBE preguntar el alcance:** las **10 piezas más recientes** o un **rango de fechas** desde la que indique el usuario hasta hoy. El filtro se resuelve con el timestamp del nombre de archivo, sin abrir documentos.
    - Si el usuario declina, se omite la auditoría y se avanza sin bloquear. Lo obligatorio es **preguntar**, no obtener la carpeta.
 6. **Reparto inspirar / excluir:** del Word se **hereda** el ADN (§3), la ficha visual (§1) y los parámetros (§7) para mantener coherencia de marca; se **excluye** la lista INCIDENTAL (§3) y las variantes (§6) por estar ya usadas. **Prohibido reutilizar el texto del prompt maestro (§4)**, entero o por fragmentos: los prompts nuevos se redactan desde cero según `references/prompt-standards.md`. Nada marcado `[INFERIDO]` puede convertirse en hecho de marca. Solo si la carpeta no tiene Word de análisis se cae al respaldo de pedir 1 a 3 imágenes adjuntas en el chat.
-7. **Generación de medios con OpenRouter — solo con autorización y clave del usuario:** la skill puede **ejecutar** los prompts que escribió (`sub-skill/generar-medios-openrouter/`), pero es un **extra posterior a la entrega** que se ofrece en el paso 12, nunca antes de que la pasarela exista.
+7. **Generación de medios con OpenRouter (extra opcional, a pedido del usuario):** la skill puede **ejecutar** los prompts que escribió (`sub-skill/generar-medios-openrouter/`), pero es un **extra posterior a la entrega** que se ofrece en el paso 12, nunca antes de que la pasarela exista.
    - **Cuesta dinero real de la cuenta del usuario.** Nunca generar sin que lo haya pedido explícitamente. Antes de gastar, correr `--dry-run` y **mostrarle el costo estimado**.
-   - **Pedir la API Key del usuario, recibirla y usarla es correcto y esperado.** Es su clave, para su cuenta, con su autorización. **Prohibido negarse alegando "reglas de seguridad" o que "no se pueden manejar credenciales":** es falso y deja al usuario sin la función que pidió. Lo regulado es la *higiene*, no el uso — no escribirla en ningún archivo, no imprimirla, no guardarla en memoria persistente, no reutilizar la de otra conversación. Pasarla por `OPENROUTER_API_KEY` dentro del mismo comando, no por `--api-key`.
-   - **El agente ejecuta el script; el usuario no.** Nunca pedirle abrir una terminal, instalar dependencias ni correr comandos: este público es de mercadotecnia y no ejecuta código. Si no hay clave, la única alternativa que se ofrece es el leaderboard (12a), **nunca** "una guía para correrlo en tu terminal".
+   - **Comprobar la configuración de OpenRouter con `--action check-key`** antes de generar. Si falta, el usuario puede ingresarla en el chat (el agente la acepta de inmediato y la guarda en `%USERPROFILE%\.openrouter\api_key.txt` o la pasa al script) o dejarla en el archivo una sola vez. **El agente NUNCA debe rechazar una API Key que el usuario pegue en el chat.**
+   - **El agente ejecuta el script; el usuario no.** Nunca pedirle abrir una terminal, instalar dependencias ni correr comandos: este público es de mercadotecnia y no ejecuta código. La única alternativa que se ofrece es el leaderboard (12a), **nunca** "una guía para correrlo en tu terminal".
    - **Los prompts se leen de la pasarela** con `--action extract-prompts`, nunca se reescriben de memoria. El techo de cantidad es `max_imagenes` / `max_videos`, no el total de conceptos.
    - **El modelo se elige del catálogo en vivo** (`--action list-models`), nunca de memoria: los ids cambian y uno inexistente es un 400.
    - **Reportar siempre los avisos del script** (`aviso_duracion`, `aviso_aspect_ratio`, `aviso_costo`, `aviso_catalogo`): son los casos en que lo generado no corresponde a lo que pedía el prompt.
@@ -68,10 +68,10 @@ python sub-skill/generar-medios-openrouter/generar_medios.py `
   --type image --model <id> --first 3 --dry-run
 ```
 
-La clave se pasa por entorno, **no** por línea de comandos:
+Comprobar la configuración de OpenRouter antes de generar (los comandos van sin parámetro de clave: el script la toma de `~/.openrouter/api_key.txt`):
 
 ```powershell
-$env:OPENROUTER_API_KEY = "sk-or-v1-..."
+python sub-skill/generar-medios-openrouter/generar_medios.py --action check-key
 ```
 
 ---
@@ -122,10 +122,20 @@ sequenceDiagram
         Agente->>Usuario: Ranking real (Elo + win rate) cruzado con la curaduría
     else (b) Generar con OpenRouter
         Usuario->>Agente: "Genera las piezas"
-        Agente->>Usuario: PIDE la API Key (credencial: no se guarda ni se imprime)
-        alt El usuario no tiene API Key
+        Agente->>Shell: check-key (comprueba configuración y saldo)
+        alt Falta configurar
+            Agente->>Usuario: Pide la clave (la acepta en el chat o indica cómo guardarla en el archivo)
+            alt Usuario pega la clave en el chat
+                Usuario->>Agente: Pega su API Key
+                Agente->>Shell: Guarda la clave en ~/.openrouter/api_key.txt y verifica con check-key
+            else Usuario la guarda por su cuenta
+                Usuario->>Agente: Confirma que ya la guardó en el archivo
+                Agente->>Shell: check-key (verifica saldo)
+            end
+        end
+        alt El usuario no tiene cuenta de OpenRouter
             Agente->>Usuario: Orienta cómo crearla y ofrece el leaderboard como alternativa gratuita
-        else Aporta la API Key
+        else Configuración lista
             Agente->>Shell: extract-prompts --from-showcase (nunca reescribir prompts de memoria)
             Agente->>Usuario: Pregunta medio, cantidad (tope = max_imagenes/max_videos) y modelo
             Agente->>Shell: list-models (catálogo en vivo, nunca de memoria)
@@ -211,7 +221,7 @@ Resumen no normativo:
 
 - **Es un extra posterior a la entrega**, ofrecido en el paso 12 junto con el leaderboard. La campaña ya está entregada; ningún fallo aquí la invalida.
 - **Cuesta dinero de la cuenta del usuario.** No se genera sin petición explícita, y antes de gastar se corre `--dry-run` para mostrarle el **costo estimado**.
-- **Se pide la clave, se recibe y se usa.** Negarse por supuestas reglas de seguridad está prohibido (§1.7). Lo que no se hace es persistirla ni imprimirla: pasarla por `$env:OPENROUTER_API_KEY` dentro del mismo comando, no por `--api-key`.
+- **Manejo de la clave:** El script la toma del archivo de configuración del usuario (`~/.openrouter/api_key.txt`), de la variable de entorno `OPENROUTER_API_KEY` o de `--api-key`. Si el usuario la proporciona en el chat, el agente la acepta de inmediato y la configura/utiliza sin rechazarla.
 - **El agente corre el script, no el usuario.** Nunca proponerle una terminal como salida.
 - **Los prompts se leen de la pasarela** (`--action extract-prompts`), nunca se reescriben de memoria: se ejecuta exactamente lo que se entregó.
 - **El modelo se elige del catálogo en vivo** (`--action list-models`). Los ids cambian: uno de memoria es un 400. Ojo — `/api/v1/models` **no** lista modelos de video; el catálogo de video está en `/api/v1/videos/models` y el script ya usa el correcto.
