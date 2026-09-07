@@ -64,5 +64,12 @@ Este documento registra de forma pormenorizada las tareas implementadas para ele
   - Implementación de la directiva multimodal estándar en §1.2:
     `ADD: The added image is the real bottle image, you could use it as an inspiration for the exact bottle geometry, crystal transparency, and small subtle typography placement.`
   - Inclusión de tokens anti-textos gigantes en negative prompt (§3.1): `oversized text, giant red lettering, large red typography, clunky font, massive font size`.
-  - Adición de la **Nota de Fidelidad de Producto** en [output-template.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/output-template.md) para orientar al usuario a adjuntar la foto oficial aislada de la botella (`references/loco-tequila/bottle_tequila_offiicial_images/`) en herramientas generativas multimodales.
   - Actualización de la lista de verificación [qa-checklist.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/qa-checklist.md).
+- [x] **Tarea 10: Compatibilidad Universal de Rutas en ZIP para Claude / Linux (Anti-Invalid Characters)**
+  - Identificación del error `Zip file contains path with invalid characters` en Claude Desktop y Claude Web: el cmdlet nativo de Windows `Compress-Archive` empaquetaba las rutas internas con barras invertidas (`\`) propias del sistema de archivos de Windows (p. ej. `references\loco-tequila\...`).
+  - El estándar oficial de compresión ZIP (PKWARE APPNOTE §4.4.17.1) y los entornos Unix/Linux de Claude exigen estrictamente barras diagonales (`/`) y rechazan `\` considerándolo un carácter inválido o riesgo de seguridad de directorio.
+  - Reemplazo de `Compress-Archive` en [package_skill.ps1](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/package_skill.ps1) por la API .NET `System.IO.Compression.ZipArchive`:
+    - Normalización forzada de todos los nombres de entrada sustituyendo `\` por `/`.
+    - Codificación explícita de caracteres en `UTF-8`.
+    - Omisión de carpetas vacías intermedias que generaban entradas redundantes con caracteres de escape.
+  - Verificación exitosa de todas las entradas del archivo `.zip` generado.

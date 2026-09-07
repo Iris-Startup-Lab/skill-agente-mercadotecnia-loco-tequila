@@ -122,8 +122,23 @@ try {
         Remove-Item -Force $ZipPath
     }
 
-    Write-Host "Comprimiendo componentes en $OutputFile..." -ForegroundColor Yellow
-    Compress-Archive -Path "$TempDir\*" -DestinationPath $ZipPath -Force
+    Write-Host "Comprimiendo componentes en $OutputFile con formato universal (forward slashes '/' y UTF-8)..." -ForegroundColor Yellow
+    Add-Type -AssemblyName System.IO.Compression
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+
+    $zipStream = [System.IO.File]::Create($ZipPath)
+    $archive = New-Object System.IO.Compression.ZipArchive($zipStream, [System.IO.Compression.ZipArchiveMode]::Create, $false, [System.Text.Encoding]::UTF8)
+
+    Get-ChildItem -Path $TempDir -Recurse -File | ForEach-Object {
+        $filePath = $_.FullName
+        $relPath = $filePath.Substring($TempDir.Length).TrimStart('\', '/')
+        # Especificación estándar ZIP: todas las rutas DEBEN usar forward slash '/'
+        $entryName = $relPath -replace '\\', '/'
+        [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($archive, $filePath, $entryName, [System.IO.Compression.CompressionLevel]::Optimal) | Out-Null
+    }
+
+    $archive.Dispose()
+    $zipStream.Dispose()
 
     $ZipSizeMB = [Math]::Round((Get-Item $ZipPath).Length / 1MB, 2)
     Write-Host "--------------------------------------------------------" -ForegroundColor Green
