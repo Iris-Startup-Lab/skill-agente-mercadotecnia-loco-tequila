@@ -105,7 +105,13 @@ La skill entrega el resultado como **texto normal de la conversación** (sin blo
 
 **FILTRO LOCURA GENIAL (por idea):** [ES / NO ES — justificar]
 
-**CUMPLIMIENTO:** [+18 incluido: sí/no] · [mensaje consumo responsable: sí/no] · [exclusión de menores en pauta configurada: sí/no/no aplica]
+**CUMPLIMIENTO Y GUARDRAILS:**
+- **Normativa General:** [+18 incluido: sí/no] · [mensaje consumo responsable: sí/no] · [exclusión de menores en pauta: sí/no/no aplica]
+- **Ficha Técnica IA 2026 (`references/manual-cumplimiento-ia-2026.md`):**
+  - **Nivel de Riesgo:** [Nivel 1 Asistencia | Nivel 2 Sintético Realista | Nivel 3 Prohibido]
+  - **Directiva de Toggle de Autodivulgación:** [Meta Ads Manager "AI Info" | YouTube Studio "Contenido sintético" | TikTok "AIGC" | No requiere toggle]
+  - **Optimización Anti-Slop LinkedIn (Algoritmo 360Brew):** [Cumple — redacción humana con anécdota de terruño y datos verificados, sin clichés de IA]
+  - **Veracidad Comercial (FTC 16 CFR Part 465 / EU AI Act):** [Cumple — cero testimonios ficticios de consumidores ni alteraciones anatómicas engañosas]
 
 **ADVERTENCIAS / NOTAS:**
 - [datos no disponibles, estimaciones (*) o valores [REFERENCIA DE INDUSTRIA] usados]
