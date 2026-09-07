@@ -22,6 +22,40 @@ share/python-wheels/
 *.egg
 MANIFEST
 
+## Archivos de imágenes, audio y video
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.gif
+*.bmp
+*.tiff
+*.svg
+*.heic
+*.heif
+*.avif
+*.mp4
+*.mov
+*.avi
+*.wmv
+*.flv
+*.webm
+*.mkv
+*.3gp
+*.mp3
+*.wav
+*.aac
+*.flac
+*.ogg
+*.wma
+*.aiff
+*.m4a
+*.opus
+*.tif
+*.tiff
+
+
+
 # Environments (Virtualenv / Conda)
 .env
 .venv

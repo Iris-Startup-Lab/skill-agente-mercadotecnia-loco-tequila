@@ -10,7 +10,7 @@ Un prompt de imagen **no está terminado** si le falta cualquiera de estos siete
 
 | # | Campo | Qué debe contener | Ejemplo |
 |---|---|---|---|
-| 1 | **Sujeto / producto** | Botella exacta del portafolio y su cristalería oficial. Nombrar el SKU. | `Loco Tequila Blanco bottle`, `Loco Hierofante bottle with its Jan Hendrix / Iker Ortiz art object` |
+| 1 | **Sujeto / producto (Fidelidad Anatómica)** | Botella exacta del SKU según canon (`references/loco-tequila/`): silueta cónica/trapezoidal, base de cristal macizo de 2 cm, cápsula de cuello por color (Blanco=rojo, Ámbar=bronce, Puro Corazón=plata), logo esmaltado en relieve rojo cochinilla sin etiqueta de papel. Cristalería oficial: copa tequilera Riedel grabada con rombo. | `Loco Tequila Blanco iconic trapezoidal conical heavy crystal bottle with 2cm solid glass base, crimson red neck foil wrap, enameled red cochineal logo on glass, official engraved Riedel tequila flute glass` |
 | 2 | **Composición y encuadre** | Distancia focal en `Nmm`, apertura `f/N`, tipo de plano y profundidad de campo | `85mm f/1.4, medium close-up, shallow depth of field` |
 | 3 | **Iluminación** | Condición de luz nombrada explícitamente (hora del día o esquema de estudio) | `warm golden hour sun rays`, `editorial studio chiaroscuro, single hard key light` |
 | 4 | **Paleta institucional** | Mínimo **2** colores de marca, en inglés y por nombre de color | `cochineal crimson`, `deep wine`, `bone-ivory`, `obsidian black`, `volcanic silver` |
@@ -18,7 +18,9 @@ Un prompt de imagen **no está terminado** si le falta cualquiera de estos siete
 | 6 | **Relación de aspecto** | Parámetro técnico explícito | `--ar 4:5` / `--ar 9:16` / `--ar 16:9` |
 | 7 | **Negative prompt** | La cadena base completa de §3, más lo específico del concepto | ver §3 |
 
-Además, el prompt **debe anclar visualmente la fecha festiva elegida** (`{{fechas_proximas}}`) con un elemento concreto de escena, no con una mención abstracta. "Día de Muertos" no es un anclaje; `cempasúal marigold petals scattered on the obsidian surface` sí lo es.
+Además, el prompt **debe anclar visualmente la fecha festiva elegida** (`{{fechas_proximas}}`) con un elemento concreto de escena, no con una mención abstracta. "Día de Muertos" no es un anclaje; `cempasúchil marigold petals scattered on the volcanic obsidian surface` sí lo es.
+
+> **Veracidad de Producto (Cumplimiento 2026 - FTC / TikTok Shop / Meta):** De acuerdo con `references/manual-cumplimiento-ia-2026.md`, está estrictamente prohibido alterar las propiedades físicas reales del producto (forma, color del destilado, volumen 750ml o empaque). La botella de Loco Tequila nunca debe representarse como cilíndrica estándar ni con etiquetas de papel adhesivo. Consultar `references/loco-tequila/bottle_tequila_offiicial_images/resumen_bottle_tequila_offiicial_images.md` y las lecciones de campañas históricas en `references/old_campaigns/resumen_old_campaigns.md`.
 
 ## 2. Campos obligatorios de todo prompt de video
 

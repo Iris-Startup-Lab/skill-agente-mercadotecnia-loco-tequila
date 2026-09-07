@@ -51,6 +51,10 @@ agente-mercadotecnia-loco-tequila/
 ├── AGENTS.md                              # Protocolo operativo (NO se autocarga fuera de este repo; solo apunta a references/)
 ├── .gitignore                             # Reglas de exclusión de Git
 │
+├── package_skill.ps1                      # Script PowerShell para empaquetar la skill en ZIP (excluye binarios)
+├── package_skill.sh                       # Script Bash para empaquetar la skill en ZIP (excluye binarios)
+├── to_do.md                               # Bitácora y registro de tareas realizadas
+│
 ├── designs/                               # Tokens y guías de diseño institucional
 │   └── Design.md                          # Sistema de diseño, paleta de color y tokens oficiales
 │
@@ -60,6 +64,8 @@ agente-mercadotecnia-loco-tequila/
 ├── references/                            # Fuente de verdad inmutable de la marca
 │   ├── brand-context.md                   # Memoria de marca, buyer personas, manifiesto y guardrails
 │   ├── fechas-alcohol.md                  # Calendario de fechas de bebidas y prioridades de marca
+│   ├── calendario-gastronomico-mexicano.md # Calendario gastronómico mexicano (UNESCO / SIC Gob Ficha 45) y maridaje
+│   ├── manual-cumplimiento-ia-2026.md     # Protocolo multicanal IA 2026: 3 niveles, FTC, EU AI Act, 360Brew
 │   ├── output-template.md                 # Plantilla estándar de salida de campañas y prompts
 │   ├── platforms-process.md               # Matriz por red social y proceso de adaptación
 │   ├── curaduria-modelos-imagen.json      # Curaduría propia de generadores por familia (sin Elo ni ranking)
@@ -68,7 +74,16 @@ agente-mercadotecnia-loco-tequila/
 │   ├── qa-checklist.md                    # Lista de verificación de calidad antes de entrega
 │   ├── seo-geo-glossary.md                # Glosario maestro de keywords y estrategia GEO
 │   ├── showcase-rules.md                  # Procedimiento de generación de la Pasarela Web (paso 11)
-│   └── showcase-template.html             # Template de la Pasarela: solo se sustituye su bloque CAMPAIGN
+│   ├── showcase-template.html             # Template de la Pasarela: solo se sustituye su bloque CAMPAIGN
+│   ├── loco-tequila/                      # Registros y cánones anatómicos de botellas oficiales
+│   │   └── bottle_tequila_offiicial_images/ # Resúmenes de Blanco, Ámbar, Puro Corazón, Áureo y Hierofante
+│   └── old_campaigns/                     # Archivo de campañas históricas de Loco Tequila
+│       ├── Dia_de_muertos/                # Análisis visual y resumen de alta fidelidad
+│       ├── Loco_tequila_ambar/            # Análisis de estilo de vida, mixología y maridaje costero
+│       ├── Loco_tequila_blanco/           # Análisis de arquitectura brutalista y pureza radical
+│       ├── Loco_tequila_puro_corazon/     # Análisis de artesanos de autor (Adriana Soto) y lujo relajado
+│       ├── Mexicanidad/                   # Análisis culinario de Chiles en Nogada y cata sensorial
+│       └── resumen_old_campaigns.md       # Memoria visual y directriz de arte transversal
 │
 ├── showcase/                              # Pasarela web interactiva (Showcase / Runway)
 │   ├── index.html                         # Vista principal de la pasarela y leaderboard
@@ -142,6 +157,7 @@ Antes de generar una campaña, la skill solicita o valida los siguientes paráme
 | --- | --- | --- |
 | `{{plataformas_destino}}` | Facebook, YouTube, LinkedIn, TikTok, Instagram | Red(es) social(es) destino de la campaña |
 | `{{fechas_proximas}}` | Fechas festivas / efemérides | **Obligatorio:** Se detectan a 30 días y se pregunta siempre al usuario cuál desea elegir |
+| `{{motivo_gastronomico}}` | `Sí` \| `No` | **Obligatorio si la festividad tiene tradición culinaria:** Pregunta si las imágenes tendrán motivo gastronómico y ofrece listado de platillos de `references/calendario-gastronomico-mexicano.md` |
 | `{{producto}}` | Loco Blanco, Loco Ámbar, Loco Puro Corazón, Loco Áureo, Loco Hierofante, Portafolio Completo | Expresión de tequila a promocionar |
 | `{{medio}}` | Imagen, Video, Ambas | Define el tipo de prompts generativos a producir |
 | `{{referencias_visuales}}` | Link de OneDrive / SharePoint *(Opcional)* | Auditoría de metadatos (pregunta al usuario si desea leer la carpeta para extraer nombres de campañas pasadas, máx. 10, y ofrece adjuntar 1 a 3 imágenes de ejemplo en el chat) |

@@ -36,11 +36,19 @@ Se verifica sobre el texto que verá el usuario, antes de enviarlo.
 - [ ] **Se leyó el contenido de cada Word, no solo su nombre de archivo.** Para cada documento usado se reconoció al menos el encabezado §3; los que no se pudieron leer están reportados como no leídos.
 - [ ] Ningún ADN ni INCIDENTAL fue inferido del nombre del archivo ni copiado por analogía de otro documento.
 
+## Cumplimiento Regulatorio y Algorítmico IA 2026 (`references/manual-cumplimiento-ia-2026.md`)
+
+- [ ] **Clasificación de Riesgo:** La pieza está clasificada correctamente (Nivel 1 Asistencia vs. Nivel 2 Sintético Realista).
+- [ ] **Autodivulgación / Toggles en Pauta:** Para contenidos visuales Nivel 2, se incluye la indicación operativa de activar el toggle en Ads Manager ("AI Info" en Meta, "Contenido sintético" en YouTube Studio, "AIGC" en TikTok) para prevenir desmonetización o supresión de alcance (-80%).
+- [ ] **FTC 16 CFR Part 465 (Veracidad):** Cero testimonios ficticios de consumidores inventados con IA, ni avatares haciéndose pasar por expertos sin respaldo real.
+- [ ] **LinkedIn Anti-Slop (Algoritmo 360Brew):** En LinkedIn, el copy evita frases trilladas de IA genérica, exceso de viñeteado y oraciones clónicas; incorpora perspectiva humana, anécdotas de terruño y datos reales de Loco Tequila para no sufrir penalización de alcance (-30%) ni desvío exclusivo a red de 1er grado.
+- [ ] **Fidelidad Física del Producto:** La descripción del producto en el prompt respeta al 100% la anatomía física oficial de `references/loco-tequila/` (silueta cónica, base de cristal macizo de 2 cm, cápsula codificada por color y serigrafía vítrea en relieve sin etiquetas de papel) y los estándares de cristalería de `references/old_campaigns/`.
+
 ## Campos obligatorios de cada prompt (`references/prompt-standards.md` §1)
 
 No son preguntas de sí/no: se lee el prompt y se confirma que la cadena **contiene** cada elemento. Si falta alguno, se reescribe el prompt en silencio.
 
-- [ ] **Sujeto:** nombra el SKU exacto del portafolio y su cristalería.
+- [ ] **Sujeto (Fidelidad Anatómica):** nombra el SKU exacto del portafolio, cristalería oficial (copa Riedel grabada) y rasgos físicos de botella oficial.
 - [ ] **Lente y encuadre:** contiene distancia focal `Nmm` y apertura `f/N`, más tipo de plano.
 - [ ] **Iluminación:** nombra explícitamente la condición de luz (hora del día o esquema de estudio).
 - [ ] **Paleta institucional:** contiene al menos **2** colores de marca por nombre (cochineal crimson, deep wine, bone-ivory, obsidian black, volcanic silver).

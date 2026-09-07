@@ -33,6 +33,7 @@ Este documento contiene las reglas de comportamiento, protocolo de ejecución y 
    - **Revisar cada pieza contra los guardrails** antes de entregarla; si los viola, descartarla y decirlo.
 8. **Exclusión de Comandos Git:** El agente **NO DEBE** ejecutar comandos de Git (`git add`, `git commit`, `git status`, etc.) ni gestionar el control de versiones. La gestión de Git es responsabilidad exclusiva del usuario.
 9. **Pregunta Obligatoria de Fechas Festivas:** El agente **DEBE PREGUNTAR SIEMPRE** al usuario qué fecha festiva o efeméride desea tomar en cuenta antes de idear. Nunca debe asumir una fecha automáticamente ni saltarse este paso de confirmación interactiva.
+10. **Pregunta Obligatoria de Motivo Gastronómico:** Si la fecha festiva elegida tiene arraigo culinario en el calendario gastronómico mexicano (`references/calendario-gastronomico-mexicano.md`), el agente **DEBE PREGUNTAR SIEMPRE**: *«¿Quieres que tus imágenes generadas tengan un motivo gastronómico?, puedo darte un listado de qué platillos pueden servir para estas fechas»*. El usuario responderá con «Sí» o «No». Si responde «Sí», se presentan los platillos y maridajes de esa fecha para integrarlos en los prompts; si responde «No», se avanza con estilo puro de producto sin alimentos.
 
 ---
 
@@ -91,7 +92,17 @@ sequenceDiagram
     Agente->>Shell: Ejecutar script de feriados (próximos 30 días)
     Agente->>Ref: Consultar fechas-alcohol.md y prioridades de marca
     Agente->>Usuario: Presentar fechas festivas detectadas y PREGUNTAR OBLIGATORIAMENTE cuál tomar en cuenta
-    Usuario->>Agente: Confirma fecha elegida, producto, red(es), medio e inventiva
+    Usuario->>Agente: Confirma fecha elegida
+    opt Festividad con tradición culinaria (calendario-gastronomico-mexicano.md)
+        Agente->>Usuario: PREGUNTA OBLIGATORIA: ¿Quieres que tus imágenes generadas tengan un motivo gastronómico?
+        Usuario->>Agente: "Sí" o "No"
+        opt Si el usuario responde "Sí"
+            Agente->>Ref: Consultar platillos y maridajes de esa fecha en calendario-gastronomico-mexicano.md
+            Agente->>Usuario: Presenta listado de platillos y maridajes recomendados con Loco Tequila
+            Usuario->>Agente: Selecciona/confirma platillo o rumbo culinario
+        end
+    end
+    Usuario->>Agente: Confirma producto, red(es), medio e inventiva
     Agente->>Usuario: PIDE OBLIGATORIAMENTE el link de la carpeta + el alcance (¿10 más recientes o desde qué fecha?)
     Note over Agente,Usuario: La carpeta cambia en cada campaña: nunca asumirla ni reutilizarla
     alt El usuario pega el link
