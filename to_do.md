@@ -45,7 +45,11 @@ Este documento registra de forma pormenorizada las tareas implementadas para ele
 - [x] **Tarea 6: Estandarización de Física de Fluidos Anti-Viscosidad para Video**
   - Identificación del sesgo por defecto en modelos generativos de video (Sora, Kling, Runway, Veo) hacia fluidos espesos, densos o almibarados al servir líquidos.
   - Actualización de [prompt-standards.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/prompt-standards.md) (§2.1 y §3.2) con parámetros de hidrodinámica real para tequila 40% ABV: ultrabaja viscosidad similar al agua (~1.2 a 1.4 mPa·s), flujo laminar de alta velocidad, rompimiento en microgotas cristalinas, rápida atenuación de turbulencia y ausencia de espuma o texturas aceitosas.
-  - Implementación del negative prompt específico de video anti-viscosidad (`viscous, syrupy, honey, molasses, oil, gelatinous, thick fluid, gooey, slime`).
-  - Incorporación del criterio de verificación de física de fluidos en [qa-checklist.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/qa-checklist.md).
+- [x] **Tarea 7: Consulta Tripartita de Referencias Visuales (Paso 5 de SKILL.md)**
+  - Unificación de la pregunta obligatoria de referencias previas ofreciendo tres vías equivalentes en la misma consulta: (a) Link de carpeta OneDrive/SharePoint con alcance, (b) 1 a 3 imágenes propias adjuntas en el chat de muestra para inspirarse, o (c) Ninguna para omitir referencias y avanzar directamente.
+  - Actualización del Paso 5 en [SKILL.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/SKILL.md).
+  - Actualización del Principio 5 y del diagrama de secuencia Mermaid en [AGENTS.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/AGENTS.md).
+  - Actualización de la tabla de parámetros en [README.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/README.md) y de la lista de verificación en [qa-checklist.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/qa-checklist.md).
+
 
 

@@ -28,7 +28,8 @@ Se verifica sobre el texto que verá el usuario, antes de enviarlo.
 - [ ] Los datos usados son verificados o están marcados (`[no disponible]`, `*` para estimaciones, `[REFERENCIA DE INDUSTRIA]` para benchmarks sin dato propio).
 - [ ] La fecha festiva anclada es real y está correctamente nombrada (feriados detectados por la sub-skill o `references/fechas-alcohol.md`).
 - [ ] El producto elegido es coherente con la campaña y usa sus keywords específicas (`references/productos.md` + glosario 10.4).
-- [ ] Si se revisaron piezas previas (Word de análisis en OneDrive/SharePoint), la pieza no repite diseños anteriores.
+- [ ] **Consulta de Referencias Previas:** Se preguntó siempre al usuario ofreciendo las 3 opciones: (a) link de OneDrive/SharePoint + alcance, (b) 1 a 3 imágenes propias adjuntas en chat, o (c) ninguna para omitir.
+- [ ] Si se revisaron piezas previas (Word de análisis en OneDrive/SharePoint o imágenes adjuntas), la pieza no repite diseños anteriores.
 - [ ] **Ningún prompt nuevo reutiliza texto del §4 (Prompt maestro) ni del §6 (Variantes) de un Word previo** — ni entero ni por fragmentos. Se hereda el ADN, nunca la redacción.
 - [ ] **Ningún elemento de la lista INCIDENTAL** de las piezas revisadas reaparece en la campaña nueva (objeto de apoyo, fondo concreto, ángulo específico).
 - [ ] Ninguna línea marcada `[INFERIDO]` en un Word de análisis se usó como hecho de marca.

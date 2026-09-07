@@ -18,10 +18,14 @@ Este documento contiene las reglas de comportamiento, protocolo de ejecución y 
    - Si se usa un benchmark de la industria: marcar como `[REFERENCIA DE INDUSTRIA]`.
    - Si es una estimación: marcar con asterisco (`*`).
    - Nunca alucinar cifras de alcance o conversiones no proporcionadas.
-5. **Auditoría de piezas previas (OneDrive/SharePoint) — vía Word:** el conector de Microsoft 365 no lee imágenes binarias, pero **sí lee `.docx`**. Un flujo de Power Automate deposita en la carpeta un Word de análisis por cada pieza, con su ficha visual y su prompt (ver `references/ingenieria-inversa-imagen.md`). Esa es la **vía principal**.
-   - **El agente DEBE PEDIR SIEMPRE el link de la carpeta al usuario.** No existe una carpeta fija: cambia en cada campaña. Prohibido asumir una ruta, reutilizar la de una conversación anterior, deducirla del nombre del producto o buscarla a ciegas con `sharepoint_folder_search`.
-   - **En la misma pregunta, DEBE preguntar el alcance:** las **10 piezas más recientes** o un **rango de fechas** desde la que indique el usuario hasta hoy. El filtro se resuelve con el timestamp del nombre de archivo, sin abrir documentos.
-   - Si el usuario declina, se omite la auditoría y se avanza sin bloquear. Lo obligatorio es **preguntar**, no obtener la carpeta.
+5. **Auditoría y Referencias Visuales Previas (OneDrive/SharePoint, Imágenes Propias o Ninguna):**
+   - **El agente DEBE PREGUNTAR SIEMPRE al usuario ofreciendo tres opciones claras en la misma consulta:**
+     1. Pegar el **link de la carpeta de OneDrive/SharePoint** con piezas previas (indicando alcance: 10 más recientes o rango de fechas).
+     2. **Adjuntar aquí en el chat de 1 a 3 imágenes propias** de muestra para inspirarse.
+     3. Responder **«Ninguna»** u omitir las referencias previas para avanzar directamente.
+   - Si el usuario comparte carpeta de OneDrive/SharePoint: el conector de Microsoft 365 lee los `.docx` de análisis depositados por Power Automate con su ficha visual y prompt (vía principal). No existe carpeta fija: nunca asumirla ni reutilizarla.
+   - Si el usuario adjunta imágenes propias en el chat: el agente analiza directamente su estética (iluminación, composición, paleta y cristalería) para inspirar la campaña.
+   - Si el usuario declina o responde «Ninguna»: se omite la auditoría y se avanza de inmediato sin bloquear. Lo obligatorio es **preguntar**, no forzar una referencia.
 6. **Reparto inspirar / excluir:** del Word se **hereda** el ADN (§3), la ficha visual (§1) y los parámetros (§7) para mantener coherencia de marca; se **excluye** la lista INCIDENTAL (§3) y las variantes (§6) por estar ya usadas. **Prohibido reutilizar el texto del prompt maestro (§4)**, entero o por fragmentos: los prompts nuevos se redactan desde cero según `references/prompt-standards.md`. Nada marcado `[INFERIDO]` puede convertirse en hecho de marca. Solo si la carpeta no tiene Word de análisis se cae al respaldo de pedir 1 a 3 imágenes adjuntas en el chat.
 7. **Generación de medios con OpenRouter (extra opcional, a pedido del usuario):** la skill puede **ejecutar** los prompts que escribió (`sub-skill/generar-medios-openrouter/`), pero es un **extra posterior a la entrega** que se ofrece en el paso 12, nunca antes de que la pasarela exista.
    - **Cuesta dinero real de la cuenta del usuario.** Nunca generar sin que lo haya pedido explícitamente. Antes de gastar, correr `--dry-run` y **mostrarle el costo estimado**.
@@ -103,20 +107,18 @@ sequenceDiagram
         end
     end
     Usuario->>Agente: Confirma producto, red(es), medio e inventiva
-    Agente->>Usuario: PIDE OBLIGATORIAMENTE el link de la carpeta + el alcance (¿10 más recientes o desde qué fecha?)
-    Note over Agente,Usuario: La carpeta cambia en cada campaña: nunca asumirla ni reutilizarla
-    alt El usuario pega el link
+    Agente->>Usuario: PREGUNTA OBLIGATORIA de referencias: ¿link de OneDrive (+ alcance), 1 a 3 imágenes en chat, o ninguna?
+    alt (a) El usuario pega link de OneDrive/SharePoint
         Usuario->>Agente: Link de la carpeta + alcance
         Agente->>Ref: Ejecutar sub-skill leer-imagenes-onedrive
         Note over Agente,Ref: Triage por nombre de archivo (plataforma + fecha), sin abrir documentos
         Agente->>Ref: Leer los .docx de análisis seleccionados
         Agente->>Usuario: Reporta piezas detectadas, el ADN a heredar y la lista de exclusión (INCIDENTAL)
-        opt La carpeta no tiene Word de análisis
-            Agente->>Usuario: Respaldo — pregunta si desea adjuntar 1 a 3 imágenes de muestra en el chat
-            Usuario->>Agente: Adjunta imágenes o confirma continuar sin adjuntar
-        end
-    else El usuario declina
-        Usuario->>Agente: "No aplica"
+    else (b) El usuario adjunta imágenes propias en el chat
+        Usuario->>Agente: Adjunta 1 a 3 imágenes de muestra
+        Agente->>Agente: Analiza estilo, composición, iluminación y cristalería para inspirarse
+    else (c) El usuario responde "Ninguna" o declina
+        Usuario->>Agente: "Ninguna" / "No aplica"
         Note over Agente: Omite la auditoría y avanza sin bloquear
     end
     Agente->>Ref: Consultar matriz de plataformas y glosario SEO/GEO

@@ -105,19 +105,24 @@ Cada idea debe pasar el filtro: ¿demuestra creatividad trascendental, innovaci�
     - **Si responde «No»:** El agente continúa el flujo enfocando la dirección visual exclusivamente en botellas anatómicas, bodegones puros de lujo, arquitectura o terruño agavero, sin presencia de alimentos.
     - *(Si la festividad elegida no tiene vinculación culinaria tradicional en el calendario, se omite esta pregunta y se avanza al paso 4).*
 4. **Preguntar el producto** (`{{producto}}`): ¿la publicidad va ligada a un producto específico o al portafolio completo? Presentar las opciones desde `references/productos.md`.
-5. **Revisar piezas previas leyendo los Word de análisis.** Activar el plugin **Microsoft 365** y seguir `sub-skill/leer-imagenes-onedrive/README.md`.
+5. **Revisar piezas previas y referencias visuales:**
 
-    **5a. PEDIR OBLIGATORIAMENTE EL LINK DE LA CARPETA** (`{{carpeta_referencias}}`). La carpeta **cambia en cada campaña**: nunca asumirla ni reutilizar una anterior. Preguntar, adelantando ya las opciones de alcance para que el usuario pueda responder ambas cosas de una vez:
+    **5a. CONSULTAR OBLIGATORIAMENTE REFERENCIAS VISUALES** (`{{carpeta_referencias}}` o `{{imagenes_referencia}}`). Las referencias previas **cambian en cada campaña**: nunca asumirlas ni reutilizar una anterior. Preguntar ofreciendo siempre las tres opciones juntas para que el usuario elija la que prefiera:
 
-    > *"¿Me pegas el link de la carpeta de OneDrive/SharePoint con las piezas previas? Y dime también si tomo en cuenta las **10 más recientes** o **desde qué fecha** hasta hoy. Si no aplica para esta campaña, dímelo y la omito."*
+    > *"Para revisar referencias visuales previas y no repetir estilos, ¿tienes alguna de estas opciones?*
+    > *(a) Pegarme el **link de la carpeta de OneDrive/SharePoint** con las piezas previas (indicando si tomo las **10 más recientes** o **desde qué fecha** hasta hoy).*
+    > *(b) **Adjuntar aquí en el chat de 1 a 3 imágenes propias** de muestra para inspirarnos.*
+    > *(c) **Ninguna** (si prefieres omitir referencias previas y avanzar directamente)."*
 
-    Si el usuario declina, se omite la auditoría y se avanza sin bloquear.
+    - **Si el usuario comparte link de OneDrive/SharePoint:** Activar el plugin **Microsoft 365** y seguir `sub-skill/leer-imagenes-onedrive/README.md` (pasos 5b, 5c, 5d para leer los `.docx` de análisis).
+    - **Si el usuario adjunta imágenes propias:** El agente las analiza para identificar estilo visual, paleta, cristalería y encuadres, heredando el ADN positivo y evitando duplicar la composición exacta.
+    - **Si el usuario responde «Ninguna» o declina:** Se omite la auditoría y se avanza inmediatamente al paso 6 sin bloquear.
 
-    **5b. Confirmar alcance** (`{{alcance_referencias}}`) si no vino en la respuesta anterior.
+    **5b. Confirmar alcance** (`{{alcance_referencias}}`) si eligió OneDrive y no vino en la respuesta anterior.
 
     **5c. Leer el CONTENIDO de los `.docx`** seleccionados — no solo sus nombres. El nombre solo aporta plataforma y fecha; el ADN y la lista de exclusión viven **dentro** del documento. Si un documento no se pudo leer, reportarlo como no leído: **nunca deducir su contenido del nombre del archivo.**
 
-    **5d. Reportar** qué se detectó (red + fecha), **cuántos documentos se leyeron efectivamente** de los seleccionados, con qué **ADN** se mantendrá coherencia y qué elementos **INCIDENTAL** quedan **excluidos**. Solo si la carpeta no tiene Word de análisis se cae al respaldo de preguntar por imágenes adjuntas.
+    **5d. Reportar** qué se detectó (red + fecha), **cuántos documentos se leyeron efectivamente** de los seleccionados, con qué **ADN** se mantendrá coherencia y qué elementos **INCIDENTAL** quedan **excluidos**.
 6. **Preguntar el medio** (`{{medio}}`): imagen, video o ambas. Define qué prompts se escriben y, más adelante, qué se puede ejecutar en el paso 12. Los extras (leaderboard y generación con OpenRouter) **no se ofrecen aquí**: se ofrecen en el paso 12, ya con la pasarela entregada, para no interrumpir la producción.
 7. **Ideación:** generar `{{numero_ideas}}` conceptos por red según `{{inventiva}}` (respetando el tope de 6 conceptos totales), cada uno anclado a la fecha festiva y al producto elegidos, conectado a una persona objetivo (Alejandro / Ana / Leonardo / efecto halo).
 8. **Reescritura en copys listos** respetando la gramática nativa de cada plataforma + inyección de keywords (regla de oro: 1 territorio mítico + 1 persona + 1 categoría; máx. 5). **Cumplimiento IA 2026:** Para LinkedIn, aplicar las directrices anti-slop del algoritmo 360Brew (`references/manual-cumplimiento-ia-2026.md` Módulo 3.4): voz auténtica, datos verificados de terruño, estructura natural y anécdotas reales; evitar viñeteado excesivo y frases trilladas que devalúen el alcance. En todas las redes, prohibición absoluta de testimonios o reseñas ficticias generadas por IA (FTC 16 CFR Part 465).

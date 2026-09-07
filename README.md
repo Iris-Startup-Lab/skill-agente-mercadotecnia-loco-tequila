@@ -160,7 +160,7 @@ Antes de generar una campaña, la skill solicita o valida los siguientes paráme
 | `{{motivo_gastronomico}}` | `Sí` \| `No` | **Obligatorio si la festividad tiene tradición culinaria:** Pregunta si las imágenes tendrán motivo gastronómico y ofrece listado de platillos de `references/calendario-gastronomico-mexicano.md` |
 | `{{producto}}` | Loco Blanco, Loco Ámbar, Loco Puro Corazón, Loco Áureo, Loco Hierofante, Portafolio Completo | Expresión de tequila a promocionar |
 | `{{medio}}` | Imagen, Video, Ambas | Define el tipo de prompts generativos a producir |
-| `{{referencias_visuales}}` | Link de OneDrive / SharePoint *(Opcional)* | Auditoría de metadatos (pregunta al usuario si desea leer la carpeta para extraer nombres de campañas pasadas, máx. 10, y ofrece adjuntar 1 a 3 imágenes de ejemplo en el chat) |
+| `{{referencias_visuales}}` | OneDrive / SharePoint, imágenes adjuntas o ninguna | Consulta obligatoria: (a) Link de carpeta (+ alcance: 10 recientes o fecha), (b) 1 a 3 imágenes propias adjuntas en el chat, o (c) Ninguna (omite auditoría) |
 | `{{numero_ideas}}` | Entero (por defecto `3`) | Cantidad de conceptos a idear por plataforma. **Tope: `redes × numero_ideas` ≤ 6 conceptos**; si se excede, se reduce y se declara en las notas. Evita que la calidad de los prompts se diluya al elegir todas las redes |
 | `{{inventiva}}` | `Original` \| `Locura Genial` (por defecto `Original`) | Grado de audacia conceptual |
 
