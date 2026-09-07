@@ -66,10 +66,10 @@ La skill entrega el resultado como **texto normal de la conversación** (sin blo
 ### 🎨 PROMPT MAESTRO DE IMAGEN — [nombre del concepto]
 
 > **Prompt principal (los 7 campos, en una sola cadena):**
-> [Sujeto: SKU exacto + cristalería] · [Escena y anclaje concreto de la fecha festiva] · [Lente `Nmm f/N` + tipo de plano + profundidad de campo] · [Iluminación nombrada: hora del día o esquema de estudio] · [≥2 colores institucionales por nombre: cochineal crimson / deep wine / bone-ivory / obsidian black / volcanic silver] · [Estilo: referencia fotográfica o artística concreta, no adjetivos genéricos] · [`--ar X:Y`]
+> [Sujeto: SKU exacto + silueta trapezoidal de cristal macizo + cristalería Riedel + rotulación oficial exacta entre comillas: "Loco", "ESPIRITU DE ORIGEN", "TEQUILA {SKU} 100% DE AGAVE AZUL", sin textos legales minúsculos] · [Escena y anclaje concreto de la fecha festiva o motivo gastronómico] · [Lente `Nmm f/N` + tipo de plano + profundidad de campo] · [Iluminación nombrada: hora del día o esquema de estudio] · [≥2 colores institucionales por nombre: cochineal crimson / deep wine / bone-ivory / obsidian black / volcanic silver] · [Estilo: referencia fotográfica o artística concreta, no adjetivos genéricos] · [`--ar X:Y`]
 >
 > **Negative prompt (obligatorio, cadena base íntegra):**
-> `underage, minors, drunk, drunkenness, excessive drinking, cheap glass, competitor bottles, Casa Dragones bottle, Clase Azul bottle, text watermark, blurry, low resolution` + [lo específico del concepto]
+> `underage, minors, drunk, drunkenness, excessive drinking, cheap glass, competitor bottles, Casa Dragones bottle, Clase Azul bottle, text watermark, blurry, low resolution, gibberish text, misspelled words, garbled letters, typo, scrambled typography, fake writing, illegible labels, deformed text, pseudo-letters, nonsense words` + [lo específico del concepto]
 >
 > **Parámetros técnicos:**
 > - Lente / cámara: [`85mm f/1.4, ISO 100, 1/250s`]

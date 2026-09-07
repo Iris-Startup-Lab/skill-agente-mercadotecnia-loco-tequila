@@ -49,7 +49,12 @@ Este documento registra de forma pormenorizada las tareas implementadas para ele
   - Unificación de la pregunta obligatoria de referencias previas ofreciendo tres vías equivalentes en la misma consulta: (a) Link de carpeta OneDrive/SharePoint con alcance, (b) 1 a 3 imágenes propias adjuntas en el chat de muestra para inspirarse, o (c) Ninguna para omitir referencias y avanzar directamente.
   - Actualización del Paso 5 en [SKILL.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/SKILL.md).
   - Actualización del Principio 5 y del diagrama de secuencia Mermaid en [AGENTS.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/AGENTS.md).
-  - Actualización de la tabla de parámetros en [README.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/README.md) y de la lista de verificación en [qa-checklist.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/qa-checklist.md).
-
-
-
+- [x] **Tarea 8: Estandarización Tipográfica Anti-Alucinaciones en Botellas (Anti-Typos & Micro-textos)**
+  - Detección de la causa raíz de deformaciones tipográficas y faltas de ortografía en modelos de difusión (p. ej. *"BLANEO"*, *"ACWE A20L"*, letras inventadas): saturación de microtextos legales (750ml, % alc, NOM) que agotan la capacidad latente del modelo.
+  - Creación de la regla canónica de tres líneas en comillas dobles en [prompt-standards.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/prompt-standards.md) (§1.1):
+    1. `"Loco"` (logotipo caligráfico esmaltado en relieve rojo).
+    2. `"ESPIRITU DE ORIGEN"` (eslogan institucional en mayúsculas).
+    3. `"TEQUILA {SKU} 100% DE AGAVE AZUL"` (donde `{SKU}` se reemplaza dinámicamente por `BLANCO`, `AMBAR`, o `PURO CORAZON`).
+  - Prohibición estricta de solicitar microtextos legales o tipografías minúsculas densas en las botellas generadas.
+  - Adición obligatoria de la suite de tokens de negative prompt tipográfico en §3.1: `gibberish text, misspelled words, garbled letters, typo, scrambled typography, fake writing, illegible labels, deformed text, pseudo-letters, nonsense words`.
+  - Actualización de la lista de verificación [qa-checklist.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/qa-checklist.md) y de la plantilla de salida [output-template.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/output-template.md).

@@ -49,13 +49,13 @@ Se verifica sobre el texto que verá el usuario, antes de enviarlo.
 
 No son preguntas de sí/no: se lee el prompt y se confirma que la cadena **contiene** cada elemento. Si falta alguno, se reescribe el prompt en silencio.
 
-- [ ] **Sujeto (Fidelidad Anatómica):** nombra el SKU exacto del portafolio, cristalería oficial (copa Riedel grabada) y rasgos físicos de botella oficial.
+- [ ] **Sujeto (Fidelidad Anatómica y Tipográfica):** nombra el SKU exacto del portafolio, cristalería oficial (copa Riedel grabada), rasgos físicos de botella oficial y, si incluye texto en la botella, usa estrictamente la fórmula canónica entre comillas: `"Loco"`, `"ESPIRITU DE ORIGEN"` y `"TEQUILA {SKU} 100% DE AGAVE AZUL"` sin microtextos legales dispersos (`prompt-standards.md` §1.1).
 - [ ] **Lente y encuadre:** contiene distancia focal `Nmm` y apertura `f/N`, más tipo de plano.
 - [ ] **Iluminación:** nombra explícitamente la condición de luz (hora del día o esquema de estudio).
 - [ ] **Paleta institucional:** contiene al menos **2** colores de marca por nombre (cochineal crimson, deep wine, bone-ivory, obsidian black, volcanic silver).
 - [ ] **Estilo visual:** referencia fotográfica o artística concreta, no adjetivos genéricos ("lujoso", "alta calidad" no cuentan).
 - [ ] **Relación de aspecto:** parámetro `--ar` explícito.
-- [ ] **Negative prompt:** incluye íntegra la cadena base de `prompt-standards.md` §3 (menores, embriaguez, cristalería barata, botellas de competidores, watermark, baja resolución).
+- [ ] **Negative prompt:** incluye íntegra la cadena base de `prompt-standards.md` §3.1 (incluyendo descriptores anti-tipografía basura: `gibberish text, misspelled words, garbled letters, typo, scrambled typography`) y §3.2 para video.
 - [ ] **Anclaje de fecha:** la fecha festiva aparece como elemento concreto de escena, no como mención abstracta.
 - [ ] El prompt corresponde al medio elegido (`{{medio}}`) y a la plataforma destino.
 - [ ] Si `{{medio}}` incluye video: el prompt tiene desglose por escena con marcas de tiempo, movimiento de cámara y duración total.

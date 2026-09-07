@@ -22,6 +22,18 @@ Además, el prompt **debe anclar visualmente la fecha festiva elegida** (`{{fech
 
 > **Veracidad de Producto (Cumplimiento 2026 - FTC / TikTok Shop / Meta):** De acuerdo con `references/manual-cumplimiento-ia-2026.md`, está estrictamente prohibido alterar las propiedades físicas reales del producto (forma, color del destilado, volumen 750ml o empaque). La botella de Loco Tequila nunca debe representarse como cilíndrica estándar ni con etiquetas de papel adhesivo. Consultar `references/loco-tequila/bottle_tequila_offiicial_images/resumen_bottle_tequila_offiicial_images.md` y las lecciones de campañas históricas en `references/old_campaigns/resumen_old_campaigns.md`.
 
+### 1.1 Estándar Tipográfico Oficial en la Botella (Anti-Alucinaciones)
+
+> ⚠️ **Regla de Oro contra la alucinación tipográfica:** Para evitar palabras deformadas o faltas de ortografía (como *"BLANEO"* o *"ACWE A20L"*), el prompt **NUNCA debe solicitar textos legales minúsculos** (como 750ml, % alc, NOM o leyendas largas). Cuando se requiera texto legible en la botella, se debe usar **estrictamente la fórmula oficial de 3 líneas entre comillas dobles**:
+>
+> 1. Logotipo caligráfico principal: `"Loco"` (en rojo cochinilla esmaltado al fuego).
+> 2. Eslogan institucional: `"ESPIRITU DE ORIGEN"`
+> 3. Categoría y pureza exacta según el SKU: `"TEQUILA {SKU} 100% DE AGAVE AZUL"`  
+>    *(donde `{SKU}` se reemplaza por `BLANCO`, `AMBAR` o `PURO CORAZON`)*
+>
+> **Ejemplo de integración en prompt:**  
+> `silkscreened raised red enamel branding on clear glass with crisp typography reading exactly "Loco" above "ESPIRITU DE ORIGEN" and "TEQUILA BLANCO 100% DE AGAVE AZUL", sharp legible letterforms, perfectly aligned serif and sans-serif typography, clean transparent bottle surface without cluttered legal micro-text`
+
 ## 2. Campos obligatorios de todo prompt de video
 
 Los siete campos de §1 aplican igual, más tres adicionales:
@@ -47,9 +59,9 @@ Cuando un prompt de video incluya escenas de vertido (*pouring*), caída del lí
 
 ## 3. Negative prompt base (obligatorio, literal)
 
-### 3.1 Base Universal (Imagen y Video)
+### 3.1 Base Universal (Imagen y Video — Incluye Anti-Tipografía Basura)
 ```text
-underage, minors, drunk, drunkenness, excessive drinking, cheap glass, competitor bottles, Casa Dragones bottle, Clase Azul bottle, text watermark, blurry, low resolution
+underage, minors, drunk, drunkenness, excessive drinking, cheap glass, competitor bottles, Casa Dragones bottle, Clase Azul bottle, text watermark, blurry, low resolution, gibberish text, misspelled words, garbled letters, typo, scrambled typography, fake writing, illegible labels, deformed text, pseudo-letters, nonsense words
 ```
 
 ### 3.2 Descriptores Anti-Viscosidad (OBLIGATORIO para todo prompt de video con líquidos o servido)
@@ -74,7 +86,7 @@ Tope duro: **máximo 6 prompts maestros por entrega.** Si `redes × {{numero_ide
 
 Este es el estándar contra el cual se mide cada prompt. Cumple los 7 campos:
 
-> Luxury editorial product photography of **Loco Tequila Blanco bottle** resting on raw black obsidian volcanic rock with faint morning mist in El Arenal Jalisco, warm golden hour sun rays piercing through blue agave fields in the background, sharp crystal reflections, condensation droplets on pure glass, **85mm f/1.4** medium format look, hyper-detailed, Hasselblad capture, cinematic chiaroscuro, natural earthy tones, vibrant **cochineal crimson** subtle backlighting over **obsidian black** base, `--ar 4:5` `--no underage, minors, drunk, drunkenness, excessive drinking, cheap glass, competitor bottles, Casa Dragones bottle, Clase Azul bottle, text watermark, blurry, low resolution`
+> Luxury editorial product photography of **Loco Tequila Blanco iconic trapezoidal crystal bottle** resting on raw black obsidian volcanic rock with faint morning mist in El Arenal Jalisco, silkscreened raised red enamel branding on clear glass with crisp typography reading exactly "Loco" above "ESPIRITU DE ORIGEN" and "TEQUILA BLANCO 100% DE AGAVE AZUL", warm golden hour sun rays piercing through blue agave fields in the background, sharp crystal reflections, condensation droplets on pure glass, **85mm f/1.4** medium format look, hyper-detailed, Hasselblad capture, cinematic chiaroscuro, natural earthy tones, vibrant **cochineal crimson** subtle backlighting over **obsidian black** base, `--ar 4:5` `--no underage, minors, drunk, drunkenness, excessive drinking, cheap glass, competitor bottles, Casa Dragones bottle, Clase Azul bottle, text watermark, blurry, low resolution, gibberish text, misspelled words, garbled letters, typo, scrambled typography, fake writing, illegible labels, deformed text, pseudo-letters, nonsense words`
 
 Contraejemplo de lo que **no** se acepta (le faltan lente, iluminación nombrada, paleta y `--ar`):
 
