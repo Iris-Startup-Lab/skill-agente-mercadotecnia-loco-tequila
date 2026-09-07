@@ -49,13 +49,13 @@ Se verifica sobre el texto que verá el usuario, antes de enviarlo.
 
 No son preguntas de sí/no: se lee el prompt y se confirma que la cadena **contiene** cada elemento. Si falta alguno, se reescribe el prompt en silencio.
 
-- [ ] **Sujeto (Fidelidad Anatómica y Tipográfica):** nombra el SKU exacto del portafolio, cristalería oficial (copa Riedel grabada), rasgos físicos de botella oficial y, si incluye texto en la botella, usa estrictamente la fórmula canónica entre comillas: `"Loco"`, `"ESPIRITU DE ORIGEN"` y `"TEQUILA {SKU} 100% DE AGAVE AZUL"` sin microtextos legales dispersos (`prompt-standards.md` §1.1).
+- [ ] **Sujeto (Fidelidad Anatómica y Jerarquía Tipográfica):** nombra el SKU exacto del portafolio, cristalería oficial (copa Riedel grabada), rasgos físicos de botella oficial y jerarquía tipográfica real: solo `"Loco"` en relieve rojo con fino filete plateado; textos secundarios `"ESPIRITU • ORIGEN"` y `"TEQUILA {SKU} 100% DE AGAVE AZUL"` en tipografía pequeña, sutil y discreta en blanco/plata cerca de la base, sin letras rojas gigantes ni microtextos legales (`prompt-standards.md` §1.1). Incluye la directiva multimodal `ADD: The added image is the real bottle image...` (§1.2).
 - [ ] **Lente y encuadre:** contiene distancia focal `Nmm` y apertura `f/N`, más tipo de plano.
 - [ ] **Iluminación:** nombra explícitamente la condición de luz (hora del día o esquema de estudio).
 - [ ] **Paleta institucional:** contiene al menos **2** colores de marca por nombre (cochineal crimson, deep wine, bone-ivory, obsidian black, volcanic silver).
 - [ ] **Estilo visual:** referencia fotográfica o artística concreta, no adjetivos genéricos ("lujoso", "alta calidad" no cuentan).
 - [ ] **Relación de aspecto:** parámetro `--ar` explícito.
-- [ ] **Negative prompt:** incluye íntegra la cadena base de `prompt-standards.md` §3.1 (incluyendo descriptores anti-tipografía basura: `gibberish text, misspelled words, garbled letters, typo, scrambled typography`) y §3.2 para video.
+- [ ] **Negative prompt:** incluye íntegra la cadena base de `prompt-standards.md` §3.1 (incluyendo descriptores anti-tipografía basura y anti-textos gigantes: `oversized text, giant red lettering, large red typography, clunky font, massive font size`) y §3.2 para video.
 - [ ] **Anclaje de fecha:** la fecha festiva aparece como elemento concreto de escena, no como mención abstracta.
 - [ ] El prompt corresponde al medio elegido (`{{medio}}`) y a la plataforma destino.
 - [ ] Si `{{medio}}` incluye video: el prompt tiene desglose por escena con marcas de tiempo, movimiento de cámara y duración total.

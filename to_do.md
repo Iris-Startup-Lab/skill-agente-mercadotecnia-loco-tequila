@@ -56,5 +56,13 @@ Este documento registra de forma pormenorizada las tareas implementadas para ele
     2. `"ESPIRITU DE ORIGEN"` (eslogan institucional en mayúsculas).
     3. `"TEQUILA {SKU} 100% DE AGAVE AZUL"` (donde `{SKU}` se reemplaza dinámicamente por `BLANCO`, `AMBAR`, o `PURO CORAZON`).
   - Prohibición estricta de solicitar microtextos legales o tipografías minúsculas densas en las botellas generadas.
-  - Adición obligatoria de la suite de tokens de negative prompt tipográfico en §3.1: `gibberish text, misspelled words, garbled letters, typo, scrambled typography, fake writing, illegible labels, deformed text, pseudo-letters, nonsense words`.
-  - Actualización de la lista de verificación [qa-checklist.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/qa-checklist.md) y de la plantilla de salida [output-template.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/output-template.md).
+- [x] **Tarea 9: Escala Tipográfica Fina (Micro-jerarquía Blanca), Directiva Multimodal `ADD:` y Nota de Fidelidad**
+  - Diagnóstico de contaminación cromática y desproporción tipográfica: evitar que los textos secundarios hereden el color rojo del logo o se generen en tamaños gigantescos y toscos.
+  - Estandarización de la jerarquía visual real de la botella en [prompt-standards.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/prompt-standards.md) (§1.1):
+    - Logotipo `"Loco"` como único elemento en relieve esmaltado rojo cochinilla con filete plateado de contorno.
+    - Textos secundarios (`ESPIRITU • ORIGEN` y `TEQUILA {SKU} 100% DE AGAVE AZUL`) en tipografía diminuta, discreta y sutil en fino esmalte blanco cerca de la base maciza, manteniendo amplios espacios negativos de cristal transparente diáfano.
+  - Implementación de la directiva multimodal estándar en §1.2:
+    `ADD: The added image is the real bottle image, you could use it as an inspiration for the exact bottle geometry, crystal transparency, and small subtle typography placement.`
+  - Inclusión de tokens anti-textos gigantes en negative prompt (§3.1): `oversized text, giant red lettering, large red typography, clunky font, massive font size`.
+  - Adición de la **Nota de Fidelidad de Producto** en [output-template.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/output-template.md) para orientar al usuario a adjuntar la foto oficial aislada de la botella (`references/loco-tequila/bottle_tequila_offiicial_images/`) en herramientas generativas multimodales.
+  - Actualización de la lista de verificación [qa-checklist.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/qa-checklist.md).
