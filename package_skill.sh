@@ -12,14 +12,17 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OUTPUT_FILE="${1:-agente-mercadotecnia-loco-tequila.zip}"
+MAX_UNCOMPRESSED_MB="${2:-30}"
+MAX_UNCOMPRESSED_KB=$((MAX_UNCOMPRESSED_MB * 1024))
 ZIP_PATH="${SCRIPT_DIR}/${OUTPUT_FILE}"
 TEMP_DIR="$(mktemp -d 2>/dev/null || mktemp -d -t 'pkg_skill')"
 
 echo "========================================================"
 echo "  Empaquetando Skill: agente-mercadotecnia-loco-tequila  "
 echo "========================================================"
-echo "Directorio origen: ${SCRIPT_DIR}"
-echo "Archivo destino:   ${ZIP_PATH}"
+echo "Directorio origen:     ${SCRIPT_DIR}"
+echo "Archivo destino:       ${ZIP_PATH}"
+echo "Límite desempaquetado: ${MAX_UNCOMPRESSED_MB} MB"
 
 cleanup() {
     rm -rf "${TEMP_DIR}"
@@ -93,6 +96,20 @@ for item in "${ITEMS[@]}"; do
     fi
 done
 
+# Verificar tamaño total desempaquetado antes de comprimir
+echo "Verificando peso total desempaquetado..."
+UNCOMPRESSED_KB=$(du -sk "${TEMP_DIR}" | cut -f1)
+UNCOMPRESSED_MB=$(awk "BEGIN {printf \"%.2f\", ${UNCOMPRESSED_KB}/1024}" 2>/dev/null || python -c "print(round(${UNCOMPRESSED_KB}/1024, 2))" 2>/dev/null || echo "$((UNCOMPRESSED_KB / 1024))")
+
+echo "  Tamaño desempaquetado: ${UNCOMPRESSED_MB} MB (Límite máximo permitido: ${MAX_UNCOMPRESSED_MB} MB)"
+
+if [ "${UNCOMPRESSED_KB}" -gt "${MAX_UNCOMPRESSED_KB}" ]; then
+    echo "ERROR: El tamaño de los archivos desempaquetados (${UNCOMPRESSED_MB} MB) supera el límite de ${MAX_UNCOMPRESSED_MB} MB."
+    exit 1
+else
+    echo "  [OK] El tamaño desempaquetado está dentro del límite permitido (< ${MAX_UNCOMPRESSED_MB} MB)."
+fi
+
 # Eliminar zip previo si existe
 if [ -f "${ZIP_PATH}" ]; then
     rm -f "${ZIP_PATH}"
@@ -111,11 +128,13 @@ shutil.make_archive('${ZIP_PATH%.zip}', 'zip', '${TEMP_DIR}')
 fi
 
 if [ -f "${ZIP_PATH}" ]; then
-    SIZE_KB=$(du -k "${ZIP_PATH}" | cut -f1)
+    ZIP_SIZE_KB=$(du -k "${ZIP_PATH}" | cut -f1)
+    ZIP_SIZE_MB=$(awk "BEGIN {printf \"%.2f\", ${ZIP_SIZE_KB}/1024}" 2>/dev/null || python -c "print(round(${ZIP_SIZE_KB}/1024, 2))" 2>/dev/null || echo "$((ZIP_SIZE_KB / 1024))")
     echo "--------------------------------------------------------"
     echo "  Empaquetado exitoso!"
-    echo "  Archivo: ${ZIP_PATH}"
-    echo "  Tamaño:  ~${SIZE_KB} KB"
+    echo "  Archivo:               ${ZIP_PATH}"
+    echo "  Tamaño comprimido:     ${ZIP_SIZE_MB} MB (~${ZIP_SIZE_KB} KB)"
+    echo "  Tamaño desempaquetado: ${UNCOMPRESSED_MB} MB (Límite: ${MAX_UNCOMPRESSED_MB} MB)"
     echo "--------------------------------------------------------"
 else
     echo "Error: No se pudo generar el archivo ZIP."

@@ -30,10 +30,32 @@ Los siete campos de §1 aplican igual, más tres adicionales:
 - **Campo 9 — Movimiento de cámara** por escena (`slow dolly in`, `static tripod`, `handheld drift`).
 - **Campo 10 — Duración total** y **dirección sonora** (sin afirmar licencias comerciales que no se tienen).
 
+### 2.1 Veracidad Física y Dinámica de Fluidos del Tequila Servido (Anti-Viscosidad)
+
+> ⚠️ **Problema recurrente de la IA de video:** Los modelos generativos (Sora, Runway, Kling, Veo, Wan) tienden por defecto a simular líquidos espesos, gelatinosos o aceitosos (similares a miel, jarabe o CGI pesado) cuando se les pide un servido genérico (*"pouring tequila"*). El tequila 100% de agave a 40% ABV es un **destilado puro con viscosidad casi idéntica al agua (~1.2 a 1.4 mPa·s)**, no un licor azucarado.
+
+Cuando un prompt de video incluya escenas de vertido (*pouring*), caída del líquido o movimiento en copa, **es obligatorio** incluir los descriptores reológicos y de hidrodinámica real:
+
+1. **Viscosidad ultrabaja y flujo laminar:**  
+   `water-thin fluid dynamics`, `ultra-low viscosity liquid (~1.2 cP)`, `crisp high-velocity laminar stream`, `free-flowing natural gravity pour`, `non-viscous distilled agave spirit`.
+2. **Impacto, turbulencia y microgotas:**  
+   `sharp dynamic liquid splash breaking into fine crystalline micro-droplets`, `rapid fluid turbulence`, `instant energetic surface ripples on the liquid meniscus`.
+3. **Aeración instantánea sin espuma:**  
+   `transient effervescent micro-bubbles rising and instantly popping with zero residual foam or lather`, `crystal-clear refractive caustics`.
+4. **Comportamiento en la cristalería Riedel (Piernas / Lágrimas):**  
+   `thin fast-draining tears (lagrimas del tequila) coating the inner crystal walls with crisp transparent runoff, no oily clinging, no syrup coating`.
+
 ## 3. Negative prompt base (obligatorio, literal)
 
+### 3.1 Base Universal (Imagen y Video)
 ```text
 underage, minors, drunk, drunkenness, excessive drinking, cheap glass, competitor bottles, Casa Dragones bottle, Clase Azul bottle, text watermark, blurry, low resolution
+```
+
+### 3.2 Descriptores Anti-Viscosidad (OBLIGATORIO para todo prompt de video con líquidos o servido)
+Se suma de forma mandatoria a la base universal en prompts de video:
+```text
+viscous, viscosity, syrupy, honey, honey-like pour, thick fluid, gelatinous, molasses, oil, oily texture, motor oil, heavy sluggish liquid, gooey, slime, slow-motion goo, sticky syrup, lingering froth, soapy foam, unnatural CGI gel
 ```
 
 Se puede **añadir**, nunca recortar.

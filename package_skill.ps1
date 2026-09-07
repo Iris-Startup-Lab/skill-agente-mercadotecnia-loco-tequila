@@ -11,7 +11,8 @@
 
 [CmdletBinding()]
 param(
-    [string]$OutputFile = "agente-mercadotecnia-loco-tequila.zip"
+    [string]$OutputFile = "agente-mercadotecnia-loco-tequila.zip",
+    [double]$MaxUncompressedMB = 30.0
 )
 
 $ErrorActionPreference = "Stop"
@@ -24,8 +25,9 @@ $TempDir = Join-Path ([System.IO.Path]::GetTempPath()) ("pkg_skill_" + [System.G
 Write-Host "========================================================" -ForegroundColor Cyan
 Write-Host "  Empaquetando Skill: agente-mercadotecnia-loco-tequila  " -ForegroundColor Cyan
 Write-Host "========================================================" -ForegroundColor Cyan
-Write-Host "Directorio origen: $ScriptDir"
-Write-Host "Archivo destino:   $ZipPath"
+Write-Host "Directorio origen:     $ScriptDir"
+Write-Host "Archivo destino:       $ZipPath"
+Write-Host "Límite desempaquetado: $MaxUncompressedMB MB"
 
 # Extensiones de imagen binaria a excluir en references
 $ImageExtensions = @(".jpg", ".jpeg", ".png", ".webp", ".bmp", ".gif", ".tiff")
@@ -101,6 +103,20 @@ try {
         }
     }
 
+    # Verificar tamaño total desempaquetado antes de comprimir
+    Write-Host "Verificando peso total desempaquetado..." -ForegroundColor Cyan
+    $UncompressedBytes = (Get-ChildItem -Path $TempDir -Recurse -File | Measure-Object -Property Length -Sum).Sum
+    $UncompressedMB = [Math]::Round($UncompressedBytes / 1MB, 2)
+
+    Write-Host "  Tamaño desempaquetado: $UncompressedMB MB (Límite máximo permitido: $MaxUncompressedMB MB)"
+
+    if ($UncompressedMB -gt $MaxUncompressedMB) {
+        Write-Error "ERROR: El tamaño de los archivos desempaquetados ($UncompressedMB MB) supera el límite de $MaxUncompressedMB MB permitido por los gestores de skills."
+        exit 1
+    } else {
+        Write-Host "  [OK] El tamaño desempaquetado está dentro del límite permitido (< $MaxUncompressedMB MB)." -ForegroundColor Green
+    }
+
     # Eliminar zip previo si existe
     if (Test-Path $ZipPath) {
         Remove-Item -Force $ZipPath
@@ -112,8 +128,9 @@ try {
     $ZipSizeMB = [Math]::Round((Get-Item $ZipPath).Length / 1MB, 2)
     Write-Host "--------------------------------------------------------" -ForegroundColor Green
     Write-Host "  Empaquetado exitoso!" -ForegroundColor Green
-    Write-Host "  Archivo: $ZipPath" -ForegroundColor Green
-    Write-Host "  Tamaño:  $ZipSizeMB MB" -ForegroundColor Green
+    Write-Host "  Archivo:               $ZipPath" -ForegroundColor Green
+    Write-Host "  Tamaño comprimido:     $ZipSizeMB MB" -ForegroundColor Green
+    Write-Host "  Tamaño desempaquetado: $UncompressedMB MB (Límite: $MaxUncompressedMB MB)" -ForegroundColor Green
     Write-Host "--------------------------------------------------------" -ForegroundColor Green
 }
 finally {

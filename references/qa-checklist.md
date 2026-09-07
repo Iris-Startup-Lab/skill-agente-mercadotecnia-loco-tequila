@@ -58,6 +58,7 @@ No son preguntas de sí/no: se lee el prompt y se confirma que la cadena **conti
 - [ ] **Anclaje de fecha:** la fecha festiva aparece como elemento concreto de escena, no como mención abstracta.
 - [ ] El prompt corresponde al medio elegido (`{{medio}}`) y a la plataforma destino.
 - [ ] Si `{{medio}}` incluye video: el prompt tiene desglose por escena con marcas de tiempo, movimiento de cámara y duración total.
+- [ ] **Física de fluidos en video (Anti-Viscosidad):** Si el video muestra servido o líquido en movimiento, incluye obligatoriamente descriptores de ultrabaja viscosidad (`water-thin fluid dynamics`, `~1.2 cP`, flujo laminar veloz, microgotas cristalinas) y el negative prompt anti-viscosidad (`prompt-standards.md` §3.2: `viscous, syrupy, honey, molasses, oil, gelatinous`).
 - [ ] Las keywords SEO/GEO están en el copy, **no** dentro del prompt de imagen.
 - [ ] El total de conceptos no excede 6; si se recortó `{{numero_ideas}}`, está declarado en las notas.
 
