@@ -34,6 +34,7 @@ ITEMS=(
     "SKILL.md"
     "README.md"
     "AGENTS.md"
+    "FLUJO_SKILL_CLIENTE.md"
     "to_do.md"
     ".gitignore"
     "package_skill.ps1"

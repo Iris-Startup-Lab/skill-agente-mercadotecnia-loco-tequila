@@ -19,7 +19,9 @@ flowchart TD
         A(["🚀 Inicio / Solicitud del Cliente"]):::startEnd --> B["1. Confirmar Plataformas Destino<br/><i>(Instagram, Facebook, YouTube, LinkedIn, TikTok)</i>"]:::stepNode
         B --> C["2. Detección Automática de Fechas<br/><i>(Python: feriados oficiales/no oficiales a 30 días + calendario de bebidas)</i>"]:::subSkillNode
         C --> D{"❓ PREGUNTA OBLIGATORIA:<br/>¿Qué fecha festiva o efeméride<br/>desea tomar en cuenta?"}:::questionNode
-        D --> E["3. Confirmar Producto del Portafolio<br/><i>(Blanco, Ámbar, Puro Corazón, Áureo, Hierofante o Portafolio)</i>"]:::stepNode
+        D --> DG{"❓ PREGUNTA OBLIGATORIA:<br/>¿Desea motivo gastronómico?<br/><i>(Tradición culinaria mexicana)</i>"}:::questionNode
+        DG --> DS{"❓ PREGUNTA OBLIGATORIA (Clickeable):<br/>¿Te gustaría darme sugerencias<br/>para prompts y copy?"}:::questionNode
+        DS --> E["3. Confirmar Producto del Portafolio<br/><i>(Blanco, Ámbar, Puro Corazón, Áureo, Hierofante)</i>"]:::stepNode
         E --> F["4. Seleccionar Medio de Salida<br/><i>(Imagen, Video o Ambos)</i>"]:::stepNode
     end
 
@@ -40,11 +42,12 @@ flowchart TD
 
     subgraph FASE4 ["✍️ FASE 4: Producción de Copys y Prompts de IA"]
         N --> O["11. Redacción de Copys Nativos por Red<br/><i>(Gramática y tono adaptado a cada plataforma)</i>"]:::stepNode
-        O --> P["12. Generación de Prompts para IA de Imagen/Video<br/><i>(Estándar de 7 campos obligatorios: SKU, Lente 85mm, Luz, Paleta institucional, Estilo luxury, AR, Negative Prompt)</i>"]:::stepNode
+        O --> EV["11b. Segunda Evaluación: Sentido Común Visual<br/><i>(Vajilla en comida, soporte de copa, preservación de botella)</i>"]:::subSkillNode
+        EV --> P["12. Generación de Prompts para IA de Imagen/Video<br/><i>(Gramática brand-context.md + 7 campos obligatorios + CERO procesos de producción)</i>"]:::stepNode
     end
 
     subgraph FASE5 ["🛡️ FASE 5: Control de Calidad y Guardrails Legales"]
-        P --> Q["13. Autoverificación Interna con QA Checklist<br/><i>(+18, Evita el exceso, #EspírituDeOrigen, Hechos inmutables)</i>"]:::stepNode
+        P --> Q["13. Autoverificación Interna con QA Checklist<br/><i>(+18, Evita el exceso, #EspírituDeOrigen, Hechos inmutables, Cero alambiques/jima)</i>"]:::stepNode
         Q --> R{"¿Cumple todos los estándares<br/>y campos obligatorios?"}:::questionNode
         R -- No --> S["Corrección Silenciosa Inmediata<br/><i>(Reescritura autónoma del prompt o copy)</i>"]:::stepNode
         S --> Q
@@ -66,7 +69,12 @@ flowchart TD
 1. **Plataformas Destino:** Se definen los canales de difusión (Instagram, Facebook, YouTube, LinkedIn, TikTok).
 2. **Detección de Fechas Próximas:** Se ejecuta un script en Python que analiza los próximos 30 días, combinando días festivos oficiales y no oficiales de México con efemérides internacionales del mundo de los destilados y gastronomía.
 3. **Confirmación Interactiva:** El agente consulta al usuario para elegir la fecha ancla exacta.
-4. **Selección de Producto y Formato:** Se elige el SKU exacto (Loco Blanco, Ámbar, Puro Corazón, Áureo o Hierofante) y el medio (*Imagen*, *Video* o *Ambos*).
+4. **Motivo Gastronómico (Opcional/Cultural):** Si la festividad tiene arraigo tradicional, se ofrece incorporar maridajes de alta gama con Loco Tequila según `references/calendario-gastronomico-mexicano.md`.
+5. **Sugerencias Creativas (Pregunta Clickeable para Claude/Codex):** Se presenta la pregunta interactiva con botones clickeables:
+   - `[🔘 Sí, dar sugerencias](#)`
+   - `[🔘 No, te lo dejo todo a ti agente](#)`
+   Permite al cliente guiar el rumbo o delegar la creatividad íntegra al agente.
+6. **Selección de Producto y Formato:** Se elige el SKU exacto (Loco Blanco, Ámbar, Puro Corazón, Áureo o Hierofante) y el medio (*Imagen*, *Video* o *Ambos*).
 
 ### 🔍 Fase 2: Auditoría y No-Repetición Visual (OneDrive / SharePoint)
 - Si el cliente proporciona acceso a un repositorio en la nube, el agente lee los metadatos de las últimas campañas (hasta 10 archivos) para registrar qué conceptos ya fueron explotados.
@@ -85,18 +93,24 @@ flowchart TD
 
 ### ✍️ Fase 4: Redacción Nativa y Prompts Generativos
 - **Copys Nativos:** Textos redactados desde cero según los formatos técnicos de cada red (Reels, TikToks rápidos, narrativas largas en Facebook, artículos corporativos en LinkedIn).
-- **Ingeniería de Prompts (7 Campos Obligatorios):**
-  1. *Sujeto / SKU exacto y cristalería oficial.*
+- **Segunda Evaluación: Sentido Común Visual y Verosimilitud de Escena (`references/evaluacion-sentido-comun-escena.md`):**
+  - *Vajilla Obligatoria:* Si hay alimentos (chiles en nogada, mole, etc.), se exige y describe explícitamente vajilla de alta gama (cerámica artesanal, porcelana mate), prohibiendo tajantemente comida servida sobre la mesa o piedra sin plato.
+  - *Preservación de lo Primordial:* Inyección de la directiva de preservación morfológica (base de 2 cm, relieve rojo vítreo) para que la IA no olvide la anatomía de la botella ni genere botellas genéricas.
+  - *Física y Soporte:* La copa Riedel debe tener apoyo creíble y sombras de contacto reales.
+- **Ingeniería de Prompts (Gramática de `references/brand-context.md` + 7 Campos Obligatorios):**
+  1. *Sujeto / SKU exacto, botella canon y cristalería oficial (copa Riedel grabada).*
   2. *Composición técnica (ej. 85mm f/1.4, plano medio cerrado).*
-  3. *Esquema de iluminación (golden hour, claroscuro editorial).*
+  3. *Esquema de iluminación (golden hour, claroscuro editorial cálido).*
   4. *Paleta institucional (carmesí cochinilla, vino profundo, negro obsidiana, etc.).*
   5. *Estilo fotográfico de lujo (Hasselblad medium format).*
   6. *Relación de aspecto (`--ar 4:5`, `--ar 9:16`, `--ar 16:9`).*
-  7. *Negative prompt base estricto (anti-embriaguez, sin menores, sin botellas de competidores).*
+  7. *Negative prompt base estricto (anti-embriaguez, sin menores, sin botellas genéricas, anti-comida sin plato, sin botellas de competidores).*
+- **REGLA DE ORO DE CONTENIDO:** Prohibición estricta de mostrar procesos de producción del tequila (jima, jimadores, hornos, piedra tahona, alambiques ni operarios) en imágenes o videos, salvo petición expresa del usuario.
 
 ### 🛡️ Fase 5: QA y Guardrails Innegociables
 - Revisión de leyendas de cumplimiento legal obligatorio: `+18`, `Evita el exceso`, `#EspírituDeOrigen`.
 - Fidelidad absoluta a la historia y origen de la marca: *Hacienda La Providencia, El Arenal, Jalisco (Terruño volcánico y agua de manantial).*
+- Verificación de ausencia de procesos de destilería y clichés prohibidos (hielo, sal, limón en copa, cerámica pintada).
 - **Corrección silenciosa:** Si falta algún parámetro técnico, el agente lo ajusta automáticamente sin fricción para el usuario.
 
 ### ✨ Fase 6: Entrega Dual de Alto Impacto

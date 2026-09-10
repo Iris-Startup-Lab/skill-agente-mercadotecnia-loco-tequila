@@ -49,6 +49,7 @@ agente-mercadotecnia-loco-tequila/
 ├── SKILL.md                               # Instrucción maestra de la skill
 ├── README.md                              # Documentación general y técnica
 ├── AGENTS.md                              # Protocolo operativo (NO se autocarga fuera de este repo; solo apunta a references/)
+├── FLUJO_SKILL_CLIENTE.md                 # Flujo ejecutivo y visual para el cliente con diagrama Mermaid
 ├── .gitignore                             # Reglas de exclusión de Git
 │
 ├── package_skill.ps1                      # Script PowerShell para empaquetar la skill en ZIP (excluye binarios)
@@ -62,7 +63,7 @@ agente-mercadotecnia-loco-tequila/
 │   └── Loco_Tequila_Logo_white.png        # Logo oficial en blanco
 │
 ├── references/                            # Fuente de verdad inmutable de la marca
-│   ├── brand-context.md                   # Memoria de marca, buyer personas, manifiesto y guardrails
+│   ├── brand-context.md                   # Memoria de marca unificada: filosofía, buyer personas, identidad visual, subidentidades y CERO procesos
 │   ├── fechas-alcohol.md                  # Calendario de fechas de bebidas y prioridades de marca
 │   ├── calendario-gastronomico-mexicano.md # Calendario gastronómico mexicano (UNESCO / SIC Gob Ficha 45) y maridaje
 │   ├── manual-cumplimiento-ia-2026.md     # Protocolo multicanal IA 2026: 3 niveles, FTC, EU AI Act, 360Brew
@@ -158,6 +159,7 @@ Antes de generar una campaña, la skill solicita o valida los siguientes paráme
 | `{{plataformas_destino}}` | Facebook, YouTube, LinkedIn, TikTok, Instagram | Red(es) social(es) destino de la campaña |
 | `{{fechas_proximas}}` | Fechas festivas / efemérides | **Obligatorio:** Se detectan a 30 días y se pregunta siempre al usuario cuál desea elegir |
 | `{{motivo_gastronomico}}` | `Sí` \| `No` | **Obligatorio si la festividad tiene tradición culinaria:** Pregunta si las imágenes tendrán motivo gastronómico y ofrece listado de platillos de `references/calendario-gastronomico-mexicano.md` |
+| `{{sugerencias_creativas}}` | `Sí` \| `No` (clickeable) | **Obligatorio:** Pregunta interactiva tras motivo gastronómico: *«¿Te gustaría darme sugerencias para proceder con la creación de los prompts y 'copy'?»* con opciones clickeables `[🔘 Sí, dar sugerencias]` / `[🔘 No, te lo dejo todo a ti agente]` |
 | `{{producto}}` | Loco Blanco, Loco Ámbar, Loco Puro Corazón, Loco Áureo, Loco Hierofante, Portafolio Completo | Expresión de tequila a promocionar |
 | `{{medio}}` | Imagen, Video, Ambas | Define el tipo de prompts generativos a producir |
 | `{{referencias_visuales}}` | OneDrive / SharePoint, imágenes adjuntas o ninguna | Consulta obligatoria: (a) Link de carpeta (+ alcance: 10 recientes o fecha), (b) 1 a 3 imágenes propias adjuntas en el chat, o (c) Ninguna (omite auditoría) |
@@ -193,7 +195,9 @@ flowchart TD
     A[Inicio / Petición del Usuario] --> B[Confirmar Plataformas Destino]
     B --> C[Detectar Feriados y Fechas de Bebidas]
     C --> D[Preguntar Obligatoriamente al Usuario qué Fecha Elegir]
-    D --> E[Confirmar Producto del Portafolio]
+    D --> D2{¿Motivo Gastronómico?}
+    D2 --> D3["Pregunta Obligatoria Clickeable:<br/>¿Desea dar sugerencias para prompts y copy?"]
+    D3 --> E[Confirmar Producto del Portafolio]
     E --> F{¿Hay Link OneDrive/SharePoint?}
     F -- Sí --> G1[Preguntar si Leer Nombres de Campañas Pasadas]
     G1 --> G2[Extraer Metadatos vía Sub-Skill]
@@ -202,8 +206,8 @@ flowchart TD
     F -- No --> H
     H --> I[Ideación según Nivel de Inventiva]
     I --> J[Redactar Copys Nativos + Keywords SEO/GEO]
-    J --> K[Generar Prompts Ultra Detallados para IA]
-    K --> L[Verificación de Guardrails y QA Checklist]
+    J --> K[Generar Prompts Ultra Detallados para IA según brand-context.md]
+    K --> L["Verificación de Guardrails y QA Checklist (Cero procesos de producción)"]
     L --> M[Entrega con Plantilla + Pasarela Web HTML]
     M --> N{Extras opcionales — la entrega ya está completa}
     N -- Top de modelos --> O[Leaderboard en vivo vía API Design Arena]
@@ -232,6 +236,7 @@ flowchart TD
    - Categoría: Pionero en "Tequila de Terruño" (Single-Estate, 100% Agave Tequilana Weber Azul).
    - Tagline: *"Espíritu de Origen. Espíritu Excepcional. El primer Tequila de Terruño."*
 5. **Coherencia Terminológica:** Usar siempre los nombres y términos oficiales establecidos en `references/seo-geo-glossary.md`.
+6. **CERO Procesos de Creación del Tequila (Salvo Petición Explícita):** Tanto en imágenes como en videos, **NO se deben mostrar procesos de producción del tequila** (faenas de jima de agave, jimadores, hornos de mampostería, piedra tahona, tinas de fermentación, alambiques de destilación, maquinaria industrial ni obreros de fábrica), a menos que el cliente lo pida expresamente (`references/brand-context.md` §9). La marca se posiciona como una obra de arte, elegancia contemplativa y celebración de la vida, no como un proceso industrial.
 
 ---
 

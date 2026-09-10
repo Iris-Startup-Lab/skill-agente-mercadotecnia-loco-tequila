@@ -38,6 +38,13 @@ Este documento contiene las reglas de comportamiento, protocolo de ejecución y 
 8. **Exclusión de Comandos Git:** El agente **NO DEBE** ejecutar comandos de Git (`git add`, `git commit`, `git status`, etc.) ni gestionar el control de versiones. La gestión de Git es responsabilidad exclusiva del usuario.
 9. **Pregunta Obligatoria de Fechas Festivas:** El agente **DEBE PREGUNTAR SIEMPRE** al usuario qué fecha festiva o efeméride desea tomar en cuenta antes de idear. Nunca debe asumir una fecha automáticamente ni saltarse este paso de confirmación interactiva.
 10. **Pregunta Obligatoria de Motivo Gastronómico:** Si la fecha festiva elegida tiene arraigo culinario en el calendario gastronómico mexicano (`references/calendario-gastronomico-mexicano.md`), el agente **DEBE PREGUNTAR SIEMPRE**: *«¿Quieres que tus imágenes generadas tengan un motivo gastronómico?, puedo darte un listado de qué platillos pueden servir para estas fechas»*. El usuario responderá con «Sí» o «No». Si responde «Sí», se presentan los platillos y maridajes de esa fecha para integrarlos en los prompts; si responde «No», se avanza con estilo puro de producto sin alimentos.
+11. **Pregunta Obligatoria de Sugerencias Creativas (con opciones clickeables):** Inmediatamente después del motivo gastronómico, el agente **DEBE PREGUNTAR SIEMPRE**:
+    *«Antes de comenzar, ¿te gustaría darme sugerencias para proceder con la creación de los prompts y 'copy'?»*
+    Para asegurar interactividad en Claude, Codex y entornos web, formular las opciones como botones clickeables en Markdown interactivo:
+    - `[🔘 Sí, dar sugerencias](#)`
+    - `[🔘 No, te lo dejo todo a ti agente](#)`
+    Si responde «Sí», se solicitan sus ideas o directrices creativas y se incorporan prioritariamente; si responde «No», el agente procede con autonomía creativa total.
+12. **CERO Procesos de Creación del Tequila (Salvo Petición Explícita):** Tanto en imágenes como en videos, **NO se deben mostrar procesos de producción del tequila** (jima de agave, jimadores, hornos de mampostería, piedra tahona, tinas de fermentación, alambiques de destilación, maquinaria industrial ni obreros de fábrica), a menos que el cliente lo pida expresamente (`references/brand-context.md` §9). La marca se posiciona como una obra de arte, elegancia contemplativa y celebración de la vida, no como un proceso industrial.
 
 ---
 
@@ -106,6 +113,14 @@ sequenceDiagram
             Usuario->>Agente: Selecciona/confirma platillo o rumbo culinario
         end
     end
+    Agente->>Usuario: PREGUNTA OBLIGATORIA (clickeable): ¿Te gustaría darme sugerencias para prompts y copy?
+    alt Usuario responde "Sí, dar sugerencias"
+        Usuario->>Agente: Aporta sugerencias / rumbo creativo específico
+        Agente->>Agente: Incorpora sugerencias de forma prioritaria
+    else Usuario responde "No, te lo dejo todo a ti agente"
+        Usuario->>Agente: Confirma delegación creativa completa
+        Agente->>Agente: Asume total autonomía creativa según memoria de marca
+    end
     Usuario->>Agente: Confirma producto, red(es), medio e inventiva
     Agente->>Usuario: PREGUNTA OBLIGATORIA de referencias: ¿link de OneDrive (+ alcance), 1 a 3 imágenes en chat, o ninguna?
     alt (a) El usuario pega link de OneDrive/SharePoint
@@ -123,7 +138,9 @@ sequenceDiagram
     end
     Agente->>Ref: Consultar matriz de plataformas y glosario SEO/GEO
     Agente->>Agente: Aplicar Filtro de Locura Genial
-    Agente->>Agente: Redactar copys nativos + Prompts para IA generativa
+    Agente->>Agente: Redactar copys nativos por red
+    Agente->>Ref: Segunda Evaluación: Sentido Común Visual (vajilla en comida, soporte de copa y botella)
+    Agente->>Agente: Generar Prompts ultra detallados según prompt-standards.md
     Agente->>Ref: Validar contra qa-checklist.md
     Agente->>Usuario: Entrega estructurada + Pasarela Web publicada (paso 11)
 
@@ -172,13 +189,13 @@ sequenceDiagram
 
 Resumen no normativo (el detalle, los 7 campos obligatorios, la regla de escala y el prompt ejemplar están en la referencia):
 
-- Sujeto/producto con SKU exacto y cristalería oficial.
+- Sujeto/producto con SKU exacto, botella canónica (`references/brand-context.md`) y cristalería oficial (copa Riedel grabada).
 - Composición con distancia focal y apertura explícitas.
 - Iluminación nombrada (hora del día o esquema de estudio).
 - Paleta institucional: rojo cochinilla, vino profundo, hueso-marfil, negro obsidiana, plata volcánica.
 - Estilo visual con referencia concreta (*luxury editorial photography, Hasselblad medium format look*).
 - Relación de aspecto explícita (`--ar`).
-- Negative prompt base íntegro (menores, embriaguez, cristalería barata, botellas de competidores, watermark, baja resolución).
+- Negative prompt base íntegro (menores, embriaguez, cristalería barata, botellas de competidores, cerámica pintada, marcas de agua, y **prohibición estricta de procesos de producción de tequila** salvo petición expresa del usuario: nada de jima, jimadores, hornos, alambiques, molienda ni operarios).
 
 ---
 

@@ -37,16 +37,39 @@ Además, el prompt **debe anclar visualmente la fecha festiva elegida** (`{{fech
 > **Fórmula canónica en prompt de texto:**  
 > `prominent raised crimson red enamel calligraphic "Loco" logo with fine silver relief outline centered on pure transparent glass, accompanied below by discrete, fine crisp white sans-serif typography in small delicate scale reading exactly "ESPIRITU • ORIGEN" and "TEQUILA {SKU} 100% DE AGAVE AZUL" positioned near the solid glass base, understated micro-hierarchy, generous clear crystal negative space without cluttered legal micro-text`
 
-### 1.2 Directiva Multimodal de Imagen de Referencia (`ADD:`)
+### 1.2 Directiva Multimodal de Preservación Anatómica (`ADD:`)
 
-Para elevar la fidelidad al 100% en herramientas generativas que admiten imágenes de entrada (Midjourney Image Prompt `--iw`, Flux Redux, Gemini 3 Pro Image-to-Image o ChatGPT con adjunto), se añade al prompt maestro de imagen la siguiente cláusula de inspiración visual:
+> ⚠️ **Preservación de lo Primordial:** Para evitar que la IA ignore los atributos canónicos de la botella (base maciza, silueta cónica trapezoidal y relieve vítreo rojo) o la reemplace por una botella genérica, se añade de forma obligatoria al prompt multimodal la directiva de preservación estricta:
 
 ```text
-ADD: The added image is the real bottle image, you could use it as an inspiration for the exact bottle geometry, crystal transparency, and small subtle typography placement.
+ADD: The added image is the real bottle image. PRESERVE EXACT BOTTLE MORPHOLOGY: Maintain the identical conical trapezoidal heavy crystal silhouette, the thick 2cm solid base, and the raised crimson enamel "Loco" relief. Strictly prohibit generic cylindrical liquor bottles, paper labels, and round screw caps.
 ```
 
 > **Guía para el usuario:** Se le recuerda al usuario que puede adjuntar una fotografía oficial de la botella real (fondo blanco o neutro de estudio) junto con el prompt maestro generado para emular a la perfección la silueta, los relieves y las proporciones tipográficas reales tanto en imagen como en video (Image-to-Video).
 
+### 1.3 Regla Canónica: CERO Procesos de Creación del Tequila (Salvo Petición Explícita)
+
+> ⚠️ **REGLA DE ORO DE CONTENIDO (Imagen y Video):**  
+> **Tanto en imágenes como en videos, ESTÁ ESTRICTAMENTE PROHIBIDO mostrar los procesos de creación o producción del tequila (faenas de jima de agave, jimadores, hornos de mampostería, piedra tahona, tinas de fermentación, alambiques de destilación, maquinaria industrial ni obreros de fábrica), a menos que el cliente lo pida expresamente.**  
+>
+> Loco Tequila se conceptualiza como un **objeto de arte, lujo contemplativo y celebración de la vida**, no como un documental de proceso fabril. El producto se representa en su gloria terminada sobre elementos nobles (obsidiana, arquitectura moderna, mármol, luz dorada) y terruño místico en calma.
+
+### 1.4 Bottle-Locks Canónicos por Expresión (`references/brand-context.md`)
+
+Para evitar distorsiones de silueta, cada prompt debe concatenar en sus primeros 20 tokens el bloque anatómico exacto de su expresión:
+- **Loco Blanco:** `Loco Blanco tequila bottle, iconic conical trapezoidal clear crystal bottle with 2cm solid heavy glass base, crimson red foil neck wrap, enameled raised red cochineal "Loco" wordmark with silver outline, subtle crisp white typography reading "ESPIRITU • ORIGEN", official engraved Riedel tequila flute glass`
+- **Loco Ámbar:** `Loco Ámbar tequila bottle, conical trapezoidal clear glass bottle with 2cm solid base, copper-bronze metallic neck cap, luminous golden amber liquid, enameled raised red cochineal "Loco" wordmark with silver outline, subtle white typography "ESPIRITU • ORIGEN", official Riedel tequila flute`
+- **Loco Puro Corazón:** `Loco Puro Corazón tequila bottle, slender conical trapezoidal crystal bottle with 2cm solid base, brushed silver-white metallic neck wrap, pure diamond-clear luminous liquid, enameled raised red cochineal "Loco" wordmark, understated white typography, Riedel crystal flute`
+- **Loco Áureo:** `Loco Áureo tequila bottle, conical trapezoidal crystal bottle with 2cm solid base, matte black neck cap, deep mahogany amber liquid, enameled raised red cochineal "Loco" wordmark with silver outline, fine art studio aesthetic`
+- **Loco Hierofante:** `Loco Hierofante tequila bottle, sculpted faceted geode crystal flask with hand-carved relief lines, polished solid silver neck ring with engraved "L" monogram, jewel-like collector piece, transcendental silver reflection ambiance`
+
+### 1.5 Regla de Oro Culinaria y Sentido Común Visual (`references/evaluacion-sentido-comun-escena.md`)
+
+> 🍽️ **Menaje y Vajilla Obligatorios:**  
+> **NUNCA generar alimentos servidos directamente sobre mesas, piedras, manteles o superficies crudas (ej. un chile en nogada sin plato).**  
+> Todo platillo tradicional o de alta cocina debe servirse sobre vajilla de alta gama explícitamente descrita:  
+> - *«artfully plated on a deep matte ivory ceramic artisan dish, glossy nogada sauce pooling elegantly on the plate surface, garnished with ruby pomegranate seeds and fresh parsley»*.  
+> - La copa Riedel debe estar apoyada firmemente sobre la mesa o posavasos de cuero/piedra con sombras de contacto reales (`contact shadows`), sin levitar ni inclinarse sin soporte.
 
 ## 2. Campos obligatorios de todo prompt de video
 
@@ -73,9 +96,9 @@ Cuando un prompt de video incluya escenas de vertido (*pouring*), caída del lí
 
 ## 3. Negative prompt base (obligatorio, literal)
 
-### 3.1 Base Universal (Imagen y Video — Incluye Anti-Tipografía Basura y Anti-Textos Gigantes)
+### 3.1 Base Universal (Imagen y Video — Incluye Anti-Tipografía Basura, Anti-Textos Gigantes, Anti-Procesos de Producción y Anti-Alucinaciones Culinarias)
 ```text
-underage, minors, drunk, drunkenness, excessive drinking, cheap glass, competitor bottles, Casa Dragones bottle, Clase Azul bottle, text watermark, blurry, low resolution, gibberish text, misspelled words, garbled letters, typo, scrambled typography, fake writing, illegible labels, deformed text, pseudo-letters, nonsense words, oversized text, giant red lettering, large red typography, clunky font, massive font size
+underage, minors, drunk, drunkenness, excessive drinking, cheap glass, competitor bottles, Casa Dragones bottle, Clase Azul bottle, generic liquor bottle, cylindrical bottle, round wine bottle, paper label, sticker label, screw cap, flat base, thin glass, painted ceramic decanter, food without plate, unplated food, ceramic decanter, hand-painted pattern, old-fashioned glass, ice cubes, salt rim, lime wedge on rim, shot glass, tequila production process, harvesting agave, jimador, jiming agave, industrial distillery, cooking ovens, brick ovens, industrial machinery, tahona stone, fermentation vats, distillation stills, factory workers, text watermark, blurry, low resolution, gibberish text, misspelled words, garbled letters, typo, scrambled typography, fake writing, illegible labels, deformed text, pseudo-letters, nonsense words, oversized text, giant red lettering, large red typography, clunky font, massive font size
 ```
 
 ### 3.2 Descriptores Anti-Viscosidad (OBLIGATORIO para todo prompt de video con líquidos o servido)
@@ -98,7 +121,7 @@ Tope duro: **máximo 6 prompts maestros por entrega.** Si `redes × {{numero_ide
 
 ## 5. Prompt ejemplar (ancla de calidad)
 
-> Luxury editorial product photography of **Loco Tequila Blanco iconic trapezoidal crystal bottle** resting on raw black obsidian volcanic rock with faint morning mist in El Arenal Jalisco, centered prominent raised crimson red enamel "Loco" logo with delicate silver relief outline, accompanied below by discrete, fine crisp white sans-serif typography in small delicate scale reading "ESPIRITU • ORIGEN" and "TEQUILA BLANCO 100% DE AGAVE AZUL" near the solid glass base, generous crystal negative space, warm golden hour sun rays piercing through blue agave fields in the background, sharp crystal reflections, condensation droplets on pure glass, **85mm f/1.4** medium format look, hyper-detailed, Hasselblad capture, cinematic chiaroscuro, natural earthy tones, vibrant **cochineal crimson** subtle backlighting over **obsidian black** base, `--ar 4:5` `ADD: The added image is the real bottle image, you could use it as an inspiration for the exact bottle geometry, crystal transparency, and small subtle typography placement.` `--no underage, minors, drunk, drunkenness, excessive drinking, cheap glass, competitor bottles, Casa Dragones bottle, Clase Azul bottle, text watermark, blurry, low resolution, gibberish text, misspelled words, garbled letters, typo, scrambled typography, fake writing, illegible labels, deformed text, pseudo-letters, nonsense words, oversized text, giant red lettering, large red typography, clunky font, massive font size`
+> Luxury editorial product photography of **Loco Tequila Blanco iconic trapezoidal crystal bottle with 2cm solid heavy glass base** resting on raw black obsidian volcanic rock with faint morning mist in El Arenal Jalisco, centered prominent raised crimson red enamel "Loco" logo with delicate silver relief outline, accompanied below by discrete, fine crisp white sans-serif typography in small delicate scale reading "ESPIRITU • ORIGEN" and "TEQUILA BLANCO 100% DE AGAVE AZUL" near the solid glass base, generous crystal negative space, warm golden hour sun rays piercing through blue agave fields in the background, sharp crystal reflections, condensation droplets on pure glass, **85mm f/1.4** medium format look, hyper-detailed, Hasselblad capture, cinematic chiaroscuro, natural earthy tones, vibrant **cochineal crimson** subtle backlighting over **obsidian black** base, `--ar 4:5` `ADD: The added image is the real bottle image. PRESERVE EXACT BOTTLE MORPHOLOGY: Maintain identical conical trapezoidal crystal silhouette, thick 2cm solid base, and raised red enamel "Loco" relief. Strictly prohibit generic cylindrical liquor bottles, paper labels, and round screw caps.` `--no underage, minors, drunk, drunkenness, excessive drinking, cheap glass, competitor bottles, Casa Dragones bottle, Clase Azul bottle, generic liquor bottle, cylindrical bottle, round wine bottle, paper label, sticker label, screw cap, flat base, thin glass, painted ceramic decanter, food without plate, unplated food, ceramic decanter, hand-painted pattern, old-fashioned glass, ice cubes, salt rim, lime wedge on rim, shot glass, tequila production process, harvesting agave, jimador, industrial distillery, cooking ovens, brick ovens, industrial machinery, tahona stone, fermentation vats, distillation stills, text watermark, blurry, low resolution, gibberish text, misspelled words, garbled letters, typo, scrambled typography, fake writing, illegible labels, deformed text, pseudo-letters, nonsense words, oversized text, giant red lettering, large red typography, clunky font, massive font size`
 
 Contraejemplo de lo que **no** se acepta (le faltan lente, iluminación nombrada, paleta y `--ar`):
 

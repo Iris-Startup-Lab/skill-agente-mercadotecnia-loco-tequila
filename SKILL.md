@@ -23,6 +23,7 @@ Antes de producir, la skill debe confirmar (o pedir al usuario si faltan):
 - **`{{plataformas_destino}}`** — Facebook, YouTube, LinkedIn, TikTok, Instagram, o varias/todas.
 - **`{{fechas_proximas}}`** — feriados oficiales/no oficiales y fechas de bebidas que se aproximan (ver sub-skill `obtener-feriados-oficiales-no-oficiales` y `references/fechas-alcohol.md`). **Requisito obligatorio:** la skill detecta las fechas y **DEBE PREGUNTAR SIEMPRE al usuario cuál fecha desea tomar en cuenta** antes de idear. Nunca asumir una fecha automáticamente.
 - **`{{producto}}`** — Loco Blanco, Loco Ámbar, Loco Puro Corazón, Loco Áureo, Loco Hierofante, o portafolio completo (ver `references/productos.md`).
+- **`{{sugerencias_creativas}}`** — (opcional) directrices, sugerencias o enfoque particular del usuario para la creación de los copys y prompts; o delegación total al agente si el usuario elige no aportarlas. Se pregunta obligatoriamente en el **paso 3c** tras el motivo gastronómico mediante opciones interactivas clickeables.
 - **`{{medio}}`** — tipo de salida multimedia: **imagen**, **video** o **ambas** (define qué prompts se generan).
 - **`{{mostrar_leaderboard}}`** — (opcional, por defecto **no**) si el usuario quiere ver el ranking en vivo de generadores de IA para ejecutar los prompts. Se pregunta en el **paso 12**, ya con la pasarela entregada. La arena depende de `{{medio}}` (imagen → `image`, video → `video`, ambas → los dos). Ver `sub-skill/obtener-leaderboard-imagen/README.md`.
 - **`{{carpeta_referencias}}`** — link de la carpeta de OneDrive/SharePoint con las piezas previas. **No hay carpeta fija: cambia según la campaña, así que el agente DEBE PEDIRLA SIEMPRE al usuario.** Nunca asumir una ruta, ni reutilizar la de una conversación anterior, ni inventar el nombre. El usuario puede declinar ("no aplica") y entonces se omite la auditoría — lo que no es opcional es **preguntar**.
@@ -55,7 +56,7 @@ Los siguientes se piden **solo después de entregar la pasarela** (paso 12), nun
 
 Los hechos de marca, buyer personas, filtro de Locura Genial, matriz de plataformas, glosario de keywords, fichas de producto y checklist de QA viven en las referencias de esta skill:
 
-- `references/brand-context.md` — memoria de marca (secciones 1–6): contexto, buyer personas, Locura Genial, distancia mítica, manifiesto, guardrails regulatorios.
+- `references/brand-context.md` — **memoria de marca e identidad visual canónica: hechos de marca, buyer personas, manifiesto, guardrails regulatorios, 4 subidentidades de producto por SKU, botellas canónicas (cónicas y facetadas), colores de cápsula, registros de escenografía, props, diferenciación y regla canónica de CERO procesos de creación del tequila.**
 - `references/platforms-process.md` — matriz de plataformas (sección 7) y formato técnico (sección 8).
 - `references/seo-geo-glossary.md` — glosario maestro de keywords SEO/GEO (sección 10).
 - `references/qa-checklist.md` — checklist de QA (sección 11).
@@ -66,8 +67,10 @@ Los hechos de marca, buyer personas, filtro de Locura Genial, matriz de platafor
 - `references/loco-tequila/bottle_tequila_offiicial_images/resumen_bottle_tequila_offiicial_images.md` — **canon anatómico de botellas oficiales de Loco Tequila: geometría cónica/trapezoidal, base de cristal macizo de 2 cm, cápsulas por color y serigrafía vítrea en rojo cochinilla.**
 - `references/old_campaigns/resumen_old_campaigns.md` — **memoria visual de campañas históricas (Día de Muertos, Ámbar, Blanco, Puro Corazón, Mexicanidad): estilismo, cristalería oficial Riedel, tapas aromatizadoras y colocación de producto.**
 - `references/prompt-standards.md` — **campos obligatorios de todo prompt de imagen/video, negative prompt base, regla de escala, veracidad física y prompt ejemplar. Lectura obligatoria ANTES del paso 9.**
+- `references/evaluacion-sentido-comun-escena.md` — **evaluación de sentido común visual y verosimilitud de escena: menaje y vajilla obligatoria para alimentos (cero comida sin plato), soporte para copas, preservación de lo primordial de la botella y física creíble de bodegón.**
 - `references/showcase-rules.md` — **cómo generar la Pasarela Web del paso 11 sin reescribir el template completo.**
 - `references/curaduria-modelos-imagen.json` — curaduría propia de generadores de imagen por familia de modelo (recomendación, tips, rating de marca). No contiene Elo ni rankings.
+- `sub-skill/evaluador-sentido-comun-visual/README.md` — sub-skill para la segunda evaluación de sentido común visual previa a la redacción de prompts.
 - `sub-skill/obtener-feriados-oficiales-no-oficiales/README.md` — guía técnica y script `obtener_feriados.py` para detección de festivos de México.
 - `sub-skill/obtener-leaderboard-imagen/README.md` — script `obtener_leaderboard.py`: ranking en vivo de generadores de imagen/video (API de Design Arena) cruzado con la curaduría.
 - `sub-skill/leer-imagenes-onedrive/README.md` — procedimiento para auditar metadatos en OneDrive/SharePoint vía Microsoft 365 MCP.
@@ -103,7 +106,21 @@ Cada idea debe pasar el filtro: ¿demuestra creatividad trascendental, innovaci�
     El usuario responderá con **«Sí»** o **«No»**.
     - **Si responde «Sí»:** El agente le presenta de inmediato el listado de platillos típicos ceremoniales y sugerencias de maridaje con Loco Tequila documentados para esa fecha en `references/calendario-gastronomico-mexicano.md` para que elija o inspire la dirección de arte gastronómica que se integrará en los prompts de imagen/video.
     - **Si responde «No»:** El agente continúa el flujo enfocando la dirección visual exclusivamente en botellas anatómicas, bodegones puros de lujo, arquitectura o terruño agavero, sin presencia de alimentos.
-    - *(Si la festividad elegida no tiene vinculación culinaria tradicional en el calendario, se omite esta pregunta y se avanza al paso 4).*
+    - *(Si la festividad elegida no tiene vinculación culinaria tradicional en el calendario, se omite esta pregunta y se avanza al paso 3c).*
+3c. **Pregunta OBLIGATORIA de sugerencias creativas (con opciones clickeables para Claude / Codex):**
+    Inmediatamente después del paso de motivo gastronómico, el agente **DEBE PREGUNTAR SIEMPRE**:
+    > *«Antes de comenzar, ¿te gustaría darme sugerencias para proceder con la creación de los prompts y 'copy'?»*
+    
+    Para garantizar que en **Claude**, **Codex** y cualquier cliente web las opciones se presenten interactivas y clickeables (ya que en ocasiones las interfaces omiten botones nativos), el agente debe estructurar la pregunta con **opciones clickeables en formato interactivo Markdown dual**:
+    
+    ```markdown
+    [🔘 Sí, dar sugerencias](#)
+    [🔘 No, te lo dejo todo a ti agente](#)
+    ```
+    *(O como lista de selección directa: `1. Sí, dar sugerencias` | `2. No, te lo dejo todo a ti agente`)*.
+    
+    - **Si el usuario elige «Sí, dar sugerencias» (o «Sí»):** El agente le pide amablemente sus sugerencias, ideas o directrices creativas y las toma como guía prioritaria para los conceptos, copys y prompts.
+    - **Si el usuario elige «No, te lo dejo todo a ti agente»:** El agente asume total autonomía creativa respetando rigurosamente la memoria de marca, el filtro de Locura Genial y las respuestas previas.
 4. **Preguntar el producto** (`{{producto}}`): ¿la publicidad va ligada a un producto específico o al portafolio completo? Presentar las opciones desde `references/productos.md`.
 5. **Revisar piezas previas y referencias visuales:**
 
@@ -126,6 +143,12 @@ Cada idea debe pasar el filtro: ¿demuestra creatividad trascendental, innovaci�
 6. **Preguntar el medio** (`{{medio}}`): imagen, video o ambas. Define qué prompts se escriben y, más adelante, qué se puede ejecutar en el paso 12. Los extras (leaderboard y generación con OpenRouter) **no se ofrecen aquí**: se ofrecen en el paso 12, ya con la pasarela entregada, para no interrumpir la producción.
 7. **Ideación:** generar `{{numero_ideas}}` conceptos por red según `{{inventiva}}` (respetando el tope de 6 conceptos totales), cada uno anclado a la fecha festiva y al producto elegidos, conectado a una persona objetivo (Alejandro / Ana / Leonardo / efecto halo).
 8. **Reescritura en copys listos** respetando la gramática nativa de cada plataforma + inyección de keywords (regla de oro: 1 territorio mítico + 1 persona + 1 categoría; máx. 5). **Cumplimiento IA 2026:** Para LinkedIn, aplicar las directrices anti-slop del algoritmo 360Brew (`references/manual-cumplimiento-ia-2026.md` Módulo 3.4): voz auténtica, datos verificados de terruño, estructura natural y anécdotas reales; evitar viñeteado excesivo y frases trilladas que devalúen el alcance. En todas las redes, prohibición absoluta de testimonios o reseñas ficticias generadas por IA (FTC 16 CFR Part 465).
+8b. **Segunda Evaluación: Sentido Común Visual y Verosimilitud de Escena (`sub-skill/evaluador-sentido-comun-visual/` y `references/evaluacion-sentido-comun-escena.md`):**  
+    Antes de proceder a la redacción definitiva de los prompts en el paso 9, el agente somete cada concepto a una autoevaluación obligatoria de sentido común físico y culinario:
+    - **Vajilla y Menaje Obligatorio:** Si la escena incluye alimentos (chiles en nogada, mole, botanas ceremoniales), **ESTÁ ESTRICTAMENTE PROHIBIDO representarlos sobre la mesa, piedra o mantel sin plato**. Se debe definir explícitamente vajilla de alta gama (cerámica artesanal de alta temperatura, gres vidriado o porcelana mate) y cubertería adecuada.
+    - **Preservación de lo Primordial de la Botella:** Garantizar que el prompt ancle en sus primeros 20 tokens los rasgos canónicos de la botella (silueta cónica trapezoidal, base maciza de 2 cm, relieve rojo vítreo y cápsula codificada) más la directiva de preservación estricta para evitar botellas genéricas.
+    - **Soporte Estable de Cristalería:** Asegurar que la copa Riedel repose con gravedad sobre superficies sólidas o posavasos con sombras de contacto creíbles.
+    - *Si la escena ideada omite el plato o soporte, el agente lo incorpora automáticamente antes de generar el prompt.*
 9. **Generar prompts ultra detallados** para IA de imagen y/o video según `{{medio}}`, alineados a cada copy. **Leer `references/prompt-standards.md` antes de escribir el primer prompt** y cumplir sus 7 campos obligatorios (sujeto, lente/encuadre, iluminación, paleta, estilo, `--ar`, negative prompt). Con 3+ redes, aplicar la regla de prompt maestro + variantes de encuadre (§4). **Veracidad física y cumplimiento 2026:** Describir la botella con absoluta fidelidad anatómica (`references/loco-tequila/bottle_tequila_offiicial_images/resumen_bottle_tequila_offiicial_images.md`) — silueta cónica, base de cristal macizo de 2 cm, cápsulas por color y serigrafía vítrea en rojo cochinilla, sin etiquetas adhesivas de papel ni alteraciones engañosas de producto (FTC / TikTok Shop). Incorporar los estándares de cristalería oficial y estilismo de `references/old_campaigns/resumen_old_campaigns.md`. Si se confirmó motivo gastronómico en el paso 3b, integrar con rigor estético y fotográfico los platillos tradicionales, texturas culinarias (nogada aterciopelada, mole brillante, pan de muerto con azahar) y maridajes descritos en `references/calendario-gastronomico-mexicano.md`.
 10. **Verificación de guardrails y QA Multicanal:** Validar contra +18, consumo responsable, coherencia terminológica y Locura Genial usando `references/qa-checklist.md` y el Checklist Pre-Flight de `references/manual-cumplimiento-ia-2026.md`. Auditar el nivel de riesgo:
     - **Nivel 1 (Asistencia):** Textos y copys sin simulación engañosa. Aprobación directa.
@@ -165,7 +188,7 @@ Cada idea debe pasar el filtro: ¿demuestra creatividad trascendental, innovaci�
         ```
 
         Informa si está configurada y con cuánto saldo.
-        
+
         - **Si responde `MISSING_API_KEY` (aún no configurada):**
           Ofrecer al usuario las dos vías de configuración:
           > *"Para generar las piezas con OpenRouter necesitamos una API Key (`sk-or-v1-…`). Tienes dos opciones sencillas:*
@@ -199,5 +222,6 @@ Cada idea debe pasar el filtro: ¿demuestra creatividad trascendental, innovaci�
 4. Coherencia terminológica: un mismo concepto se nombra siempre igual (ver glosario). Nunca sinónimos libres.
 5. La memoria de marca es inviolable: ninguna idea inventa, contradice o modifica los hechos establecidos (Hacienda La Providencia, El Arenal, terruño, portafolio, tagline, propósito).
 6. **Cumplimiento Regulatorio y Veracidad IA 2026:** Estricto apego a `references/manual-cumplimiento-ia-2026.md`. Cero testimonios o reseñas ficticias generadas por IA (FTC 16 CFR Part 465 / EU AI Act Art. 50); autodivulgación obligatoria en pauta (toggles en Meta Ads "AI Info", YouTube Studio "Contenido sintético", TikTok AIGC); redacción humana anti-slop para superar el filtro 360Brew de LinkedIn; y representación física idéntica de la botella real (`references/loco-tequila/`).
+7. **CERO Procesos de Creación de Tequila (Salvo Petición Explícita):** Tanto en imágenes como en videos, **NO se deben mostrar procesos de producción del tequila** (faenas de jima de agave, jimadores, hornos de mampostería, piedra tahona, tinas de fermentación, alambiques de destilación, maquinaria industrial ni obreros de fábrica), a menos que el cliente lo pida expresamente (`references/brand-context.md` §9). Loco Tequila se representa como un objeto de arte, lujo contemplativo, terruño místico y celebración de la vida, no como un proceso industrial.
 
 Detalle completo por plataforma en `references/brand-context.md`.
