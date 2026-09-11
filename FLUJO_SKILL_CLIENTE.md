@@ -16,7 +16,7 @@ flowchart TD
     classDef deliveryNode fill:#14532D,stroke:#4ADE80,stroke-width:2px,color:#FAFAF9;
 
     subgraph FASE1 ["📌 FASE 1: Parámetros y Configuración Inicial"]
-        A(["🚀 Inicio / Solicitud del Cliente"]):::startEnd --> B["1. Confirmar Plataformas Destino<br/><i>(Instagram, Facebook, YouTube, LinkedIn, TikTok)</i>"]:::stepNode
+        A(["🚀 Inicio / Solicitud del Cliente"]):::startEnd --> B{"❓ PREGUNTA OBLIGATORIA (Clickeable):<br/>¿En qué redes sociales se necesita?<br/><i>(Facebook, Instagram, LinkedIn, YouTube, TikTok, Todas)</i>"}:::questionNode
         B --> C["2. Detección Automática de Fechas<br/><i>(Python: feriados oficiales/no oficiales a 30 días + calendario de bebidas)</i>"]:::subSkillNode
         C --> D{"❓ PREGUNTA OBLIGATORIA:<br/>¿Qué fecha festiva o efeméride<br/>desea tomar en cuenta?"}:::questionNode
         D --> DG{"❓ PREGUNTA OBLIGATORIA:<br/>¿Desea motivo gastronómico?<br/><i>(Tradición culinaria mexicana)</i>"}:::questionNode
@@ -25,12 +25,13 @@ flowchart TD
         E --> F["4. Seleccionar Medio de Salida<br/><i>(Imagen, Video o Ambos)</i>"]:::stepNode
     end
 
-    subgraph FASE2 ["🔍 FASE 2: Auditoría de Historial Visual (Opcional)"]
-        F --> G{"¿Hay enlace a carpeta de<br/>OneDrive / SharePoint?"}:::questionNode
-        G -- Sí --> H["5. Lectura de Metadatos vía MCP<br/><i>(Auditoría de máx. 10 archivos para conocer nombres y temáticas previas)</i>"]:::subSkillNode
-        H --> I{"❓ PREGUNTA OBLIGATORIA:<br/>¿Desea adjuntar 1 a 3 imágenes<br/>de muestra en el chat?"}:::questionNode
-        I -- Adjunta / Continúa --> J["6. Análisis Estético y de No-Repetición"]:::stepNode
-        G -- No --> J
+    subgraph FASE2 ["🔍 FASE 2: Auditoría y No-Repetición Visual"]
+        F --> G{"❓ PREGUNTA OBLIGATORIA (Clickeable):<br/>¿Cómo proporcionar referencias previas?<br/><i>(OneDrive/GoogleDrive, Carpeta local/cowork, Chat, Ninguna/Acervo)</i>"}:::questionNode
+        G -- Nube (OneDrive/GDrive) --> H["5a. Lectura de Nube vía MCP / Enlace<br/><i>(Auditoría de máx. 10 archivos para conocer temáticas previas)</i>"]:::subSkillNode
+        G -- Carpeta local / Cowork --> H2["5b. Lectura de Directorio Local<br/><i>(Extracción de campañas previas en disco)</i>"]:::stepNode
+        G -- Imágenes en Chat --> I["5c. Análisis Visual en Chat<br/><i>(Análisis de 1 a 3 fotos de muestra)</i>"]:::stepNode
+        G -- Ninguna / Acervo --> J["6. Inspiración con Acervo Propio de la Skill<br/><i>(references/old_campaigns/ y references/loco-tequila/)</i>"]:::stepNode
+        H & H2 & I --> J
     end
 
     subgraph FASE3 ["🧠 FASE 3: Ideación Creativa y Memoria de Marca"]
@@ -66,7 +67,7 @@ flowchart TD
 ## 📋 Detalle de las Fases del Proceso
 
 ### 📌 Fase 1: Configuración de Parámetros
-1. **Plataformas Destino:** Se definen los canales de difusión (Instagram, Facebook, YouTube, LinkedIn, TikTok).
+1. **Pregunta Obligatoria de Plataformas Destino:** Se consulta al cliente presentando sin excepción las 5 redes oficiales más la opción «Todas» (`[🔘 Facebook]`, `[🔘 Instagram]`, `[🔘 LinkedIn]`, `[🔘 YouTube]`, `[🔘 TikTok]`, `[🔘 Todas las anteriores]`). El agente nunca debe omitir ninguna de las 5 plataformas ni asumir solo una por defecto.
 2. **Detección de Fechas Próximas:** Se ejecuta un script en Python que analiza los próximos 30 días, combinando días festivos oficiales y no oficiales de México con efemérides internacionales del mundo de los destilados y gastronomía.
 3. **Confirmación Interactiva:** El agente consulta al usuario para elegir la fecha ancla exacta.
 4. **Motivo Gastronómico (Opcional/Cultural):** Si la festividad tiene arraigo tradicional, se ofrece incorporar maridajes de alta gama con Loco Tequila según `references/calendario-gastronomico-mexicano.md`.
@@ -76,9 +77,12 @@ flowchart TD
    Permite al cliente guiar el rumbo o delegar la creatividad íntegra al agente.
 6. **Selección de Producto y Formato:** Se elige el SKU exacto (Loco Blanco, Ámbar, Puro Corazón, Áureo o Hierofante) y el medio (*Imagen*, *Video* o *Ambos*).
 
-### 🔍 Fase 2: Auditoría y No-Repetición Visual (OneDrive / SharePoint)
-- Si el cliente proporciona acceso a un repositorio en la nube, el agente lee los metadatos de las últimas campañas (hasta 10 archivos) para registrar qué conceptos ya fueron explotados.
-- Se invita al cliente a adjuntar de 1 a 3 imágenes de referencia para calibrar el tono estético sin duplicar ejecuciones pasadas.
+### 🔍 Fase 2: Auditoría y No-Repetición Visual (Nube, Carpeta Local/Cowork, Chat o Acervo)
+- **Consulta Obligatoria al Cliente:** Se formulan las 4 opciones de trabajo:
+  1. *Link de OneDrive, SharePoint o Google Drive:* Se auditan metadatos o documentos de análisis de las últimas campañas (hasta 10 archivos) para registrar qué conceptos ya fueron explotados.
+  2. *Carpeta local / Cowork:* El cliente indica la ruta de su equipo o red compartida para revisar campañas previas en disco.
+  3. *Imágenes en chat:* Se invita al cliente a adjuntar de 1 a 3 imágenes de muestra para calibrar el tono estético sin duplicar ejecuciones pasadas.
+  4. *Ninguna (Acervo de la skill):* Si el cliente no aporta referencias externas, el agente avanza de inmediato inspirándose en las campañas históricas (`references/old_campaigns/resumen_old_campaigns.md`) y el producto canónico de la propia skill.
 
 ### 🧠 Fase 3: Ideación y Memoria de Marca
 - **Niveles de Inventiva:**

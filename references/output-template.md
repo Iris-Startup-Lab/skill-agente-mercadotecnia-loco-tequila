@@ -14,7 +14,7 @@ La skill entrega el resultado como **texto normal de la conversación** (sin blo
 
 **MEDIO:** [imagen | video | ambas]
 
-**REFERENCIAS VISUALES REVISADAS (OneDrive/SharePoint):** [carpeta + N imágenes, o "no aplica"]
+**REFERENCIAS VISUALES REVISADAS:** [OneDrive/SharePoint/GoogleDrive / Carpeta local-cowork / N imágenes en chat / Acervo de la skill / "no aplica"]
 
 ---
 

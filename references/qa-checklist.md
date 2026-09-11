@@ -17,6 +17,10 @@ Se verifica sobre el texto que verá el usuario, antes de enviarlo.
 ## Marca, copy y cumplimiento
 
 - [ ] La pieza pasa el filtro de Locura Genial (columna "ES", no "NO ES").
+- [ ] **Regla «Anti-Novela» (Prohibición de Prosa Poética Barroca):** El copy NO es un relato novelesco ni prosa poética extendida sobre el tiempo o el más allá. Su extensión es concisa y afilada: 2 a 3 oraciones contundentes (35 a 50 palabras para feed de Instagram/Facebook; 1 sola línea para Stories y TikTok). Cero párrafos de novela.
+- [ ] **Gancho Frontal (<125 caracteres):** La primera línea atrapa al instante antes del botón «...más / ver más».
+- [ ] **Anclaje Ineludible en los 3 Pilares:** El copy se fundamenta en la tríada oficial: *Radical Authenticity* (terruño de El Arenal, sin aditivos), *Transcendent Creativity* (arte contemporáneo, Jan Hendrix, botella como escultura) y *Locura Genial* (obsesión por la perfección), no en metáforas poéticas trilladas.
+- [ ] **Tono Magnético vs. Sentimental:** Es audaz, contemporáneo, impecable y de una elegancia desafiante; cero cursilería, timidez o nostalgia soñadora.
 - [ ] El copy fue reescrito para la gramática nativa de la plataforma (no es un corte de Instagram).
 - [ ] Se usaron los términos del glosario maestro sin variaciones libres.
 - [ ] Incluye +18 / mensaje de consumo responsable donde aplica.
@@ -28,8 +32,8 @@ Se verifica sobre el texto que verá el usuario, antes de enviarlo.
 - [ ] Los datos usados son verificados o están marcados (`[no disponible]`, `*` para estimaciones, `[REFERENCIA DE INDUSTRIA]` para benchmarks sin dato propio).
 - [ ] La fecha festiva anclada es real y está correctamente nombrada (feriados detectados por la sub-skill o `references/fechas-alcohol.md`).
 - [ ] El producto elegido es coherente con la campaña y usa sus keywords específicas (`references/productos.md` + glosario 10.4).
-- [ ] **Consulta de Referencias Previas:** Se preguntó siempre al usuario ofreciendo las 3 opciones: (a) link de OneDrive/SharePoint + alcance, (b) 1 a 3 imágenes propias adjuntas en chat, o (c) ninguna para omitir.
-- [ ] Si se revisaron piezas previas (Word de análisis en OneDrive/SharePoint o imágenes adjuntas), la pieza no repite diseños anteriores.
+- [ ] **Consulta de Referencias Previas:** Se preguntó siempre al usuario ofreciendo las 4 modalidades completas: (1) link de nube (OneDrive/SharePoint/GoogleDrive) + alcance, (2) ruta de carpeta local/cowork en disco, (3) 1 a 3 imágenes propias adjuntas en el chat, o (4) ninguna para inspirarse en el acervo canónico integrado en la skill.
+- [ ] Si se revisaron piezas previas (Word de análisis en OneDrive/SharePoint, Google Drive, carpeta local/cowork o imágenes adjuntas), la pieza no repite diseños anteriores.
 - [ ] **Ningún prompt nuevo reutiliza texto del §4 (Prompt maestro) ni del §6 (Variantes) de un Word previo** — ni entero ni por fragmentos. Se hereda el ADN, nunca la redacción.
 - [ ] **Ningún elemento de la lista INCIDENTAL** de las piezas revisadas reaparece en la campaña nueva (objeto de apoyo, fondo concreto, ángulo específico).
 - [ ] Ninguna línea marcada `[INFERIDO]` en un Word de análisis se usó como hecho de marca.

@@ -109,13 +109,13 @@ Loco Tequila trasciende la función de un destilado para convertirse en un objet
 ## 5. Nuestro Manifiesto: "Soy Loco"
 
 > *Loco por perseguir la perfección en cada gota. Loco por desafiar las normas, por romper el molde, por crear algo verdaderamente excepcional. Loco por creer que un tequila podía ser más que una bebida. Que podía ser una expresión líquida de una vida vivida bajo mis propios términos. Una declaración. Un legado. Una obra de arte.*  
-> 
+>
 > *Soy loco por el amor a los detalles. Por la búsqueda incansable del agave perfecto, cultivado bajo el sol implacable y cosechado con manos expertas. Soy loco por la destilación lenta, paciente, reverencial, que extrae la esencia misma de la tierra.*  
-> 
+>
 > *Soy loco por mi audacia y creatividad con propósito. Por atreverme a desafiar las convenciones, por ignorar las tendencias, por ser un tequila que no es para todos. Un tequila reservado para aquellos que, como yo, viven más allá de lo ordinario. Una obra maestra líquida que despierta los sentidos y eleva el espíritu, una vivencia que trasciende lo cotidiano y nos conecta con la belleza en su forma más pura.*  
-> 
+>
 > *Y sí, estoy loco. Loco por la belleza, loco por la autenticidad, loco por la libertad de crear algo único. Loco por compartir este secreto solo con aquellos que amo. Loco Tequila no se explica, se siente. No se comparte con cualquiera, se revela a los indicados. Mi locura no es caos, sino un acto calculado de genialidad que redefine lo que el tequila puede ser.*  
-> 
+>
 > *Así soy yo, Loco.*
 
 ---
@@ -126,6 +126,39 @@ Loco Tequila trasciende la función de un destilado para convertirse en un objet
 2. **Segmentación Estricta:** Exclusión técnica de audiencias menores en toda pauta publicitaria (Meta, Google/YouTube, TikTok, LinkedIn).
 3. **No Reemplazar Identidad por Viralidad:** El mensaje central (terruño, El Arenal, artesanía, Locura Genial) es innegociable.
 4. **Coherencia Terminológica:** Mismos términos del glosario maestro en todas las adaptaciones.
+
+---
+
+## 6.1 Calibración de Tono y Copy: La Regla «Anti-Novela» y los 3 Pilares Innegociables
+
+> ⚠️ **DIAGNÓSTICO CRÍTICO DE PRODUCCIÓN REAL (FEEDBACK DEL CLIENTE):**  
+> En pruebas con cliente real para una campaña de **Día de Muertos** con **Loco Ámbar**, el agente generó un copy poético y novelesco:  
+> *«Some rituals honor those who came before. This one pours for them. On the night the veil thins, Loco Ámbar takes its place among marigolds and candlelight — a reposado steeped in patience, poured in remembrance...»*  
+> **El veredicto textual del cliente fue tajante:**  
+> *«This is too story like- and frankly long- we need to be able to captivate without being too poetic, and ground in the pillars (Radical Authenticity, Transcendent Creativity, and Locura Genial)»*
+
+### Las 3 Reglas de Oro para Todo Copy de Loco Tequila:
+
+#### A. La Regla «Anti-Novela» (Prohibición Estricta de Prosa Poética Barroca)
+- **Eliminar el storytelling novelesco y los párrafos de cuento:** En redes sociales de ultra-lujo, los textos que parecen párrafos de novela pierden la atención del lector en el segundo 2.
+- **Gancho frontal (<125 caracteres):** La primera línea debe atrapar al instante antes del botón «...más / ver más».
+- **Extensión máxima:** De 2 a 3 oraciones contundentes (35 a 50 palabras en total para feed de Instagram/Facebook; 1 sola línea para Stories y TikTok). Menos es más. Prohibidas las divagaciones sobre "el velo que se adelgaza", "el tiempo en barrica que fluye lento", etc.
+
+#### B. Anclaje Ineludible en los 3 Pilares de Loco Tequila
+Todo copy de Loco Tequila (México o internacional) debe nacer y sostenerse en la tríada de marca, no en metáforas poéticas genéricas:
+1. **Radical Authenticity (Autenticidad Radical):** Agaves de terruño propio en El Arenal, doble selección de jima, cero aditivos, pureza artesanal sin clichés fabriles ni folclor barato.
+2. **Transcendent Creativity (Creatividad Trascendente):** El arte como pilar rector, la colaboración con Jan Hendrix, la botella como escultura contemporánea, la experiencia estética que trasciende el líquido.
+3. **Locura Genial (Genial Madness):** La obsesión audaz por alcanzar una perfección que la industria consideraba insensata o imposible. Tono seguro, afilado, sofisticado y magnético.
+
+#### C. Tono Magnético vs. Tono Sentimental
+- Loco Tequila no es un destilado nostálgico, triste ni soñador; es **audaz, contemporáneo, impecable y de una elegancia desafiante**. 
+- No habla con timidez ni con cursilería; habla con el aplomo de una obra de arte.
+
+### Tabla Comparativa Oficial: Día de Muertos (Loco Ámbar)
+
+| ❌ Como lo hacía antes (Rechazado: poético, novelesco, largo) | ✅ Como debe hacerlo ahora (Aprobado: conciso, magnético, anclado en pilares) |
+|---|---|
+| *"Some rituals honor those who came before. This one pours for them. On the night the veil thins, Loco Ámbar takes its place among marigolds and candlelight — a reposado steeped in patience, poured in remembrance. Months of oak and more than a century of hacienda legacy, offered back to the origin that made it possible."* | **A tribute carved in amber and memory.**<br><br>Loco Ámbar meets the altar: uncompromised terroir aged in artisanal oak, honoring legacy through obsessive craftsmanship. Radical purity for those who lived with genial madness.<br><br>*Pour with reverence.* |
 
 ---
 

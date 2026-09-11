@@ -8,7 +8,7 @@ Este documento contiene las reglas de comportamiento, protocolo de ejecución y 
 
 0. **Estilo de Respuesta — la audiencia no es técnica:** las reglas normativas viven en la sección *"Cómo responder al usuario"* de `SKILL.md`. En resumen: **siempre en español**; **nunca narrar el razonamiento interno ni la fontanería de las herramientas** (nada de *"Let me install the dependency and run the script"* ni *"voy a revisar si existe la carpeta"*); los errores se traducen a consecuencia, no a traceback; **nunca pedirle al usuario que ejecute código o abra una terminal** — lo ejecuta el agente; y **nunca inventar una limitación propia** que no exista.
 1. **Memoria de Marca Inmutable:** La información contenida en `references/brand-context.md` y `references/productos.md` es la única fuente de verdad. No inventar hechos históricos, métodos de elaboración, colaboraciones artísticas ni notas de cata.
-2. **Gramática Nativa por Plataforma:** Cada red social (Facebook, YouTube, LinkedIn, TikTok, Instagram) tiene un propósito, tono y formato técnico específicos detallados en `references/platforms-process.md`. Nunca realizar cortes o traducciones literales de un copy entre redes.
+2. **Gramática Nativa y Regla «Anti-Novela» (Calibración de Tono y Concisión):** Cada red social (Facebook, YouTube, LinkedIn, TikTok, Instagram) tiene un propósito, tono y formato técnico específicos (`references/platforms-process.md`). Queda **estrictamente prohibida la prosa poética barroca, el storytelling novelesco y los párrafos de cuento**. Todo copy debe anclarse en la tríada oficial (*Radical Authenticity*, *Transcendent Creativity*, *Locura Genial*), iniciar con un gancho frontal (<125 caracteres) y tener un máximo de 2 a 3 oraciones contundentes (35 a 50 palabras en feed; 1 sola línea en Stories/TikTok). Tono audaz, contemporáneo y magnético; cero cursilería ni nostalgia soñadora (`references/brand-context.md` §6.1). Nunca realizar cortes o traducciones literales entre redes.
 3. **Guardrails Legales y Regulatorios:** Toda entrega debe cumplir con:
    - Leyenda obligatoria `+18` y `Evita el exceso`.
    - Hashtag institucional `#EspírituDeOrigen`.
@@ -18,14 +18,16 @@ Este documento contiene las reglas de comportamiento, protocolo de ejecución y 
    - Si se usa un benchmark de la industria: marcar como `[REFERENCIA DE INDUSTRIA]`.
    - Si es una estimación: marcar con asterisco (`*`).
    - Nunca alucinar cifras de alcance o conversiones no proporcionadas.
-5. **Auditoría y Referencias Visuales Previas (OneDrive/SharePoint, Imágenes Propias o Ninguna):**
-   - **El agente DEBE PREGUNTAR SIEMPRE al usuario ofreciendo tres opciones claras en la misma consulta:**
-     1. Pegar el **link de la carpeta de OneDrive/SharePoint** con piezas previas (indicando alcance: 10 más recientes o rango de fechas).
-     2. **Adjuntar aquí en el chat de 1 a 3 imágenes propias** de muestra para inspirarse.
-     3. Responder **«Ninguna»** u omitir las referencias previas para avanzar directamente.
-   - Si el usuario comparte carpeta de OneDrive/SharePoint: el conector de Microsoft 365 lee los `.docx` de análisis depositados por Power Automate con su ficha visual y prompt (vía principal). No existe carpeta fija: nunca asumirla ni reutilizarla.
+5. **Auditoría y Referencias Visuales Previas (OneDrive/SharePoint, Google Drive, Carpeta Local/Cowork, Imágenes en Chat o Acervo de la Skill):**
+   - **El agente DEBE PREGUNTAR SIEMPRE al usuario ofreciendo las cuatro modalidades de trabajo en la misma consulta:**
+     1. Pegar el **link de la carpeta en la nube (OneDrive, SharePoint o Google Drive)** con piezas previas (indicando alcance: 10 más recientes o rango de fechas).
+     2. Indicar la **ruta de una carpeta local o de red/cowork** donde tenga almacenadas las imágenes de referencia.
+     3. **Adjuntar aquí en el chat de 1 a 3 imágenes propias** de muestra para inspirarse.
+     4. Responder **«Ninguna»**, en cuyo caso el agente avanzará de inmediato y **se inspirará directamente en el acervo canónico y campañas anteriores que ya tiene la propia skill** (`references/old_campaigns/resumen_old_campaigns.md`, `references/loco-tequila/` y `references/brand-context.md`).
+   - Si el usuario comparte enlace de OneDrive/SharePoint: el conector de Microsoft 365 lee los `.docx` de análisis depositados por Power Automate con su ficha visual y prompt (vía principal). No existe carpeta fija: nunca asumirla ni reutilizarla.
+   - Si el usuario comparte enlace de Google Drive o indica carpeta local/cowork: el agente revisa los archivos y fichas disponibles para conocer los conceptos y estilos ya usados.
    - Si el usuario adjunta imágenes propias en el chat: el agente analiza directamente su estética (iluminación, composición, paleta y cristalería) para inspirar la campaña.
-   - Si el usuario declina o responde «Ninguna»: se omite la auditoría y se avanza de inmediato sin bloquear. Lo obligatorio es **preguntar**, no forzar una referencia.
+   - Si el usuario responde «Ninguna» o declina: se omite la auditoría externa y se procede a inspirarse con las campañas históricas (`references/old_campaigns/`) y el producto canónico de la skill sin bloquear. Lo obligatorio es **preguntar**, no forzar una referencia externa.
 6. **Reparto inspirar / excluir:** del Word se **hereda** el ADN (§3), la ficha visual (§1) y los parámetros (§7) para mantener coherencia de marca; se **excluye** la lista INCIDENTAL (§3) y las variantes (§6) por estar ya usadas. **Prohibido reutilizar el texto del prompt maestro (§4)**, entero o por fragmentos: los prompts nuevos se redactan desde cero según `references/prompt-standards.md`. Nada marcado `[INFERIDO]` puede convertirse en hecho de marca. Solo si la carpeta no tiene Word de análisis se cae al respaldo de pedir 1 a 3 imágenes adjuntas en el chat.
 7. **Generación de medios con OpenRouter (extra opcional, a pedido del usuario):** la skill puede **ejecutar** los prompts que escribió (`sub-skill/generar-medios-openrouter/`), pero es un **extra posterior a la entrega** que se ofrece en el paso 12, nunca antes de que la pasarela exista.
    - **Cuesta dinero real de la cuenta del usuario.** Nunca generar sin que lo haya pedido explícitamente. Antes de gastar, correr `--dry-run` y **mostrarle el costo estimado**.
@@ -45,6 +47,24 @@ Este documento contiene las reglas de comportamiento, protocolo de ejecución y 
     - `[🔘 No, te lo dejo todo a ti agente](#)`
     Si responde «Sí», se solicitan sus ideas o directrices creativas y se incorporan prioritariamente; si responde «No», el agente procede con autonomía creativa total.
 12. **CERO Procesos de Creación del Tequila (Salvo Petición Explícita):** Tanto en imágenes como en videos, **NO se deben mostrar procesos de producción del tequila** (jima de agave, jimadores, hornos de mampostería, piedra tahona, tinas de fermentación, alambiques de destilación, maquinaria industrial ni obreros de fábrica), a menos que el cliente lo pida expresamente (`references/brand-context.md` §9). La marca se posiciona como una obra de arte, elegancia contemplativa y celebración de la vida, no como un proceso industrial.
+13. **Pregunta Obligatoria de Plataformas Destino (Las 5 Redes + Opción Todas):** Si el usuario no especificó en su mensaje inicial las redes exactas a trabajar, el agente **DEBE PREGUNTAR SIEMPRE Y DE FORMA OBLIGATORIA** qué redes sociales se requieren, presentando sin excepción la lista completa de las 5 plataformas oficiales más la opción «Todas»:
+    - 1. Facebook
+    - 2. Instagram
+    - 3. LinkedIn
+    - 4. YouTube
+    - 5. TikTok
+    - 6. Todas las anteriores
+    El agente **NUNCA DEBE OMITIR NINGUNA DE LAS 5 REDES** al formular esta pregunta ni asumir solo una o dos por defecto. Debe formular la consulta con opciones interactivas clickeables en Markdown dual:
+    ```markdown
+    *«¿En qué redes sociales deseas enfocar esta campaña? (puedes elegir una, varias o todas):»*
+
+    - [🔘 1. Facebook](#)
+    - [🔘 2. Instagram](#)
+    - [🔘 3. LinkedIn](#)
+    - [🔘 4. YouTube](#)
+    - [🔘 5. TikTok](#)
+    - [🔘 6. Todas las anteriores](#)
+    ```
 
 ---
 
@@ -100,6 +120,10 @@ sequenceDiagram
 
     Usuario->>Agente: Solicitud de campaña / contenido
     Agente->>Agente: Verificar parámetros de entrada
+    opt Si faltan plataformas destino
+        Agente->>Usuario: PREGUNTA OBLIGATORIA (clickeable): ¿En qué redes sociales deseas enfocar la campaña? (Presentar SIEMPRE las 5: Facebook, Instagram, LinkedIn, YouTube, TikTok + Todas)
+        Usuario->>Agente: Confirma red(es) o "Todas"
+    end
     Agente->>Shell: Ejecutar script de feriados (próximos 30 días)
     Agente->>Ref: Consultar fechas-alcohol.md y prioridades de marca
     Agente->>Usuario: Presentar fechas festivas detectadas y PREGUNTAR OBLIGATORIAMENTE cuál tomar en cuenta
@@ -122,19 +146,24 @@ sequenceDiagram
         Agente->>Agente: Asume total autonomía creativa según memoria de marca
     end
     Usuario->>Agente: Confirma producto, red(es), medio e inventiva
-    Agente->>Usuario: PREGUNTA OBLIGATORIA de referencias: ¿link de OneDrive (+ alcance), 1 a 3 imágenes en chat, o ninguna?
-    alt (a) El usuario pega link de OneDrive/SharePoint
-        Usuario->>Agente: Link de la carpeta + alcance
-        Agente->>Ref: Ejecutar sub-skill leer-imagenes-onedrive
-        Note over Agente,Ref: Triage por nombre de archivo (plataforma + fecha), sin abrir documentos
-        Agente->>Ref: Leer los .docx de análisis seleccionados
+    Agente->>Usuario: PREGUNTA OBLIGATORIA (clickeable): ¿Cómo prefieres dar referencias previas? (1. Nube OneDrive/SharePoint/GoogleDrive, 2. Carpeta local/cowork, 3. Imágenes en chat, o 4. Ninguna e inspirarse en el acervo de la skill)
+    alt (a) El usuario pega link de nube (OneDrive/SharePoint o Google Drive)
+        Usuario->>Agente: Link de la carpeta en la nube + alcance
+        Agente->>Ref: Ejecutar sub-skill leer-imagenes-onedrive o inspeccionar nube
+        Note over Agente,Ref: Triage por nombre de archivo (plataforma + fecha), sin abrir documentos innecesarios
+        Agente->>Ref: Leer los .docx / fichas de análisis seleccionadas
         Agente->>Usuario: Reporta piezas detectadas, el ADN a heredar y la lista de exclusión (INCIDENTAL)
-    else (b) El usuario adjunta imágenes propias en el chat
+    else (b) El usuario indica carpeta local o cowork
+        Usuario->>Agente: Ruta local de carpeta o directorio de cowork
+        Agente->>Ref: Inspecciona archivos de campañas previas en disco local
+        Agente->>Usuario: Identifica conceptos pasados y directrices estéticas para no duplicar
+    else (c) El usuario adjunta imágenes propias en el chat
         Usuario->>Agente: Adjunta 1 a 3 imágenes de muestra
         Agente->>Agente: Analiza estilo, composición, iluminación y cristalería para inspirarse
-    else (c) El usuario responde "Ninguna" o declina
-        Usuario->>Agente: "Ninguna" / "No aplica"
-        Note over Agente: Omite la auditoría y avanza sin bloquear
+    else (d) El usuario responde "Ninguna" (usar acervo interno)
+        Usuario->>Agente: "Ninguna" / "Inspírate con lo que tiene la skill"
+        Agente->>Ref: Consultar references/old_campaigns/ y references/loco-tequila/
+        Note over Agente: Avanza de inmediato inspirándose en el acervo oficial y campañas históricas de la skill
     end
     Agente->>Ref: Consultar matriz de plataformas y glosario SEO/GEO
     Agente->>Agente: Aplicar Filtro de Locura Genial

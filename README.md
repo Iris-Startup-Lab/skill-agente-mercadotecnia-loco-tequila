@@ -156,13 +156,13 @@ Antes de generar una campaña, la skill solicita o valida los siguientes paráme
 
 | Parámetro | Tipo / Opciones | Descripción |
 | --- | --- | --- |
-| `{{plataformas_destino}}` | Facebook, YouTube, LinkedIn, TikTok, Instagram | Red(es) social(es) destino de la campaña |
+| `{{plataformas_destino}}` | Facebook, Instagram, LinkedIn, YouTube, TikTok, Todas | **Obligatorio:** Si no se especificaron, preguntar siempre presentando sin excepción las 5 redes oficiales completas más la opción «Todas» con botones clickeables |
 | `{{fechas_proximas}}` | Fechas festivas / efemérides | **Obligatorio:** Se detectan a 30 días y se pregunta siempre al usuario cuál desea elegir |
 | `{{motivo_gastronomico}}` | `Sí` \| `No` | **Obligatorio si la festividad tiene tradición culinaria:** Pregunta si las imágenes tendrán motivo gastronómico y ofrece listado de platillos de `references/calendario-gastronomico-mexicano.md` |
 | `{{sugerencias_creativas}}` | `Sí` \| `No` (clickeable) | **Obligatorio:** Pregunta interactiva tras motivo gastronómico: *«¿Te gustaría darme sugerencias para proceder con la creación de los prompts y 'copy'?»* con opciones clickeables `[🔘 Sí, dar sugerencias]` / `[🔘 No, te lo dejo todo a ti agente]` |
 | `{{producto}}` | Loco Blanco, Loco Ámbar, Loco Puro Corazón, Loco Áureo, Loco Hierofante, Portafolio Completo | Expresión de tequila a promocionar |
 | `{{medio}}` | Imagen, Video, Ambas | Define el tipo de prompts generativos a producir |
-| `{{referencias_visuales}}` | OneDrive / SharePoint, imágenes adjuntas o ninguna | Consulta obligatoria: (a) Link de carpeta (+ alcance: 10 recientes o fecha), (b) 1 a 3 imágenes propias adjuntas en el chat, o (c) Ninguna (omite auditoría) |
+| `{{referencias_visuales}}` | Nube (OneDrive/SharePoint/GoogleDrive), carpeta local/cowork, imágenes en chat, o Acervo interno | **Consulta obligatoria (clickeable):** (1) Link de nube (+ alcance: 10 recientes o fecha), (2) Ruta de carpeta local/cowork en disco, (3) 1 a 3 imágenes propias adjuntas en el chat, o (4) Ninguna (inspirarse en el acervo canónico integrado en la skill) |
 | `{{numero_ideas}}` | Entero (por defecto `3`) | Cantidad de conceptos a idear por plataforma. **Tope: `redes × numero_ideas` ≤ 6 conceptos**; si se excede, se reduce y se declara en las notas. Evita que la calidad de los prompts se diluya al elegir todas las redes |
 | `{{inventiva}}` | `Original` \| `Locura Genial` (por defecto `Original`) | Grado de audacia conceptual |
 
@@ -192,18 +192,18 @@ Antes de generar una campaña, la skill solicita o valida los siguientes paráme
 
 ```mermaid
 flowchart TD
-    A[Inicio / Petición del Usuario] --> B[Confirmar Plataformas Destino]
+    A[Inicio / Petición del Usuario] --> B["Pregunta Obligatoria Clickeable:<br/>¿En qué redes enfocar la campaña?<br/>(Facebook, Instagram, LinkedIn, YouTube, TikTok, Todas)"]
     B --> C[Detectar Feriados y Fechas de Bebidas]
     C --> D[Preguntar Obligatoriamente al Usuario qué Fecha Elegir]
     D --> D2{¿Motivo Gastronómico?}
     D2 --> D3["Pregunta Obligatoria Clickeable:<br/>¿Desea dar sugerencias para prompts y copy?"]
     D3 --> E[Confirmar Producto del Portafolio]
-    E --> F{¿Hay Link OneDrive/SharePoint?}
-    F -- Sí --> G1[Preguntar si Leer Nombres de Campañas Pasadas]
-    G1 --> G2[Extraer Metadatos vía Sub-Skill]
-    G2 --> G3[Preguntar Obligatoriamente si Desea Adjuntar Imágenes de Muestra en Chat]
-    G3 --> H[Definir Medio: Imagen / Video / Ambos]
-    F -- No --> H
+    E --> F{"Pregunta Obligatoria Clickeable:<br/>¿Cómo proporcionar referencias previas?<br/>(1. Nube, 2. Carpeta cowork/local, 3. Chat, 4. Acervo de la skill)"}
+    F -- Nube OneDrive / GDrive --> G1[Extraer Metadatos vía Sub-Skill o Enlace]
+    F -- Carpeta Local / Cowork --> G2[Lectura de Campañas Previas en Disco]
+    F -- Imágenes en Chat --> G3[Análisis Estético Directo en Chat]
+    F -- Ninguna / Acervo --> G4[Inspirarse con Campañas Oficiales de la Skill]
+    G1 & G2 & G3 & G4 --> H[Definir Medio: Imagen / Video / Ambos]
     H --> I[Ideación según Nivel de Inventiva]
     I --> J[Redactar Copys Nativos + Keywords SEO/GEO]
     J --> K[Generar Prompts Ultra Detallados para IA según brand-context.md]

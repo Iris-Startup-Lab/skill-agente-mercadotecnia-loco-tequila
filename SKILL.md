@@ -20,15 +20,15 @@ Director creativo de contenido y mercadotecnia digital para Loco Tequila. Toma u
 
 Antes de producir, la skill debe confirmar (o pedir al usuario si faltan):
 
-- **`{{plataformas_destino}}`** — Facebook, YouTube, LinkedIn, TikTok, Instagram, o varias/todas.
+- **`{{plataformas_destino}}`** — Facebook, Instagram, LinkedIn, YouTube, TikTok, o varias / todas. **Requisito obligatorio:** Si el usuario no indicó las redes en su solicitud inicial, el agente **DEBE PREGUNTAR SIEMPRE Y DE FORMA OBLIGATORIA** qué redes sociales se requieren, presentando sin excepción la lista completa de las 5 plataformas oficiales más la opción «Todas las anteriores». NUNCA asumir solo una o dos plataformas ni omitir ninguna.
 - **`{{fechas_proximas}}`** — feriados oficiales/no oficiales y fechas de bebidas que se aproximan (ver sub-skill `obtener-feriados-oficiales-no-oficiales` y `references/fechas-alcohol.md`). **Requisito obligatorio:** la skill detecta las fechas y **DEBE PREGUNTAR SIEMPRE al usuario cuál fecha desea tomar en cuenta** antes de idear. Nunca asumir una fecha automáticamente.
 - **`{{producto}}`** — Loco Blanco, Loco Ámbar, Loco Puro Corazón, Loco Áureo, Loco Hierofante, o portafolio completo (ver `references/productos.md`).
 - **`{{sugerencias_creativas}}`** — (opcional) directrices, sugerencias o enfoque particular del usuario para la creación de los copys y prompts; o delegación total al agente si el usuario elige no aportarlas. Se pregunta obligatoriamente en el **paso 3c** tras el motivo gastronómico mediante opciones interactivas clickeables.
 - **`{{medio}}`** — tipo de salida multimedia: **imagen**, **video** o **ambas** (define qué prompts se generan).
 - **`{{mostrar_leaderboard}}`** — (opcional, por defecto **no**) si el usuario quiere ver el ranking en vivo de generadores de IA para ejecutar los prompts. Se pregunta en el **paso 12**, ya con la pasarela entregada. La arena depende de `{{medio}}` (imagen → `image`, video → `video`, ambas → los dos). Ver `sub-skill/obtener-leaderboard-imagen/README.md`.
-- **`{{carpeta_referencias}}`** — link de la carpeta de OneDrive/SharePoint con las piezas previas. **No hay carpeta fija: cambia según la campaña, así que el agente DEBE PEDIRLA SIEMPRE al usuario.** Nunca asumir una ruta, ni reutilizar la de una conversación anterior, ni inventar el nombre. El usuario puede declinar ("no aplica") y entonces se omite la auditoría — lo que no es opcional es **preguntar**.
+- **`{{carpeta_referencias}}`** — link de la carpeta en la nube (OneDrive, SharePoint, Google Drive) o ruta de carpeta local / cowork con las piezas previas. **No hay carpeta fija: cambia según la campaña, así que el agente DEBE PEDIRLA SIEMPRE al usuario.** Nunca asumir una ruta, ni reutilizar la de una conversación anterior, ni inventar el nombre. El usuario puede elegir cualquiera de las 4 modalidades (nube, carpeta local/cowork, imágenes en chat, o ninguna) — lo que no es opcional es **preguntar**.
 - **`{{alcance_referencias}}`** — cuántas piezas previas tomar en cuenta. Se pregunta **después** de tener la carpeta, con dos opciones: **(a) las 10 más recientes** o **(b) un rango de fechas** — desde la fecha que indique el usuario hasta hoy. El filtro se resuelve con el timestamp del nombre de archivo, sin abrir documentos.
-- **`{{referencias_visuales}}`** — resultado de la auditoría. La vía principal es **leer los documentos Word de análisis** que un flujo de Power Automate deposita en esa carpeta (el conector de Microsoft 365 sí lee `.docx`), no las imágenes. Ver `sub-skill/leer-imagenes-onedrive/README.md`.
+- **`{{referencias_visuales}}`** — resultado de la auditoría. Si es OneDrive/SharePoint, lee los `.docx` de análisis; si es Google Drive o carpeta local/cowork, lee los archivos y fichas; si se adjuntan imágenes en el chat, analiza su estética; y si el usuario responde «Ninguna», el agente se inspira directamente con el acervo oficial y campañas históricas que ya tiene integradas la skill (`references/old_campaigns/` y `references/loco-tequila/`).
 - **`{{numero_ideas}}`** — cuántos conceptos idear por red (por defecto 3). **Tope de calidad:** el total de conceptos (`redes × numero_ideas`) **no puede exceder 6**. Si lo excede, reducir `{{numero_ideas}}` hasta cumplir el tope y declararlo en las notas de la entrega. Un prompt excelente vale más que tres adelgazados; ver `references/prompt-standards.md` §4.
 - **`{{inventiva}}`** — nivel de inventiva: **Original** o **Locura Genial** (por defecto Original).
 
@@ -98,7 +98,26 @@ Cada idea debe pasar el filtro: ¿demuestra creatividad trascendental, innovaci�
 
 ## Flujo de trabajo
 
-1. **Confirmar red(es) destino** (`{{plataformas_destino}}`). Si falta, preguntar. Usar la matriz de `references/platforms-process.md`.
+1. **Pregunta OBLIGATORIA de red(es) destino (`{{plataformas_destino}}`):** Si el usuario no especificó las redes en su mensaje de inicio, el agente **DEBE PREGUNTAR SIEMPRE** presentando sin excepción la lista completa de las 5 redes sociales oficiales más la opción «Todas»:
+    - 1. Facebook
+    - 2. Instagram
+    - 3. LinkedIn
+    - 4. YouTube
+    - 5. TikTok
+    - 6. Todas las anteriores
+
+    Formular la consulta con opciones interactivas clickeables en Markdown para Claude / Codex / Web:
+    ```markdown
+    *«¿En qué redes sociales deseas enfocar esta campaña? (puedes elegir una, varias o todas):»*
+
+    - [🔘 1. Facebook](#)
+    - [🔘 2. Instagram](#)
+    - [🔘 3. LinkedIn](#)
+    - [🔘 4. YouTube](#)
+    - [🔘 5. TikTok](#)
+    - [🔘 6. Todas las anteriores](#)
+    ```
+    *(El usuario puede responder haciendo clic, indicando los números o nombres de las redes que desea combinar, o diciendo «Todas»)*. Usar la matriz técnica de `references/platforms-process.md` para adaptar la gramática de cada red seleccionada.
 2. **Detectar fechas próximas.** Ejecutar el script `sub-skill/obtener-feriados-oficiales-no-oficiales/obtener_feriados.py` (siguiendo las instrucciones de `sub-skill/obtener-feriados-oficiales-no-oficiales/README.md`) y leer `references/fechas-alcohol.md` (fechas de bebidas + prioridades de marca). Cruzar ambas.
 3. **Preguntar OBLIGATORIAMENTE las fechas al usuario:** Presentar la lista de fechas festivas/efemérides detectadas (ventana de 30 días) y **preguntarle siempre y explícitamente**: *"¿A cuál de estas fechas festivas o del mundo de las bebidas deseas enfocar la campaña, o tienes en mente alguna fecha/efeméride personalizada?"*. **NO continuar a la ideación sin la confirmación del usuario.**
 3b. **Pregunta OBLIGATORIA de motivo gastronómico:** Una vez confirmada la festividad, si esta tiene relación o tradición en el calendario gastronómico tradicional mexicano (`references/calendario-gastronomico-mexicano.md`, por ejemplo Fiestas Patrias/Independencia, Día de Muertos, Candelaria, Cuaresma/Semana Santa, Reyes, Navidad, Santa Cruz, etc.), **preguntarle siempre y explícitamente**:
@@ -124,16 +143,20 @@ Cada idea debe pasar el filtro: ¿demuestra creatividad trascendental, innovaci�
 4. **Preguntar el producto** (`{{producto}}`): ¿la publicidad va ligada a un producto específico o al portafolio completo? Presentar las opciones desde `references/productos.md`.
 5. **Revisar piezas previas y referencias visuales:**
 
-    **5a. CONSULTAR OBLIGATORIAMENTE REFERENCIAS VISUALES** (`{{carpeta_referencias}}` o `{{imagenes_referencia}}`). Las referencias previas **cambian en cada campaña**: nunca asumirlas ni reutilizar una anterior. Preguntar ofreciendo siempre las tres opciones juntas para que el usuario elija la que prefiera:
+    **5a. CONSULTAR OBLIGATORIAMENTE REFERENCIAS VISUALES** (`{{carpeta_referencias}}` o `{{imagenes_referencia}}`). Las referencias previas **cambian en cada campaña**: nunca asumirlas ni reutilizar una anterior. El agente **DEBE PREGUNTAR SIEMPRE** presentando sin excepción las cuatro opciones mediante botones clickeables en Markdown:
 
-    > *"Para revisar referencias visuales previas y no repetir estilos, ¿tienes alguna de estas opciones?*
-    > *(a) Pegarme el **link de la carpeta de OneDrive/SharePoint** con las piezas previas (indicando si tomo las **10 más recientes** o **desde qué fecha** hasta hoy).*
-    > *(b) **Adjuntar aquí en el chat de 1 a 3 imágenes propias** de muestra para inspirarnos.*
-    > *(c) **Ninguna** (si prefieres omitir referencias previas y avanzar directamente)."*
+    > *«Para revisar referencias visuales previas y no repetir estilos, ¿cómo prefieres proporcionar tus referencias?:»*
+    > 
+    > - [🔘 1. Link de OneDrive, SharePoint o Google Drive (con las piezas previas)](#)
+    > - [🔘 2. Ruta de carpeta local si trabajas en cowork o en tu equipo](#)
+    > - [🔘 3. Adjuntar aquí en el chat de 1 a 3 imágenes propias de muestra](#)
+    > - [🔘 4. Ninguna (inspirarse directamente con el acervo y campañas previas que ya tiene la skill)](#)
 
     - **Si el usuario comparte link de OneDrive/SharePoint:** Activar el plugin **Microsoft 365** y seguir `sub-skill/leer-imagenes-onedrive/README.md` (pasos 5b, 5c, 5d para leer los `.docx` de análisis).
-    - **Si el usuario adjunta imágenes propias:** El agente las analiza para identificar estilo visual, paleta, cristalería y encuadres, heredando el ADN positivo y evitando duplicar la composición exacta.
-    - **Si el usuario responde «Ninguna» o declina:** Se omite la auditoría y se avanza inmediatamente al paso 6 sin bloquear.
+    - **Si el usuario comparte link de Google Drive:** El agente revisa los documentos o imágenes contenidos en el enlace compartido para extraer conceptos y directrices de no-repetición.
+    - **Si el usuario indica una carpeta local / cowork:** El agente lee directamente los archivos de la ruta especificada en disco para identificar estilos anteriores.
+    - **Si el usuario adjunta de 1 a 3 imágenes propias en el chat:** El agente las analiza para identificar estilo visual, paleta, cristalería y encuadres, heredando el ADN positivo y evitando duplicar la composición exacta.
+    - **Si el usuario responde «Ninguna» o elige inspirarse con la skill:** Se avanza de inmediato sin bloquear, utilizando como inspiración el acervo histórico que ya tiene la skill en `references/old_campaigns/` (`resumen_old_campaigns.md`), `references/loco-tequila/` y `references/brand-context.md`.
 
     **5b. Confirmar alcance** (`{{alcance_referencias}}`) si eligió OneDrive y no vino en la respuesta anterior.
 
@@ -142,7 +165,10 @@ Cada idea debe pasar el filtro: ¿demuestra creatividad trascendental, innovaci�
     **5d. Reportar** qué se detectó (red + fecha), **cuántos documentos se leyeron efectivamente** de los seleccionados, con qué **ADN** se mantendrá coherencia y qué elementos **INCIDENTAL** quedan **excluidos**.
 6. **Preguntar el medio** (`{{medio}}`): imagen, video o ambas. Define qué prompts se escriben y, más adelante, qué se puede ejecutar en el paso 12. Los extras (leaderboard y generación con OpenRouter) **no se ofrecen aquí**: se ofrecen en el paso 12, ya con la pasarela entregada, para no interrumpir la producción.
 7. **Ideación:** generar `{{numero_ideas}}` conceptos por red según `{{inventiva}}` (respetando el tope de 6 conceptos totales), cada uno anclado a la fecha festiva y al producto elegidos, conectado a una persona objetivo (Alejandro / Ana / Leonardo / efecto halo).
-8. **Reescritura en copys listos** respetando la gramática nativa de cada plataforma + inyección de keywords (regla de oro: 1 territorio mítico + 1 persona + 1 categoría; máx. 5). **Cumplimiento IA 2026:** Para LinkedIn, aplicar las directrices anti-slop del algoritmo 360Brew (`references/manual-cumplimiento-ia-2026.md` Módulo 3.4): voz auténtica, datos verificados de terruño, estructura natural y anécdotas reales; evitar viñeteado excesivo y frases trilladas que devalúen el alcance. En todas las redes, prohibición absoluta de testimonios o reseñas ficticias generadas por IA (FTC 16 CFR Part 465).
+8. **Reescritura en copys listos (Calibración de Tono y Regla «Anti-Novela»):** Redactar copys nativos respetando la gramática técnica de cada red y la inyección de keywords (1 territorio mítico + 1 persona + 1 categoría; máx. 5):
+    - **Regla «Anti-Novela» (Prohibición de Storytelling Barroco):** Prohibición absoluta de textos tipo novela, cuentos largos o prosas poéticas sobre el tiempo o el más allá. El copy debe ser conciso, afilado y magnético: de 2 a 3 oraciones contundentes (35 a 50 palabras para feed de Instagram/Facebook; 1 sola línea para Stories y TikTok), con gancho frontal de menos de 125 caracteres que atrape al instante antes del botón «...más / ver más».
+    - **Anclaje Ineludible en los 3 Pilares:** Todo copy debe fundamentarse en la tríada oficial: *Radical Authenticity* (terruño propio de El Arenal, pureza artesanal sin aditivos), *Transcendent Creativity* (arte contemporáneo, Jan Hendrix, botella como escultura) y *Locura Genial* (obsesión por la perfección absoluta). Tono audaz, contemporáneo y de elegancia desafiante; cero cursilería, timidez o nostalgia soñadora (`references/brand-context.md` §6.1).
+    - **Cumplimiento IA 2026:** Para LinkedIn, aplicar las directrices anti-slop del algoritmo 360Brew (`references/manual-cumplimiento-ia-2026.md` Módulo 3.4): voz auténtica, datos verificados de terruño, estructura natural y anécdotas reales; evitar viñeteado excesivo y frases trilladas que devalúen el alcance. En todas las redes, prohibición absoluta de testimonios o reseñas ficticias generadas por IA (FTC 16 CFR Part 465).
 8b. **Segunda Evaluación: Sentido Común Visual y Verosimilitud de Escena (`sub-skill/evaluador-sentido-comun-visual/` y `references/evaluacion-sentido-comun-escena.md`):**  
     Antes de proceder a la redacción definitiva de los prompts en el paso 9, el agente somete cada concepto a una autoevaluación obligatoria de sentido común físico y culinario:
     - **Vajilla y Menaje Obligatorio:** Si la escena incluye alimentos (chiles en nogada, mole, botanas ceremoniales), **ESTÁ ESTRICTAMENTE PROHIBIDO representarlos sobre la mesa, piedra o mantel sin plato**. Se debe definir explícitamente vajilla de alta gama (cerámica artesanal de alta temperatura, gres vidriado o porcelana mate) y cubertería adecuada.
