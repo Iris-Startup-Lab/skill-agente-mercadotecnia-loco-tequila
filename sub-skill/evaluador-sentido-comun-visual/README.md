@@ -27,7 +27,7 @@ Antes de autorizar un prompt maestro de imagen o video, el agente debe auditar l
   - Si la escena lo amerita, incluir menaje de apoyo coherente: cubertería de plata mate o acero forjado, servilleta de lino doblada al costado.
 
 ### 2.2 Criterio de Cristalería y Soporte Físico
-- La copa de degustación oficial (Riedel tequilera grabada) debe contar con un punto de apoyo definido y estable:
+- La copa de degustación oficial (Riedel tequilera grabada) debe describirse en prompts generativos por su morfología de tulipán (`narrow tulip-shaped crystal tasting glass with tapered rim`) para blindar contra copas flauta de champán, y contar con un punto de apoyo definido y estable:
   - Sobre un posavasos artesanal de piel/cuero curtido, bajoplato de piedra volcánica pulida o madera de parota.
   - Sombra de contacto (*contact shadow*) y oclusión ambiental nítida en la base del pie de la copa.
   - NUNCA copas inclinadas sin una mano humana visible que las sostenga con delicadeza.
@@ -40,7 +40,7 @@ Antes de autorizar un prompt maestro de imagen o video, el agente debe auditar l
 
 ### 2.4 Criterio de Gravedad, Escala y Espacio
 - Relación de escala real: una botella de 750 ml mide ~28-30 cm de altura; una copa Riedel mide ~21 cm; un plato extendido de cena mide ~27-30 cm de diámetro. La botella no debe verse miniaturizada ni gigantesca frente a la comida.
-- Si hay vertido de líquido (*pour*): el chorro debe tener origen exacto en el cuello de la botella y destino visible dentro del cáliz de la copa, con física laminar fluida y sin salpicaduras aceitosas irreales.
+- Si hay vertido de líquido (*pour*): el chorro debe tener origen exacto en el cuello de la botella y destino visible dentro del cáliz de la copa, con física laminar fluida, ultrabaja viscosidad (~1.2 cP), velocidad real/normal y superficie en reposo completamente libre de gas, efervescencia o espuma (`completely still, non-carbonated liquid surface immediately after impact`).
 
 ### 2.5 Criterio de Etiqueta y Armonía de Bodegón
 - Composición armónica entre gastronomía y tequila:
@@ -55,7 +55,8 @@ Antes de autorizar un prompt maestro de imagen o video, el agente debe auditar l
 | Error detectado en la ideación | Corrección obligatoria en el prompt |
 |---|---|
 | Alimento sobre superficie cruda (ej. chile en nogada sobre mesa de madera) | Agregar: *«artfully plated on a deep matte ivory ceramic artisan dish, glossy nogada sauce pooling elegantly on the plate surface, garnished with ruby pomegranate seeds and fresh parsley»* |
-| Copa flotando o sin anclaje visual | Agregar: *«Riedel glass resting securely on an obsidian stone coaster with soft contact shadows and crisp reflections»* |
+| Copa flotando o sin anclaje visual | Agregar: *«tulip-shaped crystal glass resting securely on an obsidian stone coaster with soft contact shadows and crisp reflections»* |
+| Líquido servido espumoso, burbujeante o espeso | Agregar descriptores de hidrodinámica: *«water-thin fluid dynamics (~1.2 cP), crisp high-velocity laminar stream, completely still non-carbonated liquid surface, no bubbles, no fizz, no foam»* y negative prompt anti-carbonatación |
 | Botella genérica o sin rasgos primordiales | Añadir directiva: *«PRESERVE EXACT BOTTLE MORPHOLOGY: conical trapezoidal clear crystal bottle, thick 2cm solid glass base, raised red cochineal enamel "Loco" wordmark with silver outline»* |
 | Botella abierta con líquido sin tapón | Especificar botella cerrada con su cápsula metálica oficial, o con el tapón colocado a un lado sobre la mesa con intención estética |
 | Hielo o rodajas en la copa | Eliminar y añadir al Negative Prompt: *«ice cubes, salt rim, lime wedge, shot glass»* |

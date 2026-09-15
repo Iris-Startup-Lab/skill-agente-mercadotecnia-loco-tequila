@@ -10,7 +10,7 @@ Un prompt de imagen **no está terminado** si le falta cualquiera de estos siete
 
 | # | Campo | Qué debe contener | Ejemplo |
 |---|---|---|---|
-| 1 | **Sujeto / producto (Fidelidad Anatómica)** | Botella exacta del SKU según canon (`references/loco-tequila/`): silueta cónica/trapezoidal, base de cristal macizo de 2 cm, cápsula de cuello por color (Blanco=rojo, Ámbar=bronce, Puro Corazón=plata), logo esmaltado en relieve rojo cochinilla sin etiqueta de papel. Cristalería oficial: copa tequilera Riedel grabada con rombo. | `Loco Tequila Blanco iconic trapezoidal conical heavy crystal bottle with 2cm solid glass base, crimson red neck foil wrap, enameled red cochineal logo on glass, official engraved Riedel tequila flute glass` |
+| 1 | **Sujeto / producto (Fidelidad Anatómica)** | Botella exacta del SKU según canon (`references/loco-tequila/`): silueta cónica/trapezoidal, base de cristal macizo de 2 cm, cápsula de cuello por color (Blanco=rojo, Ámbar=bronce, Puro Corazón=plata), logo esmaltado en relieve rojo cochinilla sin etiqueta de papel. Cristalería oficial: copa tequilera Riedel grabada con rombo (silueta tulipán). | `Loco Tequila Blanco iconic trapezoidal conical heavy crystal bottle with 2cm solid glass base, crimson red neck foil wrap, enameled red cochineal logo on glass, narrow tulip-shaped crystal tasting glass with tapered rim (Riedel tequila glassware silhouette)` |
 | 2 | **Composición y encuadre** | Distancia focal en `Nmm`, apertura `f/N`, tipo de plano y profundidad de campo | `85mm f/1.4, medium close-up, shallow depth of field` |
 | 3 | **Iluminación** | Condición de luz nombrada explícitamente (hora del día o esquema de estudio) | `warm golden hour sun rays`, `editorial studio chiaroscuro, single hard key light` |
 | 4 | **Paleta institucional** | Mínimo **2** colores de marca, en inglés y por nombre de color | `cochineal crimson`, `deep wine`, `bone-ivory`, `obsidian black`, `volcanic silver` |
@@ -57,9 +57,9 @@ ADD: The added image is the real bottle image. PRESERVE EXACT BOTTLE MORPHOLOGY:
 ### 1.4 Bottle-Locks Canónicos por Expresión (`references/brand-context.md`)
 
 Para evitar distorsiones de silueta, cada prompt debe concatenar en sus primeros 20 tokens el bloque anatómico exacto de su expresión:
-- **Loco Blanco:** `Loco Blanco tequila bottle, iconic conical trapezoidal clear crystal bottle with 2cm solid heavy glass base, crimson red foil neck wrap, enameled raised red cochineal "Loco" wordmark with silver outline, subtle crisp white typography reading "ESPIRITU • ORIGEN", official engraved Riedel tequila flute glass`
-- **Loco Ámbar:** `Loco Ámbar tequila bottle, conical trapezoidal clear glass bottle with 2cm solid base, copper-bronze metallic neck cap, luminous golden amber liquid, enameled raised red cochineal "Loco" wordmark with silver outline, subtle white typography "ESPIRITU • ORIGEN", official Riedel tequila flute`
-- **Loco Puro Corazón:** `Loco Puro Corazón tequila bottle, slender conical trapezoidal crystal bottle with 2cm solid base, brushed silver-white metallic neck wrap, pure diamond-clear luminous liquid, enameled raised red cochineal "Loco" wordmark, understated white typography, Riedel crystal flute`
+- **Loco Blanco:** `Loco Blanco tequila bottle, iconic conical trapezoidal clear crystal bottle with 2cm solid heavy glass base, crimson red foil neck wrap, enameled raised red cochineal "Loco" wordmark with silver outline, subtle crisp white typography reading "ESPIRITU • ORIGEN", narrow tulip-shaped crystal tasting glass with tapered rim (Riedel tequila glassware silhouette)`
+- **Loco Ámbar:** `Loco Ámbar tequila bottle, conical trapezoidal clear glass bottle with 2cm solid base, copper-bronze metallic neck cap, luminous golden amber liquid, enameled raised red cochineal "Loco" wordmark with silver outline, subtle white typography "ESPIRITU • ORIGEN", narrow tulip-shaped crystal tasting glass with tapered rim (Riedel tequila glassware silhouette)`
+- **Loco Puro Corazón:** `Loco Puro Corazón tequila bottle, slender conical trapezoidal crystal bottle with 2cm solid base, brushed silver-white metallic neck wrap, pure diamond-clear luminous liquid, enameled raised red cochineal "Loco" wordmark, understated white typography, narrow tulip-shaped crystal tasting glass with tapered rim (Riedel tequila glassware silhouette)`
 - **Loco Áureo:** `Loco Áureo tequila bottle, conical trapezoidal crystal bottle with 2cm solid base, matte black neck cap, deep mahogany amber liquid, enameled raised red cochineal "Loco" wordmark with silver outline, fine art studio aesthetic`
 - **Loco Hierofante:** `Loco Hierofante tequila bottle, sculpted faceted geode crystal flask with hand-carved relief lines, polished solid silver neck ring with engraved "L" monogram, jewel-like collector piece, transcendental silver reflection ambiance`
 
@@ -79,9 +79,9 @@ Los siete campos de §1 aplican igual, más tres adicionales:
 - **Campo 9 — Movimiento de cámara** por escena (`slow dolly in`, `static tripod`, `handheld drift`).
 - **Campo 10 — Duración total** y **dirección sonora** (sin afirmar licencias comerciales que no se tienen).
 
-### 2.1 Veracidad Física y Dinámica de Fluidos del Tequila Servido (Anti-Viscosidad)
+### 2.1 Veracidad Física y Dinámica de Fluidos del Tequila Servido (Anti-Viscosidad y Anti-Carbonatación)
 
-> ⚠️ **Problema recurrente de la IA de video:** Los modelos generativos (Sora, Runway, Kling, Veo, Wan) tienden por defecto a simular líquidos espesos, gelatinosos o aceitosos (similares a miel, jarabe o CGI pesado) cuando se les pide un servido genérico (*"pouring tequila"*). El tequila 100% de agave a 40% ABV es un **destilado puro con viscosidad casi idéntica al agua (~1.2 a 1.4 mPa·s)**, no un licor azucarado.
+> ⚠️ **Problema recurrente de la IA de video:** Los modelos generativos (Sora, Runway, Kling, Veo, Wan, Seedance) tienden por defecto a simular líquidos espesos o con efervescencia errónea (similares a miel, jarabe, sidra o cerveza clara) cuando se les pide un servido genérico (*"pouring tequila"*). El tequila 100% de agave a 40% ABV es un **destilado puro con viscosidad casi idéntica al agua (~1.2 a 1.4 mPa·s), completamente plano y sin gas**, no un fermentado ni un licor azucarado.
 
 Cuando un prompt de video incluya escenas de vertido (*pouring*), caída del líquido o movimiento en copa, **es obligatorio** incluir los descriptores reológicos y de hidrodinámica real:
 
@@ -89,10 +89,18 @@ Cuando un prompt de video incluya escenas de vertido (*pouring*), caída del lí
    `water-thin fluid dynamics`, `ultra-low viscosity liquid (~1.2 cP)`, `crisp high-velocity laminar stream`, `free-flowing natural gravity pour`, `non-viscous distilled agave spirit`.
 2. **Impacto, turbulencia y microgotas:**  
    `sharp dynamic liquid splash breaking into fine crystalline micro-droplets`, `rapid fluid turbulence`, `instant energetic surface ripples on the liquid meniscus`.
-3. **Aeración instantánea sin espuma:**  
-   `transient effervescent micro-bubbles rising and instantly popping with zero residual foam or lather`, `crystal-clear refractive caustics`.
+3. **Superficie en reposo tras el impacto (anti-carbonatación):**  
+   `completely still, non-carbonated liquid surface immediately after impact — no bubbles of any kind, no fizz, no foam; crystal-clear refractive caustics from the still liquid meniscus`.
 4. **Comportamiento en la cristalería Riedel (Piernas / Lágrimas):**  
    `thin fast-draining tears (lagrimas del tequila) coating the inner crystal walls with crisp transparent runoff, no oily clinging, no syrup coating`.
+
+### 2.2 Referencia Visual Multimodal para Dinámica de Vertido (OPCIONAL)
+
+> 💡 **Capacidad Multimodal (Opcional, no obligatoria):**  
+> En modelos generativos de video que admiten referencias visuales multimodales (como Seedance 2.5, Kling o Runway Gen-3), el usuario puede **opcionalmente** adjuntar un clip corto de referencia real de un vertido de destilado transparente (agua o tequila en copa de degustación) para anclar la física de fluidos.  
+> Si el usuario decide utilizarla, se puede añadir la directiva opcional:  
+> `MATCH POUR PHYSICS (OPTIONAL): match the exact water-thin pour physics, continuous laminar stream, and zero-carbonation still surface shown in the reference video.`  
+> **Nota importante:** El uso de este clip es **100% opcional y nunca obligatorio**. El prompt en texto detallado en §2.1 y el negative prompt de §3.2 proporcionan por sí solos la protección completa e independiente sin necesidad de material externo.
 
 ## 3. Negative prompt base (obligatorio, literal)
 
@@ -101,10 +109,10 @@ Cuando un prompt de video incluya escenas de vertido (*pouring*), caída del lí
 underage, minors, drunk, drunkenness, excessive drinking, cheap glass, competitor bottles, Casa Dragones bottle, Clase Azul bottle, generic liquor bottle, cylindrical bottle, round wine bottle, paper label, sticker label, screw cap, flat base, thin glass, painted ceramic decanter, food without plate, unplated food, ceramic decanter, hand-painted pattern, old-fashioned glass, ice cubes, salt rim, lime wedge on rim, shot glass, tequila production process, harvesting agave, jimador, jiming agave, industrial distillery, cooking ovens, brick ovens, industrial machinery, tahona stone, fermentation vats, distillation stills, factory workers, text watermark, blurry, low resolution, gibberish text, misspelled words, garbled letters, typo, scrambled typography, fake writing, illegible labels, deformed text, pseudo-letters, nonsense words, oversized text, giant red lettering, large red typography, clunky font, massive font size
 ```
 
-### 3.2 Descriptores Anti-Viscosidad (OBLIGATORIO para todo prompt de video con líquidos o servido)
-Se suma de forma mandatoria a la base universal en prompts de video:
+### 3.2 Descriptores Anti-Viscosidad y Anti-Carbonatación (OBLIGATORIO para todo prompt de video con líquidos o servido)
+Se suma de forma mandatoria a la base universal en prompts de video de producto:
 ```text
-viscous, viscosity, syrupy, honey, honey-like pour, thick fluid, gelatinous, molasses, oil, oily texture, motor oil, heavy sluggish liquid, gooey, slime, slow-motion goo, sticky syrup, lingering froth, soapy foam, unnatural CGI gel
+viscous, viscosity, syrupy, honey, honey-like pour, thick fluid, gelatinous, molasses, oil, oily texture, motor oil, heavy sluggish liquid, gooey, slime, slow-motion goo, sticky syrup, lingering froth, soapy foam, unnatural CGI gel, carbonation, carbonated, effervescent, effervescence, fizzy, fizz, bubbles, bubbly, sparkling, sparkling wine, champagne, cider, apple cider, beer, beer head, ale, lager, fermented beverage, brewed beverage, cloudy liquid, hazy liquid, flute glass, champagne flute
 ```
 
 Se puede **añadir**, nunca recortar.

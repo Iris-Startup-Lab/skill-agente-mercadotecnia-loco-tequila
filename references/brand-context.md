@@ -217,13 +217,13 @@ Loco Tequila no tiene una sola estética: activa cuatro subidentidades visuales 
 Fragmentos morfológicos obligatorios para los primeros 20 tokens de cada prompt:
 
 - **Loco Blanco:**  
-  `Loco Blanco tequila bottle, iconic conical trapezoidal clear crystal bottle with 2cm solid heavy glass base, crimson red foil neck wrap, enameled raised red cochineal "Loco" wordmark with silver outline, subtle crisp white typography reading "ESPIRITU • ORIGEN", official engraved Riedel tequila flute glass, shallow depth of field, product in sharp focus`
+  `Loco Blanco tequila bottle, iconic conical trapezoidal clear crystal bottle with 2cm solid heavy glass base, crimson red foil neck wrap, enameled raised red cochineal "Loco" wordmark with silver outline, subtle crisp white typography reading "ESPIRITU • ORIGEN", narrow tulip-shaped crystal tasting glass with tapered rim (Riedel tequila glassware silhouette), shallow depth of field, product in sharp focus`
 
 - **Loco Ámbar (Reposado):**  
-  `Loco Ámbar tequila bottle, conical trapezoidal clear glass bottle with 2cm solid base, copper-bronze metallic neck cap, luminous golden amber liquid, enameled raised red cochineal "Loco" wordmark with silver outline, subtle white typography "ESPIRITU • ORIGEN", official Riedel tequila flute, shallow depth of field`
+  `Loco Ámbar tequila bottle, conical trapezoidal clear glass bottle with 2cm solid base, copper-bronze metallic neck cap, luminous golden amber liquid, enameled raised red cochineal "Loco" wordmark with silver outline, subtle white typography "ESPIRITU • ORIGEN", narrow tulip-shaped crystal tasting glass with tapered rim (Riedel tequila glassware silhouette), shallow depth of field`
 
 - **Loco Puro Corazón:**  
-  `Loco Puro Corazón tequila bottle, slender conical trapezoidal crystal bottle with 2cm solid base, brushed silver-white metallic neck wrap, pure diamond-clear luminous liquid, enameled raised red cochineal "Loco" wordmark, understated white typography, Riedel crystal flute`
+  `Loco Puro Corazón tequila bottle, slender conical trapezoidal crystal bottle with 2cm solid base, brushed silver-white metallic neck wrap, pure diamond-clear luminous liquid, enameled raised red cochineal "Loco" wordmark, understated white typography, narrow tulip-shaped crystal tasting glass with tapered rim (Riedel tequila glassware silhouette)`
 
 - **Loco Áureo:**  
   `Loco Áureo tequila bottle, conical trapezoidal crystal bottle with 2cm solid base, matte black neck cap, deep mahogany amber liquid, enameled raised red cochineal "Loco" wordmark with silver outline, fine art studio aesthetic, product in razor-sharp focus`

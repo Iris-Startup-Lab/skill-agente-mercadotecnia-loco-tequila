@@ -45,16 +45,16 @@ Los generadores de IA (Midjourney, Flux, Imagen 3, Sora) a menudo ignoran la sil
 
 ## 3. Lógica Espacial, Cristalería y Gravedad
 
-1. **La Copa Oficial Riedel:**
-   - Copa tequilera Riedel oficial grabada con rombo institucional.
+1. **La Copa Oficial Riedel (Silueta Tulipán):**
+   - Copa tequilera grabada con rombo institucional; en prompts generativos describirla por su morfología (`narrow tulip-shaped crystal tasting glass with tapered rim`) para evitar sesgos de modelos hacia copas flauta de champán.
    - Debe descansar firmemente sobre la mesa o posavasos de cuero/piedra con sombra de contacto (*contact shadow*).
    - NUNCA copas flotando en el aire ni colocadas en bordes precarios.
 2. **Relación Espacial y Escala Real:**
    - La botella de 750 ml (~28-30 cm) guarda una escala proporcionada frente al plato de comida (~27-30 cm) y la copa (~21 cm).
    - En tomas de maridaje: el plato de comida en primer o plano medio, la copa a la derecha o alcance natural de la mano, y la botella como ancla visual de fondo en bokeh sutil o en co-protagonismo editorial.
-3. **Física del Vertido y Dinámica de Fluidos:**
-   - El chorro de vertido proviene de la boca de la botella y cae directamente en el centro del cáliz de la copa.
-   - Líquido cristalino ultraligero (~1.2 cP), sin viscosidad aceitosa ni espuma persistente.
+3. **Física del Vertido y Dinámica de Fluidos (Anti-Viscosidad y Anti-Carbonatación):**
+   - El chorro de vertido proviene de la boca de la botella y cae directamente en el centro del cáliz de la copa a velocidad real/normal.
+   - Líquido cristalino ultraligero (~1.2 cP), sin viscosidad aceitosa, sin efervescencia, sin burbujas residuales ni espuma (`completely still, non-carbonated liquid surface immediately after impact`). Si el usuario aporta clip de referencia multimodal (opcional), se integra la directiva `MATCH POUR PHYSICS`.
 
 ---
 

@@ -152,17 +152,17 @@
       "category": "Video Cinematográfico",
       "tags": ["Multiescena", "Continuidad", "Narrativa"],
       "loco_rating": "⭐⭐⭐⭐½",
-      "recommendation": "Conviene cuando el concepto exige varias escenas encadenadas con continuidad (la jima, el alambique, el servicio) en una sola generación.",
+      "recommendation": "Conviene cuando el concepto exige varias escenas encadenadas con continuidad (el paisaje agavero en calma, el brindis de celebración, el servicio contemplativo) en una sola generación.",
       "settings_tip": "Entregar el desglose por escena con marcas de tiempo tal como lo produce la skill; responde mejor a estructura explícita que a un párrafo único."
     },
     "kling": {
       "developer": "Kuaishou",
       "badge": "Movimiento Físico Realista",
       "category": "Video Cinematográfico",
-      "tags": ["Física de Líquidos", "Servido", "Cámara Lenta"],
+      "tags": ["Física de Líquidos", "Servido", "Velocidad Real de Vertido"],
       "loco_rating": "⭐⭐⭐⭐",
-      "recommendation": "El más sólido para el momento del servido: caída del destilado, hielo y condensación con física creíble. Útil para la toma de producto en movimiento.",
-      "settings_tip": "Pedir cámara lenta explícita para el servido y acotar la toma a una sola acción por generación."
+      "recommendation": "El más sólido para el momento del servido: caída del destilado puro, refracción en copa y condensación con física creíble. Útil para la toma de producto en movimiento.",
+      "settings_tip": "Pedir velocidad normal/real para la acción de servido (evitar cámara lenta en el vertido para no exagerar la viscosidad del destilado; reservar slow-motion únicamente para macro estático, gotas de condensación o caída de ingredientes) y acotar la toma a una sola acción por generación."
     },
     "minimax": {
       "developer": "MiniMax",
