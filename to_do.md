@@ -82,3 +82,18 @@ Este documento registra de forma pormenorizada las tareas implementadas para ele
   - Documentación de la capacidad de referencia multimodal de video (§2.2): se integra la directiva opcional `MATCH POUR PHYSICS (OPTIONAL)`, estipulando de manera explícita que es **100% opcional y no obligatoria**.
   - Actualización consistente en [qa-checklist.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/qa-checklist.md), [evaluacion-sentido-comun-escena.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/evaluacion-sentido-comun-escena.md) y [sub-skill/evaluador-sentido-comun-visual/README.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/sub-skill/evaluador-sentido-comun-visual/README.md).
   - Verificación del script de empaquetado [package_skill.ps1](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/package_skill.ps1), confirmando total adaptabilidad (< 30 MB).
+
+- [x] **Tarea 12: Especialización de Física de Fluidos en Vertido de Tequila en Copa Riedel para Video**
+  - Especialización completa de [references/especificaciones-fluidos.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/especificaciones-fluidos.md) exclusivamente para Loco Tequila: erradicación de referencias a vino tinto y a vasos de shot/caballitos (prohibidos por el canon de marca).
+  - Definición de los dos perfiles lumínicos y ópticos: Blanco/Puro Corazón (diamantino/plata, 100% incoloro, sin oscurecimiento central) y Ámbar/Áureo (dorado traslúcido, miel y cobre cálido sin sombras fangosas).
+  - Regla Crítica Cero: desactivación absoluta de emisores de fondo (*Bottom Emitters OFF*) para anular cualquier efervescencia continua tipo sidra o refresco.
+  - Dinámica de microburbujas mecánicas por choque con ciclo de vida ultracorto (<0.3 s) y estallido instantáneo al contacto con la atmósfera (cero espuma, cero halo residual en cristal).
+  - Estabilización hidrodinámica a reposo superficial completo en menos de 1 a 1.5 segundos tras cesar el vertido de la botella.
+  - Comportamiento en la copa Riedel Tequila: lágrimas finas, nítidas y transparentes de escurrimiento ágil (*thin tequila tears*).
+  - Estructuración de las dos modalidades de entrada multimodal para video:
+    1. Fotografía de botella oficial (Image-to-Video) con directiva `ADD: PRESERVE EXACT BOTTLE MORPHOLOGY`.
+    2. Clip de muestra de vertido real (Video-to-Video) con directiva `MATCH POUR PHYSICS`.
+    3. Respaldo autónomo textual por si el usuario no proporciona archivos.
+  - Armonización transversal en [references/prompt-standards.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/prompt-standards.md) (§2.1, §2.2, §3.2), [SKILL.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/SKILL.md) (índice y paso 9), [references/qa-checklist.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/qa-checklist.md) y [references/evaluacion-sentido-comun-escena.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/evaluacion-sentido-comun-escena.md).
+  - Reempaquetado del paquete `.zip` distribuible.
+

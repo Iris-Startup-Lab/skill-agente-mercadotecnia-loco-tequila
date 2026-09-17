@@ -52,9 +52,13 @@ Los generadores de IA (Midjourney, Flux, Imagen 3, Sora) a menudo ignoran la sil
 2. **Relación Espacial y Escala Real:**
    - La botella de 750 ml (~28-30 cm) guarda una escala proporcionada frente al plato de comida (~27-30 cm) y la copa (~21 cm).
    - En tomas de maridaje: el plato de comida en primer o plano medio, la copa a la derecha o alcance natural de la mano, y la botella como ancla visual de fondo en bokeh sutil o en co-protagonismo editorial.
-3. **Física del Vertido y Dinámica de Fluidos (Anti-Viscosidad y Anti-Carbonatación):**
-   - El chorro de vertido proviene de la boca de la botella y cae directamente en el centro del cáliz de la copa a velocidad real/normal.
-   - Líquido cristalino ultraligero (~1.2 cP), sin viscosidad aceitosa, sin efervescencia, sin burbujas residuales ni espuma (`completely still, non-carbonated liquid surface immediately after impact`). Si el usuario aporta clip de referencia multimodal (opcional), se integra la directiva `MATCH POUR PHYSICS`.
+3. **Física del Vertido y Dinámica de Fluidos (Anti-Viscosidad y Anti-Carbonatación, ver `references/especificaciones-fluidos.md`):**
+   - El chorro de vertido proviene de la boca de la botella y cae directamente en el cáliz de la copa Riedel tulipán a velocidad real (1x), con flujo laminar limpio.
+   - Destilado ultraligero (~1.2 cP), sin viscosidad aceitosa ni fluidez gelatinosa.
+   - **Emisores de fondo desactivados (*Bottom Emitters OFF*):** Sin efervescencia ascendente continua.
+   - Microburbujas mecánicas transitorias que suben y estallan instantáneamente al tocar el aire.
+   - Superficie que alcanza reposo absoluto e inerte en <1.5 s tras cesar el vertido (`completely still, non-carbonated liquid surface immediately after impact`).
+   - Sin oscurecimiento central turbio en la copa Riedel. Si el usuario aporta clip de vertido real o foto de botella, se integran las directivas multimodales correspondientes (`MATCH POUR PHYSICS` / `ADD: PRESERVE EXACT BOTTLE MORPHOLOGY`).
 
 ---
 

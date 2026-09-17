@@ -80,27 +80,38 @@ Los siete campos de §1 aplican igual, más tres adicionales:
 - **Campo 10 — Duración total** y **dirección sonora** (sin afirmar licencias comerciales que no se tienen).
 
 ### 2.1 Veracidad Física y Dinámica de Fluidos del Tequila Servido (Anti-Viscosidad y Anti-Carbonatación)
+*(Fuente técnica completa: [`references/especificaciones-fluidos.md`](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/especificaciones-fluidos.md))*
 
 > ⚠️ **Problema recurrente de la IA de video:** Los modelos generativos (Sora, Runway, Kling, Veo, Wan, Seedance) tienden por defecto a simular líquidos espesos o con efervescencia errónea (similares a miel, jarabe, sidra o cerveza clara) cuando se les pide un servido genérico (*"pouring tequila"*). El tequila 100% de agave a 40% ABV es un **destilado puro con viscosidad casi idéntica al agua (~1.2 a 1.4 mPa·s), completamente plano y sin gas**, no un fermentado ni un licor azucarado.
 
-Cuando un prompt de video incluya escenas de vertido (*pouring*), caída del líquido o movimiento en copa, **es obligatorio** incluir los descriptores reológicos y de hidrodinámica real:
+Cuando un prompt de video incluya escenas de vertido (*pouring*), caída del líquido o movimiento en copa, **es obligatorio** incluir los descriptores reológicos y de hidrodinámica real según `references/especificaciones-fluidos.md`:
 
 1. **Viscosidad ultrabaja y flujo laminar:**  
    `water-thin fluid dynamics`, `ultra-low viscosity liquid (~1.2 cP)`, `crisp high-velocity laminar stream`, `free-flowing natural gravity pour`, `non-viscous distilled agave spirit`.
 2. **Impacto, turbulencia y microgotas:**  
-   `sharp dynamic liquid splash breaking into fine crystalline micro-droplets`, `rapid fluid turbulence`, `instant energetic surface ripples on the liquid meniscus`.
-3. **Superficie en reposo tras el impacto (anti-carbonatación):**  
-   `completely still, non-carbonated liquid surface immediately after impact — no bubbles of any kind, no fizz, no foam; crystal-clear refractive caustics from the still liquid meniscus`.
-4. **Comportamiento en la cristalería Riedel (Piernas / Lágrimas):**  
-   `thin fast-draining tears (lagrimas del tequila) coating the inner crystal walls with crisp transparent runoff, no oily clinging, no syrup coating`.
+   `dynamic liquid impact breaking into sharp crystalline micro-droplets`, `rapid fluid turbulence`, `instant energetic surface ripples on the liquid meniscus`.
+3. **Desactivación de emisores de fondo y microburbujas mecánicas:**  
+   `no bottom emitters`, `mechanical impact micro-bubbles that burst instantly upon reaching the surface`, `zero residual foam, zero surface ring, zero trapped bubbles on inner crystal walls`.
+4. **Tiempo de reposo y estabilización (<1.5s):**  
+   `settles into a completely still, inert liquid surface within 1.5 seconds after pouring ceases`, `glass-like flat meniscus with zero internal turbulence`.
+5. **Comportamiento en la cristalería Riedel (Piernas / Lágrimas):**  
+   `narrow tulip-shaped Riedel crystal tasting glass with tapered rim`, `crisp thin transparent tequila tears (lágrimas del tequila) draining smoothly and swiftly down inner crystal walls, no oily residue, no syrup coating`.
+6. **Interacción óptica y transmisión de luz (sin oscurecimiento central):**  
+   - Para Blanco/Puro Corazón: `diamond-clear transparency, uniform light transmission with no central darkening, sharp refractive caustics, volcanic silver highlights`.  
+   - Para Ámbar/Áureo: `luminous golden-amber crystal translucency, uniform radiant clarity with no murky central darkening, warm honey and copper specular reflections`.
 
-### 2.2 Referencia Visual Multimodal para Dinámica de Vertido (OPCIONAL)
+### 2.2 Entradas Multimodales para Video: Botella y Referencia de Vertido
 
-> 💡 **Capacidad Multimodal (Opcional, no obligatoria):**  
-> En modelos generativos de video que admiten referencias visuales multimodales (como Seedance 2.5, Kling o Runway Gen-3), el usuario puede **opcionalmente** adjuntar un clip corto de referencia real de un vertido de destilado transparente (agua o tequila en copa de degustación) para anclar la física de fluidos.  
-> Si el usuario decide utilizarla, se puede añadir la directiva opcional:  
-> `MATCH POUR PHYSICS (OPTIONAL): match the exact water-thin pour physics, continuous laminar stream, and zero-carbonation still surface shown in the reference video.`  
-> **Nota importante:** El uso de este clip es **100% opcional y nunca obligatorio**. El prompt en texto detallado en §2.1 y el negative prompt de §3.2 proporcionan por sí solos la protección completa e independiente sin necesidad de material externo.
+La skill contempla **dos métodos de referencia multimodal** que el usuario puede proporcionar para enriquecer la generación de video, además del respaldo textual autónomo:
+
+1. **Referencia de la Botella Real (Image-to-Video):**  
+   El usuario puede adjuntar una fotografía oficial de la botella de Loco Tequila. El prompt incorpora de forma obligatoria la directiva de preservación morfológica:  
+   `ADD: The added image is the real bottle image. PRESERVE EXACT BOTTLE MORPHOLOGY: Maintain identical conical trapezoidal crystal silhouette, thick 2cm solid base, and raised red enamel "Loco" relief. Strictly prohibit generic cylindrical liquor bottles, paper labels, and round screw caps.`
+2. **Clip de Referencia del Vertido Real (Video-to-Video / Motion Transfer - OPCIONAL):**  
+   En modelos generativos de video que admiten referencias visuales multimodales (como Seedance 2.5, Kling o Runway Gen-3), el usuario puede **opcionalmente** adjuntar un clip corto de referencia real de un vertido de destilado transparente (agua o tequila en copa de degustación) para anclar la hidrodinámica. Si se utiliza, se añade la directiva:  
+   `MATCH POUR PHYSICS: match the exact water-thin pour physics (~1.2 cP), continuous laminar stream into Riedel crystal glass, instant bubble burst on impact, and zero-carbonation still surface shown in the reference video.`  
+3. **Respaldo Autónomo por Texto:**  
+   Si el usuario no proporciona imagen ni clip, el prompt detallado en §2.1 y el negative prompt de §3.2 proporcionan por sí solos la protección física completa e independiente.
 
 ## 3. Negative prompt base (obligatorio, literal)
 
@@ -112,7 +123,7 @@ underage, minors, drunk, drunkenness, excessive drinking, cheap glass, competito
 ### 3.2 Descriptores Anti-Viscosidad y Anti-Carbonatación (OBLIGATORIO para todo prompt de video con líquidos o servido)
 Se suma de forma mandatoria a la base universal en prompts de video de producto:
 ```text
-viscous, viscosity, syrupy, honey, honey-like pour, thick fluid, gelatinous, molasses, oil, oily texture, motor oil, heavy sluggish liquid, gooey, slime, slow-motion goo, sticky syrup, lingering froth, soapy foam, unnatural CGI gel, carbonation, carbonated, effervescent, effervescence, fizzy, fizz, bubbles, bubbly, sparkling, sparkling wine, champagne, cider, apple cider, beer, beer head, ale, lager, fermented beverage, brewed beverage, cloudy liquid, hazy liquid, flute glass, champagne flute
+viscous, viscosity, syrupy, honey, honey-like pour, thick fluid, gelatinous, molasses, oil, oily texture, motor oil, heavy sluggish liquid, gooey, slime, slow-motion goo, sticky syrup, lingering froth, soapy foam, bottom emitters, continuous bubbles from bottom, effervescent trail, unnatural CGI gel, carbonation, carbonated, effervescent, effervescence, fizzy, fizz, bubbles, bubbly, sparkling, sparkling wine, champagne, cider, apple cider, beer, beer head, ale, lager, fermented beverage, brewed beverage, cloudy liquid, hazy liquid, central darkening, shot glass, caballito, tumbler, flute glass, champagne flute
 ```
 
 Se puede **añadir**, nunca recortar.

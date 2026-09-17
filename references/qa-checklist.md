@@ -66,7 +66,15 @@ No son preguntas de sí/no: se lee el prompt y se confirma que la cadena **conti
 - [ ] **Anclaje de fecha:** la fecha festiva aparece como elemento concreto de escena, no como mención abstracta.
 - [ ] El prompt corresponde al medio elegido (`{{medio}}`) y a la plataforma destino.
 - [ ] Si `{{medio}}` incluye video: el prompt tiene desglose por escena con marcas de tiempo, movimiento de cámara y duración total.
-- [ ] **Física de fluidos en video (Anti-Viscosidad y Anti-Carbonatación):** Si el video muestra servido o líquido en movimiento, incluye obligatoriamente descriptores de ultrabaja viscosidad (`water-thin fluid dynamics`, `~1.2 cP`, flujo laminar veloz, microgotas cristalinas), superficie en reposo libre de efervescencia/burbujas (`completely still, non-carbonated liquid surface immediately after impact — no bubbles of any kind, no fizz, no foam`), velocidad de cámara normal/real en el vertido, y el negative prompt completo de §3.2 (`viscous, syrupy, honey... carbonation, carbonated, effervescent, fizz, bubbles, sparkling, champagne, cider, beer, flute glass`). Si el usuario aporta clip de referencia multimodal, se incluye la directiva opcional `MATCH POUR PHYSICS`.
+- [ ] **Física de fluidos en video (Anti-Viscosidad y Anti-Carbonatación según `references/especificaciones-fluidos.md`):** Si el video muestra servido o líquido en movimiento, incluye obligatoriamente:
+  - Descriptores de ultrabaja viscosidad (`water-thin fluid dynamics`, `~1.2 cP`, flujo laminar veloz cilíndrico, salpicadura en microgotas cristalinas).
+  - Emisores de fondo desactivados (`no bottom emitters`, `non-carbonated distilled agave spirit`).
+  - Microburbujas mecánicas transitorias que estallan al instante (`burst instantly upon reaching surface`, cero espuma, cero halo de burbujas en cristal).
+  - Estabilización a reposo total en <1.5s (`settles into completely still, inert liquid surface within 1.5s`).
+  - Transmisión de luz uniforme sin oscurecimiento central denso (diamantina para Blanco, ámbar luminosa para Ámbar/Áureo).
+  - Cristalería oficial Riedel Tequila tulipán con lágrimas delgadas y transparentes (`crisp thin transparent tequila tears`), excluyendo shots y caballitos.
+  - Negative prompt completo de §3.2 (incluyendo `bottom emitters, continuous bubbles from bottom, effervescent trail, central darkening, shot glass, caballito`).
+  - Directivas multimodales si el usuario aportó insumos (`ADD: PRESERVE EXACT BOTTLE MORPHOLOGY` y/o `MATCH POUR PHYSICS`).
 - [ ] Las keywords SEO/GEO están en el copy, **no** dentro del prompt de imagen.
 - [ ] El total de conceptos no excede 6; si se recortó `{{numero_ideas}}`, está declarado en las notas.
 
