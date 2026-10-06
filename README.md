@@ -162,7 +162,8 @@ Antes de generar una campaña, la skill solicita o valida los siguientes paráme
 | `{{sugerencias_creativas}}` | `Sí` \| `No` (clickeable) | **Obligatorio:** Pregunta interactiva tras motivo gastronómico: *«¿Te gustaría darme sugerencias para proceder con la creación de los prompts y 'copy'?»* con opciones clickeables `[🔘 Sí, dar sugerencias]` / `[🔘 No, te lo dejo todo a ti agente]` |
 | `{{producto}}` | Loco Blanco, Loco Ámbar, Loco Puro Corazón, Loco Áureo, Loco Hierofante, Portafolio Completo | Expresión de tequila a promocionar |
 | `{{medio}}` | Imagen, Video, Ambas | Define el tipo de prompts generativos a producir |
-| `{{referencias_visuales}}` | Nube (OneDrive/SharePoint/GoogleDrive), carpeta local/cowork, imágenes en chat, o Acervo interno | **Consulta obligatoria (clickeable):** (1) Link de nube (+ alcance: 10 recientes o fecha), (2) Ruta de carpeta local/cowork en disco, (3) 1 a 3 imágenes propias adjuntas en el chat, o (4) Ninguna (inspirarse en el acervo canónico integrado en la skill) |
+| `{{duracion_video}}` | `10` \| `20` \| `30` \| `45` \| `60` s (clickeable) | **Obligatorio si el medio incluye video**, una vez por campaña. Cada video se escribe en tramos encadenados de 10 s: 1, 2, 3, 5 (4 × 10 s + cierre de 5 s) o 6 prompts. Cada tramo usa como referencia el video del anterior (`references/prompt-standards.md` §2.3) |
+| `{{referencias_visuales}}` | Nube (OneDrive/SharePoint/GoogleDrive), carpeta local/cowork, imágenes en chat, o Acervo interno | **Consulta obligatoria (clickeable):** (1) Nube mediante link o búsqueda directa con conector sin link (+ alcance: 10 recientes o fecha), (2) Ruta de carpeta local/cowork en disco, (3) 1 a 3 imágenes propias adjuntas en el chat, o (4) Ninguna (inspirarse en el acervo canónico integrado en la skill) |
 | `{{numero_ideas}}` | Entero (por defecto `3`) | Cantidad de conceptos a idear por plataforma. **Tope: `redes × numero_ideas` ≤ 6 conceptos**; si se excede, se reduce y se declara en las notas. Evita que la calidad de los prompts se diluya al elegir todas las redes |
 | `{{inventiva}}` | `Original` \| `Locura Genial` (por defecto `Original`) | Grado de audacia conceptual |
 
@@ -204,7 +205,10 @@ flowchart TD
     F -- Imágenes en Chat --> G3[Análisis Estético Directo en Chat]
     F -- Ninguna / Acervo --> G4[Inspirarse con Campañas Oficiales de la Skill]
     G1 & G2 & G3 & G4 --> H[Definir Medio: Imagen / Video / Ambos]
-    H --> I[Ideación según Nivel de Inventiva]
+    H --> H2{"¿Incluye video?"}
+    H2 -- Sí --> H3["Pregunta Obligatoria Clickeable:<br/>¿Duración total? 10 / 20 / 30 / 45 / 60 s<br/>(tramos encadenados de 10 s)"]
+    H2 -- No --> I
+    H3 --> I[Ideación según Nivel de Inventiva]
     I --> J[Redactar Copys Nativos + Keywords SEO/GEO]
     J --> K[Generar Prompts Ultra Detallados para IA según brand-context.md]
     K --> L["Verificación de Guardrails y QA Checklist (Cero procesos de producción)"]
@@ -296,5 +300,6 @@ python sub-skill/generar-medios-openrouter/generar_medios.py `
 - **Los prompts no se reescriben:** se leen del HTML de campaña, así que se ejecuta exactamente lo que se entregó.
 - **Los flags de Midjourney (`--ar`, `--no`) se convierten en parámetros** y se quitan del texto: los modelos de OpenRouter los leerían como texto y podrían renderizarlos dentro de la imagen.
 - **Las duraciones de video son conjuntos discretos, no rangos.** Veo 3.1 acepta solo 4/6/8 s; Sora 2 Pro 4/8/12/16/20 s. El script encaja duración y aspecto a lo que el modelo admite y **declara el ajuste**.
-- **Un prompt de video de 24 s no se genera completo:** se obtiene un fragmento. El script lo dice en lugar de entregar 8 segundos como si fueran el spot.
+- **Los prompts de video siguen el lenguaje de los videos reales del cliente** (`references/videos-cliente.md`): orden canónico de lista de tomas, tramos de tipo corte o continuación, versión completa y compacta (≤500 caracteres, para Higgsfield, Runway o Dreamina), negativo en su propia casilla, cero texto generado. Cada video lleva además un **prompt musical** propio y un **bloque de postproducción** (tarjetas de texto, end card y leyenda `+18 · Evita el exceso`). El script envía la compacta con `--prompt-version compact`; la música no la genera.
+- **Los videos van por tramos de 10 s:** el script genera cada tramo por separado (sin pasarle al modelo el tramo previo) y lo avisa en `aviso_encadenado`; los tramos se unen en orden en el editor. Un prompt de video antiguo sin tramos y más largo que el tope sigue saliendo como fragmento, y el script lo declara.
 - **El precio de video es por segundo** (de USD ~0.11/s en Kling v3.0 Pro a USD 0.50/s en Sora 2 Pro a 1080p), de ahí el tope de costo de 10 s ajustable con `--max-duration`.

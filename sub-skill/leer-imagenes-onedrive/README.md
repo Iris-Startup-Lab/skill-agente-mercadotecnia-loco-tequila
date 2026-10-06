@@ -16,25 +16,26 @@ Plugin **Microsoft 365** (MCP) activo, con `sharepoint_folder_search` y `read_re
 
 ## Protocolo de ejecución
 
-### Paso 1 — PEDIR EL LINK DE LA CARPETA (obligatorio)
+### Paso 1 — CONSULTAR LA CARPETA (Con Link o Búsqueda Directa con Conector sin Link)
 
-**No existe una carpeta fija.** Cambia según la campaña, el producto o la red. El agente **DEBE PEDIRLA SIEMPRE** al usuario y **nunca**:
+**No existe una carpeta fija.** Cambia según la campaña, el producto o la red. El agente **DEBE PREGUNTAR SIEMPRE** al usuario y nunca asumir una ruta a ciegas ni reutilizarla sin confirmación.
 
-- asumir una ruta o un nombre de carpeta,
-- reutilizar la carpeta de una conversación anterior,
-- deducirla del nombre del producto o de la campaña,
-- ni buscar "la carpeta de Loco Tequila" a ciegas con `sharepoint_folder_search`.
+El usuario cuenta con dos vías de acceso en la nube:
+1. **Pegar el link directo** de la carpeta de OneDrive/SharePoint.
+2. **Solicitar la búsqueda sin link**, indicando el nombre o término de la carpeta, para que el agente la localice directamente mediante el conector **Microsoft 365** (`sharepoint_folder_search`), **siempre y cuando el agente tenga acceso al conector seleccionado**.
 
 Preguntar adelantando ya las opciones de alcance, para que el usuario pueda responder todo de una vez:
 
-> *"¿Me pegas el link de la carpeta de OneDrive/SharePoint con las piezas previas? Y dime también si tomo en cuenta las **10 más recientes** o **desde qué fecha** hasta hoy. Si no aplica para esta campaña, dímelo y la omito."*
+> *"¿Me compartes el link de la carpeta de OneDrive/SharePoint con las piezas previas o prefieres que la busque directamente con el conector sin link (indicándome su nombre)? Dime también si tomo en cuenta las **10 más recientes** o **desde qué fecha** hasta hoy. Si no aplica para esta campaña, dímelo y la omito."*
 
-Tres respuestas posibles, todas válidas:
+Respuestas posibles:
 
 | Respuesta del usuario | Qué hacer |
 |---|---|
-| Link + alcance | Continuar al Paso 2 |
-| Solo el link | Preguntar el alcance antes de leer |
+| Link + alcance | Continuar al Paso 2a (localizar por URL) |
+| Nombre de carpeta sin link + alcance | Continuar al Paso 2b (buscar directamente con el conector si está activo) |
+| Solicita sin link pero NO hay conector | Notificar amablemente la falta de conector y pedir el link o pasar a otra alternativa |
+| Solo el link o solo el nombre | Preguntar el alcance antes de leer |
 | "No aplica" / declina | **Omitir la auditoría y avanzar.** No insistir |
 
 ### Paso 1b — Alcance de la revisión
@@ -48,8 +49,12 @@ El filtro se resuelve **con el timestamp del nombre de archivo** (ver Paso 3), s
 
 ### Paso 2 — Localizar la carpeta
 
-1. Extraer el nombre de carpeta del URL (la porción tras el último `/` antes de los parámetros `?`). Decodificar caracteres especiales (`%20` = espacio).
-2. `Microsoft 365:sharepoint_folder_search` con ese nombre.
+- **Paso 2a (si el usuario dio link):**
+  1. Extraer el nombre de carpeta del URL (la porción tras el último `/` antes de los parámetros `?`). Decodificar caracteres especiales (`%20` = espacio).
+  2. `Microsoft 365:sharepoint_folder_search` con ese nombre.
+- **Paso 2b (si el usuario pidió búsqueda sin link y el conector está activo):**
+  1. Ejecutar `Microsoft 365:sharepoint_folder_search` directamente con el nombre o términos proporcionados por el usuario.
+  2. Si hay múltiples resultados coincidentes, confirmar brevemente con el usuario cuál de las carpetas listadas corresponde a la campaña.
 
 ### Paso 3 — Triage por nombre de archivo (solo para decidir CUÁLES abrir)
 

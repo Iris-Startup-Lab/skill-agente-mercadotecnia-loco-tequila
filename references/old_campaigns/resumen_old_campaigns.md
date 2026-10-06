@@ -40,8 +40,8 @@ Este documento constituye la memoria visual y directriz de dirección de arte tr
 ## 3. Documentos de Detalle por Subcarpeta
 
 Para consultar el desglose fotograma por fotograma, las composiciones específicas y las directrices precisas de prompt engineering de cada campaña, referirse a:
-- [resumen_Dia_de_muertos.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/old_campaigns/Dia_de_muertos/resumen_Dia_de_muertos.md)
-- [resumen_Loco_tequila_ambar.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/old_campaigns/Loco_tequila_ambar/resumen_Loco_tequila_ambar.md)
-- [resumen_Loco_tequila_blanco.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/old_campaigns/Loco_tequila_blanco/resumen_Loco_tequila_blanco.md)
-- [resumen_Loco_tequila_puro_corazon.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/old_campaigns/Loco_tequila_puro_corazon/resumen_Loco_tequila_puro_corazon.md)
-- [resumen_Mexicanidad.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/old_campaigns/Mexicanidad/resumen_Mexicanidad.md)
+- [resumen_Dia_de_muertos.md](Dia_de_muertos/resumen_Dia_de_muertos.md)
+- [resumen_Loco_tequila_ambar.md](Loco_tequila_ambar/resumen_Loco_tequila_ambar.md)
+- [resumen_Loco_tequila_blanco.md](Loco_tequila_blanco/resumen_Loco_tequila_blanco.md)
+- [resumen_Loco_tequila_puro_corazon.md](Loco_tequila_puro_corazon/resumen_Loco_tequila_puro_corazon.md)
+- [resumen_Mexicanidad.md](Mexicanidad/resumen_Mexicanidad.md)

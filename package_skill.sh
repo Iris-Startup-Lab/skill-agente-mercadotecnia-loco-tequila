@@ -13,6 +13,7 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OUTPUT_FILE="${1:-agente-mercadotecnia-loco-tequila.zip}"
 MAX_UNCOMPRESSED_MB="${2:-30}"
+MAX_FILES="${3:-200}"
 MAX_UNCOMPRESSED_KB=$((MAX_UNCOMPRESSED_MB * 1024))
 ZIP_PATH="${SCRIPT_DIR}/${OUTPUT_FILE}"
 TEMP_DIR="$(mktemp -d 2>/dev/null || mktemp -d -t 'pkg_skill')"
@@ -23,6 +24,7 @@ echo "========================================================"
 echo "Directorio origen:     ${SCRIPT_DIR}"
 echo "Archivo destino:       ${ZIP_PATH}"
 echo "Límite desempaquetado: ${MAX_UNCOMPRESSED_MB} MB"
+echo "Límite de archivos:    ${MAX_FILES}"
 
 cleanup() {
     rm -rf "${TEMP_DIR}"
@@ -34,6 +36,7 @@ ITEMS=(
     "SKILL.md"
     "README.md"
     "AGENTS.md"
+    "CLAUDE.md"
     "FLUJO_SKILL_CLIENTE.md"
     "to_do.md"
     ".gitignore"
@@ -97,12 +100,21 @@ for item in "${ITEMS[@]}"; do
     fi
 done
 
-# Verificar tamaño total desempaquetado antes de comprimir
-echo "Verificando peso total desempaquetado..."
+# Verificar tamaño total desempaquetado y cantidad de archivos antes de comprimir
+echo "Verificando peso total desempaquetado y cantidad de archivos..."
+FILE_COUNT=$(find "${TEMP_DIR}" -type f | wc -l | tr -d ' ')
 UNCOMPRESSED_KB=$(du -sk "${TEMP_DIR}" | cut -f1)
 UNCOMPRESSED_MB=$(awk "BEGIN {printf \"%.2f\", ${UNCOMPRESSED_KB}/1024}" 2>/dev/null || python -c "print(round(${UNCOMPRESSED_KB}/1024, 2))" 2>/dev/null || echo "$((UNCOMPRESSED_KB / 1024))")
 
 echo "  Tamaño desempaquetado: ${UNCOMPRESSED_MB} MB (Límite máximo permitido: ${MAX_UNCOMPRESSED_MB} MB)"
+echo "  Cantidad de archivos:  ${FILE_COUNT} (Límite máximo permitido: ${MAX_FILES})"
+
+if [ "${FILE_COUNT}" -gt "${MAX_FILES}" ]; then
+    echo "ERROR: La cantidad de archivos (${FILE_COUNT}) supera el límite de ${MAX_FILES} permitido por los gestores de skills."
+    exit 1
+else
+    echo "  [OK] La cantidad de archivos está dentro del límite permitido (<= ${MAX_FILES})."
+fi
 
 if [ "${UNCOMPRESSED_KB}" -gt "${MAX_UNCOMPRESSED_KB}" ]; then
     echo "ERROR: El tamaño de los archivos desempaquetados (${UNCOMPRESSED_MB} MB) supera el límite de ${MAX_UNCOMPRESSED_MB} MB."
@@ -136,6 +148,7 @@ if [ -f "${ZIP_PATH}" ]; then
     echo "  Archivo:               ${ZIP_PATH}"
     echo "  Tamaño comprimido:     ${ZIP_SIZE_MB} MB (~${ZIP_SIZE_KB} KB)"
     echo "  Tamaño desempaquetado: ${UNCOMPRESSED_MB} MB (Límite: ${MAX_UNCOMPRESSED_MB} MB)"
+    echo "  Total de archivos:     ${FILE_COUNT} (Límite: ${MAX_FILES})"
     echo "--------------------------------------------------------"
 else
     echo "Error: No se pudo generar el archivo ZIP."

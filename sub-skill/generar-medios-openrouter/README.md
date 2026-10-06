@@ -60,7 +60,7 @@ python sub-skill/generar-medios-openrouter/generar_medios.py `
   --from-showcase showcase/campaign-2026-09-16-independencia-locura.html
 ```
 
-Devuelve `total_conceptos`, `max_imagenes`, `max_videos` y, por concepto, su prompt, su copy y sus especificaciones. **`max_imagenes` y `max_videos` son el techo real** de la pregunta "¿cuántas quieres generar?" — no el número de conceptos, porque un concepto sin `prompt_video` no puede producir video.
+Devuelve `total_conceptos`, `max_imagenes`, `max_videos`, `max_tramos_video` (clips de video que se generarían, ver §6.5) y, por concepto, su prompt, su copy y sus especificaciones. **`max_imagenes` y `max_videos` son el techo real** de la pregunta "¿cuántas quieres generar?" — no el número de conceptos, porque un concepto sin `prompt_video` no puede producir video.
 
 ### Paso 2 — Preguntar medio y cantidad
 
@@ -106,7 +106,7 @@ Por cada pieza, presentar **las tres cosas juntas**:
 2. **El copy** — headline, body, CTA, hashtags y la leyenda legal, tal como está en la pasarela.
 3. **El prompt + especificaciones** — modelo, `aspect_ratio_enviado`, dimensiones, lente/paleta (imagen) o duración/movimiento de cámara/escenas (video), y el costo.
 
-**Reportar siempre los avisos si aparecen:** `aviso_aspect_ratio`, `aviso_duracion`, `aviso_costo`, `aviso_catalogo`. Son los casos en que lo generado **no** corresponde exactamente a lo que pedía el prompt, y callarlos deja al usuario creyendo que sí.
+**Reportar siempre los avisos si aparecen:** `aviso_aspect_ratio`, `aviso_duracion`, `aviso_costo`, `aviso_catalogo`, `aviso_encadenado`, `aviso_longitud`. Son los casos en que lo generado **no** corresponde exactamente a lo que pedía el prompt, y callarlos deja al usuario creyendo que sí.
 
 ---
 
@@ -119,6 +119,8 @@ Por cada pieza, presentar **las tres cosas juntas**:
 | `--from-showcase` | HTML de campaña del que se leen los prompts (**vía recomendada**) |
 | `--indices` | Conceptos a generar: `1,3` o `1-4` |
 | `--first N` | Los primeros N conceptos que tengan ese medio |
+| `--prompt-version` | Video por tramos: `full` (por defecto) o `compact` (≤500 caracteres; ver §6.6) |
+| `--segments` | Video por tramos: tramos a generar de cada concepto, `1,2` o `2-3` (por defecto, todos; ver §6.5) |
 | `--model` | Id exacto de OpenRouter (obligatorio para generar) |
 | `--api-key-file` | Ruta del archivo de clave (por defecto `~/.openrouter/api_key.txt`) |
 | `--api-key` | Solo por compatibilidad; el flujo normal no la usa (ver §3.3) |
@@ -156,9 +158,27 @@ Lo mismo con el aspecto: Veo y Sora solo hacen `16:9` y `9:16`. Un prompt de Ins
 
 El script original fijaba `MAX_VIDEO_DURATION_SECONDS = 10` como límite. En realidad la API acepta hasta 15 s (Kling, Seedance) y 20 s (Sora), pero **el precio es por segundo**: Sora 2 Pro a 1080p cuesta USD 0.50/s — 20 s son USD 10 de una sola pieza. Se conserva el tope de 10 s como **guarda de costo** ajustable con `--max-duration`, no como afirmación técnica falsa.
 
-### 6.5 Los prompts de video de la campaña son más largos que lo generable
+### 6.5 Videos encadenados por tramos de 10 s
 
-Un `prompt_video` de la skill suele pedir 24 s con desglose por escena. Ningún modelo del catálogo llega ahí en una sola llamada. Lo que se obtiene es **un fragmento**, no la pieza terminada — y el script lo dice explícitamente en `aviso_duracion` en lugar de entregar 8 segundos como si fueran el spot completo. Para la pieza completa hay que generar las escenas por separado y editarlas fuera.
+La skill escribe cada video como una cadena de tramos (`prompt_video.segments[]`, ver `references/prompt-standards.md` §2.3): 10 s → 1 tramo, 20 s → 2, 30 s → 3, 45 s → 5 (4 × 10 s + cierre de 5 s), 60 s → 6. Cada tramo cabe en el tope de costo de 10 s y en la duración que aceptan casi todos los modelos.
+
+- **Cada tramo es una unidad de generación independiente**, con su propio archivo (`…-03-tramo02de05-…mp4`), su duración (`duration_s`, encajada al modelo con `snap_duration`) y su costo, que se suma al total.
+- **El script no encadena:** el modelo **no** recibe el video del tramo anterior como referencia. La continuidad depende de la biblia de continuidad escrita en cada prompt. El resultado lo dice en `aviso_encadenado`, y hay que trasladárselo al usuario: los tramos se unen en orden en el editor y, para máxima consistencia, los tramos N>1 pueden regenerarse en una herramienta que acepte el video previo como referencia.
+- `--segments 2-3` genera solo esos tramos de cada concepto elegido (por defecto, todos). Sirve para regenerar un tramo que salió mal sin pagar la cadena completa.
+- En `extract-prompts`, `max_videos` sigue contando conceptos con video y **`max_tramos_video`** cuenta los clips que se generarían, que son los que definen el costo.
+- Cada resultado trae `tramo`, `tramos_totales`, `rango_tramo`, `referencia_entrada` y `fotograma_salida`.
+
+### 6.6 Versión completa y compacta de cada tramo; música aparte
+
+Cada tramo trae dos textos (`references/prompt-standards.md` §2.0): `text` (completo, con la biblia de continuidad) y `text_compact` (máximo 500 caracteres, `COMPACT_PROMPT_LIMIT`, o el `compact_limit` de la campaña), pensado para herramientas con tope como Higgsfield (~512), Runway (1 000) o Dreamina (`[no disponible]`).
+
+- `--prompt-version compact` envía la compacta. Si un tramo no la trae, se envía la completa y se avisa en `aviso_version`.
+- Si la compacta supera el tope, el resultado lo marca en `aviso_longitud` (por tramo y en el resumen).
+- Cada resultado trae `version_prompt`, `caracteres_prompt` y `tipo_tramo` (`cut` / `continuation`).
+- El negative prompt sigue viajando como texto anexo (§6.2), porque OpenRouter no expone una casilla negativa.
+- **La música no se genera aquí.** `extract-prompts` expone `musica` y `postproduccion` por concepto (y `conceptos_con_musica`) para que el agente se los muestre al usuario; la pista se ejecuta en una herramienta de audio.
+
+Un `prompt_video` antiguo **sin** `segments` que pida más que el tope (p. ej. 24 s) sigue la ruta anterior: se obtiene **un fragmento**, y el script lo dice en `aviso_duracion` en lugar de entregar 8 segundos como si fueran el spot completo.
 
 ---
 

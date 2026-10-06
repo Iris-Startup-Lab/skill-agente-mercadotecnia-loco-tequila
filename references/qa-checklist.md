@@ -32,7 +32,7 @@ Se verifica sobre el texto que verá el usuario, antes de enviarlo.
 - [ ] Los datos usados son verificados o están marcados (`[no disponible]`, `*` para estimaciones, `[REFERENCIA DE INDUSTRIA]` para benchmarks sin dato propio).
 - [ ] La fecha festiva anclada es real y está correctamente nombrada (feriados detectados por la sub-skill o `references/fechas-alcohol.md`).
 - [ ] El producto elegido es coherente con la campaña y usa sus keywords específicas (`references/productos.md` + glosario 10.4).
-- [ ] **Consulta de Referencias Previas:** Se preguntó siempre al usuario ofreciendo las 4 modalidades completas: (1) link de nube (OneDrive/SharePoint/GoogleDrive) + alcance, (2) ruta de carpeta local/cowork en disco, (3) 1 a 3 imágenes propias adjuntas en el chat, o (4) ninguna para inspirarse en el acervo canónico integrado en la skill.
+- [ ] **Consulta de Referencias Previas:** Se preguntó siempre al usuario ofreciendo las 4 modalidades completas: (1) nube (OneDrive/SharePoint/GoogleDrive mediante link o búsqueda directa con conector sin link) + alcance, (2) ruta de carpeta local/cowork en disco, (3) 1 a 3 imágenes propias adjuntas en el chat, o (4) ninguna para inspirarse en el acervo canónico integrado en la skill.
 - [ ] Si se revisaron piezas previas (Word de análisis en OneDrive/SharePoint, Google Drive, carpeta local/cowork o imágenes adjuntas), la pieza no repite diseños anteriores.
 - [ ] **Ningún prompt nuevo reutiliza texto del §4 (Prompt maestro) ni del §6 (Variantes) de un Word previo** — ni entero ni por fragmentos. Se hereda el ADN, nunca la redacción.
 - [ ] **Ningún elemento de la lista INCIDENTAL** de las piezas revisadas reaparece en la campaña nueva (objeto de apoyo, fondo concreto, ángulo específico).
@@ -56,7 +56,7 @@ Se verifica sobre el texto que verá el usuario, antes de enviarlo.
 
 No son preguntas de sí/no: se lee el prompt y se confirma que la cadena **contiene** cada elemento. Si falta alguno, se reescribe el prompt en silencio.
 
-- [ ] **Sujeto (Fidelidad Anatómica y Jerarquía Tipográfica):** nombra el SKU exacto del portafolio, cristalería oficial con silueta geométrica tulipán (`narrow tulip-shaped crystal tasting glass with tapered rim`, omitiendo la palabra "flute" en el prompt positivo), rasgos físicos de botella oficial y jerarquía tipográfica real: solo `"Loco"` en relieve rojo con fino filete plateado; textos secundarios `"ESPIRITU • ORIGEN"` y `"TEQUILA {SKU} 100% DE AGAVE AZUL"` en tipografía pequeña, sutil y discreta en blanco/plata cerca de la base, sin letras rojas gigantes ni microtextos legales (`prompt-standards.md` §1.1). Incluye la directiva multimodal `ADD: The added image is the real bottle image. PRESERVE EXACT BOTTLE MORPHOLOGY...` (§1.2), el bottle-lock canónico (§1.4) y vajilla si hay comida (§1.5).
+- [ ] **Sujeto (Fidelidad Anatómica y Jerarquía Tipográfica):** nombra el SKU exacto del portafolio, cristalería oficial con silueta geométrica tulipán (`narrow tulip-shaped crystal tasting glass with tapered rim`, omitiendo la palabra "flute" en el prompt positivo), rasgos físicos de botella oficial y jerarquía tipográfica real: solo `"Loco"` en relieve esmaltado rojo vitrificado directo al cristal sin filete blanco ni contorno de calcomanía; textos secundarios `"ESPIRITU • ORIGEN"` y `"TEQUILA {SKU} 100% DE AGAVE AZUL"` en tipografía pequeña, sutil y discreta en blanco/plata cerca de la base, sin letras rojas gigantes ni microtextos legales (`prompt-standards.md` §1.1). Incluye la directiva multimodal `ADD: The added image is the real bottle image. PRESERVE EXACT BOTTLE MORPHOLOGY...` (§1.2), el bottle-lock canónico (§1.4) y vajilla si hay comida (§1.5).
 - [ ] **Lente y encuadre:** contiene distancia focal `Nmm` y apertura `f/N`, más tipo de plano.
 - [ ] **Iluminación:** nombra explícitamente la condición de luz (hora del día o esquema de estudio).
 - [ ] **Paleta institucional:** contiene al menos **2** colores de marca por nombre (cochineal crimson, deep wine, bone-ivory, obsidian black, volcanic silver).
@@ -66,6 +66,18 @@ No son preguntas de sí/no: se lee el prompt y se confirma que la cadena **conti
 - [ ] **Anclaje de fecha:** la fecha festiva aparece como elemento concreto de escena, no como mención abstracta.
 - [ ] El prompt corresponde al medio elegido (`{{medio}}`) y a la plataforma destino.
 - [ ] Si `{{medio}}` incluye video: el prompt tiene desglose por escena con marcas de tiempo, movimiento de cámara y duración total.
+- [ ] **Videos encadenados (`prompt-standards.md` §2.3):** se preguntó `{{duracion_video}}` y el número de tramos corresponde (10 s → 1, 20 s → 2, 30 s → 3, 45 s → 5 con cierre de 5 s, 60 s → 6). Ningún tramo pasa de 10 s.
+  - Cada tramo es autónomo: su versión completa repite literal la biblia de continuidad, y trae su negative prompt íntegro (+ §3.2 si hay líquido) **en casilla aparte, no dentro del positivo**.
+  - **Orden canónico** del positivo (§2.0): `Format → CONTINUATION/referencias → SETTING & LIGHTING → ACTIVE REFERENCES → ACTION & BEATS → CAMERA → PRESERVATION & LOCKS`, en inglés limpio, con **una sola acción principal**.
+  - **Cero meta-texto en español** dentro del positivo (`REFERENCIA DE ENTRADA`, `ESCENAS`, `FOTOGRAMA DE SALIDA`).
+  - Cada tramo declara `shot_type`: los `continuation` abren con `CONTINUATION FROM SEGMENT <N-1>` y remiten a `@Frame1`; los `cut` no la llevan y se anclan a `@Image1`. El tramo 1 es `cut`.
+  - Cada tramo trae **versión compacta de máximo 500 caracteres** (contados, con espacios).
+  - Cada tramo describe su fotograma de salida. Ningún corte cae a mitad de un vertido.
+  - Gancho visual en el tramo 1. **Ningún tramo pide texto, tagline ni leyenda al modelo**; el final deja el tercio inferior limpio. Sonido: solo ambiente (`no music`).
+  - La mezcla de tomas sigue `references/videos-cliente.md` §2.2; las personas son adultos visiblemente de 30–55 años, no personas reales identificables.
+  - Si la duración no encaja con alguna red elegida (TikTok 15–34 s, Shorts <60 s), se avisó al usuario.
+- [ ] **Música (uno por video):** arquetipo A o B coherente con la escena, duración = total del video, resuelve en el end card, instrumental, y derechos marcados `[no disponible]` (ninguna licencia afirmada).
+- [ ] **Postproducción (uno por video):** orden de montaje, tarjetas de texto con tiempos, end card del logo rojo sobre negro y la leyenda `+18 · Evita el exceso · #EspírituDeOrigen`. **Sin la leyenda, el video no se entrega.**
 - [ ] **Física de fluidos en video (Anti-Viscosidad y Anti-Carbonatación según `references/especificaciones-fluidos.md`):** Si el video muestra servido o líquido en movimiento, incluye obligatoriamente:
   - Descriptores de ultrabaja viscosidad (`water-thin fluid dynamics`, `~1.2 cP`, flujo laminar veloz cilíndrico, salpicadura en microgotas cristalinas).
   - Emisores de fondo desactivados (`no bottom emitters`, `non-carbonated distilled agave spirit`).
@@ -85,7 +97,7 @@ Este bloque **no se satisface marcando casillas**: son acciones con rastro compr
 - [ ] Existe el archivo `showcase/campaign-<fecha>-<slug>.html` en disco.
 - [ ] Se generó copiando el template y sustituyendo **solo** el bloque `const CAMPAIGN = {…}` (no se reescribió el HTML/CSS completo).
 - [ ] `CAMPAIGN.items` contiene **todos** los conceptos entregados en el markdown, con el prompt completo en `prompt.text`.
-- [ ] **Si `{{medio}}` es video o ambas: cada concepto tiene `prompt_video` poblado** (con `duration`, `camera_movement` y `scenes[]`). Sin ese objeto el prompt de video no aparece en la pasarela, aunque sí esté en el markdown.
+- [ ] **Si `{{medio}}` es video o ambas: cada concepto tiene `prompt_video` poblado** (con `total_duration`, `continuity_bible`, `music`, `post_production` y `segments[]`, un objeto por tramo con `time`, `duration_s`, `shot_type`, `text`, `text_compact`, `reference_input`, `exit_frame`, `camera_movement` y `scenes[]`). Sin ese objeto el prompt de video no aparece en la pasarela, aunque sí esté en el markdown.
 - [ ] Si `{{medio}}` es solo video, se omitió el objeto `prompt` en lugar de dejarlo vacío (la etiqueta de la pestaña debe leerse `VID`, no `IMG+VID`).
 - [ ] El logo va como data-URI base64 (`showcase/assets/logo_base64.txt`), no como ruta relativa al SVG de 2.2 MB.
 - [ ] Se publicó con la herramienta `Artifact` y el link se entregó al usuario — o, si la herramienta no está disponible, se informó la ruta del archivo escrito.
@@ -102,5 +114,6 @@ Este bloque **no aplica** si el usuario no pidió el extra. Si lo pidió, todos 
 - [ ] La cantidad generada respeta el techo real (`max_imagenes` / `max_videos`), no el total de conceptos.
 - [ ] Si el medio fue "ambas": se generaron **primero las imágenes** y después los videos.
 - [ ] Cada pieza se entregó con **las tres cosas**: archivo, copy de la pasarela y prompt + especificaciones.
-- [ ] **Todo aviso del script se trasladó al usuario** (`aviso_duracion`, `aviso_aspect_ratio`, `aviso_costo`, `aviso_catalogo`). Ningún recorte de duración o de aspecto quedó sin declarar.
+- [ ] **Todo aviso del script se trasladó al usuario** (`aviso_duracion`, `aviso_aspect_ratio`, `aviso_costo`, `aviso_catalogo`, `aviso_encadenado`, `aviso_longitud`). Ningún recorte de duración o de aspecto quedó sin declarar.
+- [ ] En video por tramos: los tramos se entregaron **en orden** y se le dijo al usuario que se generaron por separado y se unen en el editor.
 - [ ] Cada pieza generada se revisó contra los guardrails de marca; las que los violan se descartaron y se dijo por qué.

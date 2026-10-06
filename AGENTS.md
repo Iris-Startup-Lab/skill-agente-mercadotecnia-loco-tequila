@@ -20,12 +20,15 @@ Este documento contiene las reglas de comportamiento, protocolo de ejecución y 
    - Nunca alucinar cifras de alcance o conversiones no proporcionadas.
 5. **Auditoría y Referencias Visuales Previas (OneDrive/SharePoint, Google Drive, Carpeta Local/Cowork, Imágenes en Chat o Acervo de la Skill):**
    - **El agente DEBE PREGUNTAR SIEMPRE al usuario ofreciendo las cuatro modalidades de trabajo en la misma consulta:**
-     1. Pegar el **link de la carpeta en la nube (OneDrive, SharePoint o Google Drive)** con piezas previas (indicando alcance: 10 más recientes o rango de fechas).
+     1. **Nube (OneDrive, SharePoint o Google Drive):** el usuario puede **pegar el link** de la carpeta o **pedir que se busque directamente en sus carpetas sin link** (siempre y cuando el agente tenga acceso al conector seleccionado), indicando nombre o término de búsqueda y alcance (10 más recientes o rango de fechas).
      2. Indicar la **ruta de una carpeta local o de red/cowork** donde tenga almacenadas las imágenes de referencia.
      3. **Adjuntar aquí en el chat de 1 a 3 imágenes propias** de muestra para inspirarse.
      4. Responder **«Ninguna»**, en cuyo caso el agente avanzará de inmediato y **se inspirará directamente en el acervo canónico y campañas anteriores que ya tiene la propia skill** (`references/old_campaigns/resumen_old_campaigns.md`, `references/loco-tequila/` y `references/brand-context.md`).
-   - Si el usuario comparte enlace de OneDrive/SharePoint: el conector de Microsoft 365 lee los `.docx` de análisis depositados por Power Automate con su ficha visual y prompt (vía principal). No existe carpeta fija: nunca asumirla ni reutilizarla.
-   - Si el usuario comparte enlace de Google Drive o indica carpeta local/cowork: el agente revisa los archivos y fichas disponibles para conocer los conceptos y estilos ya usados.
+   - Si el usuario elige OneDrive/SharePoint o Google Drive:
+     - **Con link:** localiza la carpeta a partir del enlace provisto.
+     - **Sin link:** si el agente tiene acceso al conector correspondiente (Microsoft 365 MCP o Google Drive MCP), busca directamente la carpeta por nombre o términos indicados. Si no tiene acceso al conector o no la localiza, solicita amablemente el enlace o continuar con otra alternativa.
+     - En ambos casos, lee los `.docx` de análisis depositados por Power Automate con su ficha visual y prompt (vía principal de OneDrive) o las fichas/archivos disponibles en Google Drive. No existe carpeta fija: nunca asumirla a priori ni reutilizarla de campañas anteriores sin confirmación.
+   - Si el usuario indica carpeta local o cowork: el agente revisa los archivos y fichas disponibles para conocer los conceptos y estilos ya usados.
    - Si el usuario adjunta imágenes propias en el chat: el agente analiza directamente su estética (iluminación, composición, paleta y cristalería) para inspirar la campaña.
    - Si el usuario responde «Ninguna» o declina: se omite la auditoría externa y se procede a inspirarse con las campañas históricas (`references/old_campaigns/`) y el producto canónico de la skill sin bloquear. Lo obligatorio es **preguntar**, no forzar una referencia externa.
 6. **Reparto inspirar / excluir:** del Word se **hereda** el ADN (§3), la ficha visual (§1) y los parámetros (§7) para mantener coherencia de marca; se **excluye** la lista INCIDENTAL (§3) y las variantes (§6) por estar ya usadas. **Prohibido reutilizar el texto del prompt maestro (§4)**, entero o por fragmentos: los prompts nuevos se redactan desde cero según `references/prompt-standards.md`. Nada marcado `[INFERIDO]` puede convertirse en hecho de marca. Solo si la carpeta no tiene Word de análisis se cae al respaldo de pedir 1 a 3 imágenes adjuntas en el chat.
@@ -35,7 +38,7 @@ Este documento contiene las reglas de comportamiento, protocolo de ejecución y 
    - **El agente ejecuta el script; el usuario no.** Nunca pedirle abrir una terminal, instalar dependencias ni correr comandos: este público es de mercadotecnia y no ejecuta código. La única alternativa que se ofrece es el leaderboard (12a), **nunca** "una guía para correrlo en tu terminal".
    - **Los prompts se leen de la pasarela** con `--action extract-prompts`, nunca se reescriben de memoria. El techo de cantidad es `max_imagenes` / `max_videos`, no el total de conceptos.
    - **El modelo se elige del catálogo en vivo** (`--action list-models`), nunca de memoria: los ids cambian y uno inexistente es un 400.
-   - **Reportar siempre los avisos del script** (`aviso_duracion`, `aviso_aspect_ratio`, `aviso_costo`, `aviso_catalogo`): son los casos en que lo generado no corresponde a lo que pedía el prompt.
+   - **Reportar siempre los avisos del script** (`aviso_duracion`, `aviso_aspect_ratio`, `aviso_costo`, `aviso_catalogo`, `aviso_encadenado`, `aviso_longitud`): son los casos en que lo generado no corresponde a lo que pedía el prompt.
    - **Revisar cada pieza contra los guardrails** antes de entregarla; si los viola, descartarla y decirlo.
 8. **Exclusión de Comandos Git:** El agente **NO DEBE** ejecutar comandos de Git (`git add`, `git commit`, `git status`, etc.) ni gestionar el control de versiones. La gestión de Git es responsabilidad exclusiva del usuario.
 9. **Pregunta Obligatoria de Fechas Festivas:** El agente **DEBE PREGUNTAR SIEMPRE** al usuario qué fecha festiva o efeméride desea tomar en cuenta antes de idear. Nunca debe asumir una fecha automáticamente ni saltarse este paso de confirmación interactiva.
@@ -65,6 +68,31 @@ Este documento contiene las reglas de comportamiento, protocolo de ejecución y 
     - [🔘 5. TikTok](#)
     - [🔘 6. Todas las anteriores](#)
     ```
+14. **Pregunta Obligatoria de Duración de Video (Tramos Encadenados de 10 s):** Si `{{medio}}` es **video** o **ambas**, el agente **DEBE PREGUNTAR SIEMPRE, una sola vez por campaña**, la duración total del video. Los modelos de video rinden mejor en clips de ~10 s, por lo que cada video se escribe como **una cadena de prompts de 10 s**, uno por tramo:
+    ```markdown
+    *«¿Qué duración total deseas para los videos de esta campaña? (se generan en tramos encadenados de 10 segundos):»*
+
+    - [🔘 10 segundos (1 prompt)](#)
+    - [🔘 20 segundos (2 prompts encadenados)](#)
+    - [🔘 30 segundos (3 prompts encadenados)](#)
+    - [🔘 45 segundos (5 prompts: 4 de 10 s + cierre de 5 s)](#)
+    - [🔘 60 segundos (6 prompts encadenados)](#)
+    ```
+
+    | Duración | Tramos | Reparto |
+    | --- | --- | --- |
+    | 10 s | 1 | 10 |
+    | 20 s | 2 | 10 + 10 |
+    | 30 s | 3 | 10 + 10 + 10 |
+    | 45 s | 5 | 10 + 10 + 10 + 10 + 5 |
+    | 60 s | 6 | 10 × 6 |
+
+    - El máximo es **60 s**. Con 10 s se genera un único prompt, como siempre.
+    - Cada tramo es de tipo **`continuation`** (misma toma: usa como referencia el video inmediatamente anterior — extenderlo, video de referencia o su último fotograma como imagen de inicio) o **`cut`** (plano nuevo anclado a la foto de la botella), según la mezcla de tomas de los videos reales del cliente (`references/videos-cliente.md`). Todo tramo repite literal la *biblia de continuidad* en su versión completa. Norma completa en `references/prompt-standards.md` §2.0–§2.4.
+    - Cada tramo se entrega en **versión completa y versión compacta (máx. 500 caracteres)** para herramientas con tope (Higgsfield, Runway, Dreamina). El negative prompt va íntegro y siempre en su propia casilla, nunca dentro del positivo, y el positivo no lleva meta-texto en español.
+    - **Ningún tramo pide texto al modelo.** El gancho visual va en el tramo 1; las tarjetas de texto, el end card del logo rojo sobre negro y la leyenda `+18 · Evita el exceso · #EspírituDeOrigen` se montan en **postproducción**. La leyenda es obligatoria en el montaje final.
+    - Si la duración elegida no encaja con alguna red seleccionada (TikTok 15–34 s, YouTube Shorts <60 s; `references/platforms-process.md`), avisarlo en una línea y continuar sin bloquear.
+15. **Música por Video (Prompt Separado):** Todo video lleva **un prompt musical propio**, aparte de los prompts de video, con la duración total del video y su estructura sincronizada a los tramos (resuelve en el end card). Se elige el arquetipo según la escena (`references/videos-cliente.md` §3): **A — Organic Deep House / Lounge (118–122 BPM)** para coctelería, cocina, galerías y eventos; **B — Neoclásico cinemático (80–95 BPM)** para brindis, banquetes y fechas conmemorativas. Siempre instrumental. Los prompts de video piden solo ambiente y efectos (`no music`) para que las uniones entre tramos no se noten. **Los derechos comerciales de la pista son `[no disponible]`**: dependen del plan de la herramienta musical y nunca se afirma una licencia.
 
 ---
 
@@ -146,10 +174,14 @@ sequenceDiagram
         Agente->>Agente: Asume total autonomía creativa según memoria de marca
     end
     Usuario->>Agente: Confirma producto, red(es), medio e inventiva
-    Agente->>Usuario: PREGUNTA OBLIGATORIA (clickeable): ¿Cómo prefieres dar referencias previas? (1. Nube OneDrive/SharePoint/GoogleDrive, 2. Carpeta local/cowork, 3. Imágenes en chat, o 4. Ninguna e inspirarse en el acervo de la skill)
-    alt (a) El usuario pega link de nube (OneDrive/SharePoint o Google Drive)
-        Usuario->>Agente: Link de la carpeta en la nube + alcance
-        Agente->>Ref: Ejecutar sub-skill leer-imagenes-onedrive o inspeccionar nube
+    opt Si el medio incluye video
+        Agente->>Usuario: PREGUNTA OBLIGATORIA (clickeable): ¿Duración total del video? (10, 20, 30, 45 o 60 s — tramos encadenados de 10 s)
+        Usuario->>Agente: Confirma duración (define 1, 2, 3, 5 o 6 prompts por video)
+    end
+    Agente->>Usuario: PREGUNTA OBLIGATORIA (clickeable): ¿Cómo prefieres dar referencias previas? (1. Nube OneDrive/SharePoint/GoogleDrive [con link o búsqueda con conector sin link], 2. Carpeta local/cowork, 3. Imágenes en chat, o 4. Ninguna e inspirarse en el acervo de la skill)
+    alt (a) El usuario elige nube (OneDrive/SharePoint o Google Drive)
+        Usuario->>Agente: Link de la carpeta o nombre para búsqueda directa + alcance
+        Agente->>Ref: Ejecutar sub-skill leer-imagenes-onedrive o inspeccionar nube (con link o conector activo sin link)
         Note over Agente,Ref: Triage por nombre de archivo (plataforma + fecha), sin abrir documentos innecesarios
         Agente->>Ref: Leer los .docx / fichas de análisis seleccionadas
         Agente->>Usuario: Reporta piezas detectadas, el ADN a heredar y la lista de exclusión (INCIDENTAL)
@@ -224,7 +256,8 @@ Resumen no normativo (el detalle, los 7 campos obligatorios, la regla de escala 
 - Paleta institucional: rojo cochinilla, vino profundo, hueso-marfil, negro obsidiana, plata volcánica.
 - Estilo visual con referencia concreta (*luxury editorial photography, Hasselblad medium format look*).
 - Relación de aspecto explícita (`--ar`).
-- Negative prompt base íntegro (menores, embriaguez, cristalería barata, botellas de competidores, cerámica pintada, marcas de agua, y **prohibición estricta de procesos de producción de tequila** salvo petición expresa del usuario: nada de jima, jimadores, hornos, alambiques, molienda ni operarios).
+- Video: lista de tomas en orden canónico (`Format → CONTINUATION/referencias → SETTING & LIGHTING → ACTIVE REFERENCES → ACTION & BEATS → CAMERA → PRESERVATION & LOCKS`), una acción por tramo, menciones `@`, versión completa + compacta (≤500 caracteres), cero texto generado y cero meta-texto en el positivo, lenguaje visual de `references/videos-cliente.md`, música aparte y bloque de postproducción.
+- Negative prompt base íntegro, en su propia casilla (menores, embriaguez, cristalería barata, botellas de competidores, cerámica pintada, marcas de agua, y **prohibición estricta de procesos de producción de tequila** salvo petición expresa del usuario: nada de jima, jimadores, hornos, alambiques, molienda ni operarios).
 
 ---
 
@@ -248,7 +281,7 @@ Cada pieza generada debe integrar la **Regla de Oro** (máximo 5 keywords):
 
 ## 6. Formato de Salida Obligatorio
 
-Toda respuesta final debe estructurarse estrictamente siguiendo la plantilla de [output-template.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/output-template.md) entregada como texto markdown claro, complementada al final con el **Artefacto HTML de la Pasarela Interactiva** (código HTML/CSS/JS autocontenido que se renderiza directamente en el entorno de Claude como artefacto interactivo).
+Toda respuesta final debe estructurarse estrictamente siguiendo la plantilla de [output-template.md](references/output-template.md) entregada como texto markdown claro, complementada al final con el **Artefacto HTML de la Pasarela Interactiva** (código HTML/CSS/JS autocontenido que se renderiza directamente en el entorno de Claude como artefacto interactivo).
 
 ---
 
@@ -285,6 +318,6 @@ Resumen no normativo:
 - **Los prompts se leen de la pasarela** (`--action extract-prompts`), nunca se reescriben de memoria: se ejecuta exactamente lo que se entregó.
 - **El modelo se elige del catálogo en vivo** (`--action list-models`). Los ids cambian: uno de memoria es un 400. Ojo — `/api/v1/models` **no** lista modelos de video; el catálogo de video está en `/api/v1/videos/models` y el script ya usa el correcto.
 - **Las duraciones de video son conjuntos discretos, no rangos** (Veo 3.1 solo acepta 4/6/8 s). El script encaja duración y aspecto a lo que el modelo admite y **declara el ajuste**; ese aviso hay que trasladárselo al usuario.
-- **Un `prompt_video` de 24 s no se genera completo:** lo que se obtiene es un fragmento. Decirlo, no entregar 8 segundos como si fueran el spot.
+- **Los videos se generan por tramos:** si el `prompt_video` trae `segments[]`, el script genera cada tramo de 10 s (o 5 s de cierre) **por separado**, sin pasarle al modelo el tramo previo como referencia. Hay que decirle al usuario que los tramos se unen en orden en el editor (`aviso_encadenado`). Un `prompt_video` antiguo sin tramos y más largo que el tope sigue saliendo como fragmento: decirlo, no entregar 8 segundos como si fueran el spot.
 - **Revisar cada pieza contra los guardrails de marca** antes de entregarla. Que la haya producido un modelo externo no relaja +18, exclusión de menores ni la prohibición de botellas de competidores.
 - Los archivos van a `outputs/images/` y `outputs/videos/`, excluidos de Git. Son borradores de trabajo, no piezas aprobadas.

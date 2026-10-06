@@ -12,7 +12,8 @@
 [CmdletBinding()]
 param(
     [string]$OutputFile = "agente-mercadotecnia-loco-tequila.zip",
-    [double]$MaxUncompressedMB = 30.0
+    [double]$MaxUncompressedMB = 30.0,
+    [int]$MaxFiles = 200
 )
 
 $ErrorActionPreference = "Stop"
@@ -28,6 +29,7 @@ Write-Host "========================================================" -Foregroun
 Write-Host "Directorio origen:     $ScriptDir"
 Write-Host "Archivo destino:       $ZipPath"
 Write-Host "Límite desempaquetado: $MaxUncompressedMB MB"
+Write-Host "Límite de archivos:    $MaxFiles"
 
 # Extensiones de imagen binaria a excluir en references
 $ImageExtensions = @(".jpg", ".jpeg", ".png", ".webp", ".bmp", ".gif", ".tiff")
@@ -43,6 +45,7 @@ try {
         "SKILL.md",
         "README.md",
         "AGENTS.md",
+        "CLAUDE.md",
         "FLUJO_SKILL_CLIENTE.md",
         "to_do.md",
         ".gitignore",
@@ -104,12 +107,22 @@ try {
         }
     }
 
-    # Verificar tamaño total desempaquetado antes de comprimir
-    Write-Host "Verificando peso total desempaquetado..." -ForegroundColor Cyan
-    $UncompressedBytes = (Get-ChildItem -Path $TempDir -Recurse -File | Measure-Object -Property Length -Sum).Sum
+    # Verificar tamaño total desempaquetado y cantidad de archivos antes de comprimir
+    Write-Host "Verificando peso total desempaquetado y cantidad de archivos..." -ForegroundColor Cyan
+    $AllFiles = @(Get-ChildItem -Path $TempDir -Recurse -File)
+    $FileCount = $AllFiles.Count
+    $UncompressedBytes = ($AllFiles | Measure-Object -Property Length -Sum).Sum
     $UncompressedMB = [Math]::Round($UncompressedBytes / 1MB, 2)
 
     Write-Host "  Tamaño desempaquetado: $UncompressedMB MB (Límite máximo permitido: $MaxUncompressedMB MB)"
+    Write-Host "  Cantidad de archivos:  $FileCount (Límite máximo permitido: $MaxFiles)"
+
+    if ($FileCount -gt $MaxFiles) {
+        Write-Error "ERROR: La cantidad de archivos ($FileCount) supera el límite de $MaxFiles permitido por los gestores de skills."
+        exit 1
+    } else {
+        Write-Host "  [OK] La cantidad de archivos está dentro del límite permitido (<= $MaxFiles)." -ForegroundColor Green
+    }
 
     if ($UncompressedMB -gt $MaxUncompressedMB) {
         Write-Error "ERROR: El tamaño de los archivos desempaquetados ($UncompressedMB MB) supera el límite de $MaxUncompressedMB MB permitido por los gestores de skills."
@@ -147,6 +160,7 @@ try {
     Write-Host "  Archivo:               $ZipPath" -ForegroundColor Green
     Write-Host "  Tamaño comprimido:     $ZipSizeMB MB" -ForegroundColor Green
     Write-Host "  Tamaño desempaquetado: $UncompressedMB MB (Límite: $MaxUncompressedMB MB)" -ForegroundColor Green
+    Write-Host "  Total de archivos:     $FileCount (Límite: $MaxFiles)" -ForegroundColor Green
     Write-Host "--------------------------------------------------------" -ForegroundColor Green
 }
 finally {

@@ -25,8 +25,9 @@ Antes de producir, la skill debe confirmar (o pedir al usuario si faltan):
 - **`{{producto}}`** — Loco Blanco, Loco Ámbar, Loco Puro Corazón, Loco Áureo, Loco Hierofante, o portafolio completo (ver `references/productos.md`).
 - **`{{sugerencias_creativas}}`** — (opcional) directrices, sugerencias o enfoque particular del usuario para la creación de los copys y prompts; o delegación total al agente si el usuario elige no aportarlas. Se pregunta obligatoriamente en el **paso 3c** tras el motivo gastronómico mediante opciones interactivas clickeables.
 - **`{{medio}}`** — tipo de salida multimedia: **imagen**, **video** o **ambas** (define qué prompts se generan).
+- **`{{duracion_video}}`** — solo si `{{medio}}` incluye video: duración total del video, **10, 20, 30, 45 o 60 s** (máximo 60). Se pregunta **una vez por campaña** en el **paso 6b** y define cuántos prompts encadenados de 10 s lleva cada video: 10 s → 1, 20 s → 2, 30 s → 3, 45 s → 5 (4 de 10 s + cierre de 5 s), 60 s → 6.
 - **`{{mostrar_leaderboard}}`** — (opcional, por defecto **no**) si el usuario quiere ver el ranking en vivo de generadores de IA para ejecutar los prompts. Se pregunta en el **paso 12**, ya con la pasarela entregada. La arena depende de `{{medio}}` (imagen → `image`, video → `video`, ambas → los dos). Ver `sub-skill/obtener-leaderboard-imagen/README.md`.
-- **`{{carpeta_referencias}}`** — link de la carpeta en la nube (OneDrive, SharePoint, Google Drive) o ruta de carpeta local / cowork con las piezas previas. **No hay carpeta fija: cambia según la campaña, así que el agente DEBE PEDIRLA SIEMPRE al usuario.** Nunca asumir una ruta, ni reutilizar la de una conversación anterior, ni inventar el nombre. El usuario puede elegir cualquiera de las 4 modalidades (nube, carpeta local/cowork, imágenes en chat, o ninguna) — lo que no es opcional es **preguntar**.
+- **`{{carpeta_referencias}}`** — carpeta en la nube (OneDrive, SharePoint, Google Drive — mediante link o por búsqueda directa con conector sin link) o ruta de carpeta local / cowork con las piezas previas. **No hay carpeta fija: cambia según la campaña, así que el agente DEBE PEDIRLA SIEMPRE al usuario.** Nunca asumir una ruta, ni reutilizar la de una conversación anterior, ni inventar el nombre. El usuario puede elegir cualquiera de las 4 modalidades (nube con/sin link, carpeta local/cowork, imágenes en chat, o ninguna) — lo que no es opcional es **preguntar**.
 - **`{{alcance_referencias}}`** — cuántas piezas previas tomar en cuenta. Se pregunta **después** de tener la carpeta, con dos opciones: **(a) las 10 más recientes** o **(b) un rango de fechas** — desde la fecha que indique el usuario hasta hoy. El filtro se resuelve con el timestamp del nombre de archivo, sin abrir documentos.
 - **`{{referencias_visuales}}`** — resultado de la auditoría. Si es OneDrive/SharePoint, lee los `.docx` de análisis; si es Google Drive o carpeta local/cowork, lee los archivos y fichas; si se adjuntan imágenes en el chat, analiza su estética; y si el usuario responde «Ninguna», el agente se inspira directamente con el acervo oficial y campañas históricas que ya tiene integradas la skill (`references/old_campaigns/` y `references/loco-tequila/`).
 - **`{{numero_ideas}}`** — cuántos conceptos idear por red (por defecto 3). **Tope de calidad:** el total de conceptos (`redes × numero_ideas`) **no puede exceder 6**. Si lo excede, reducir `{{numero_ideas}}` hasta cumplir el tope y declararlo en las notas de la entrega. Un prompt excelente vale más que tres adelgazados; ver `references/prompt-standards.md` §4.
@@ -37,7 +38,7 @@ Los siguientes se piden **solo después de entregar la pasarela** (paso 12), nun
 - **`{{generar_medios}}`** — si el usuario quiere que la skill **ejecute** los prompts con OpenRouter. Por defecto **no**.
 - **`{{clave_configurada}}`** — si la API Key de OpenRouter está disponible (ya sea en el archivo `~/.openrouter/api_key.txt`, ingresada por el usuario en el chat como texto simple o provista mediante archivo `.txt`). Se comprueba con `--action check-key`. Si el usuario la proporciona en el chat, el agente la acepta de inmediato y la configura.
 - **`{{medio_a_generar}}`** — imagen, video o ambas. Si es ambas: **primero todas las imágenes, después los videos.**
-- **`{{cantidad_a_generar}}`** — mínimo 1, máximo el número de conceptos de la pasarela **que tengan ese medio** (`max_imagenes` / `max_videos` del script, no el total de conceptos).
+- **`{{cantidad_a_generar}}`** — mínimo 1, máximo el número de conceptos de la pasarela **que tengan ese medio** (`max_imagenes` / `max_videos` del script, no el total de conceptos). En video, cada concepto elegido genera **todos sus tramos** (`max_tramos_video` del script es el total de clips y define el costo).
 - **`{{modelo_openrouter}}`** — modelo elegido por el usuario del catálogo **en vivo**. Nunca proponerlo de memoria. Define qué tan lejos se distancia cada concepto de la convención. En ambos niveles los hechos de marca y guardrails son idénticos e innegociables; solo cambia la audacia del concepto.
 
 ### Niveles de inventiva
@@ -67,6 +68,7 @@ Los hechos de marca, buyer personas, filtro de Locura Genial, matriz de platafor
 - `references/loco-tequila/bottle_tequila_offiicial_images/resumen_bottle_tequila_offiicial_images.md` — **canon anatómico de botellas oficiales de Loco Tequila: geometría cónica/trapezoidal, base de cristal macizo de 2 cm, cápsulas por color y serigrafía vítrea en rojo cochinilla.**
 - `references/old_campaigns/resumen_old_campaigns.md` — **memoria visual de campañas históricas (Día de Muertos, Ámbar, Blanco, Puro Corazón, Mexicanidad): estilismo, cristalería oficial Riedel, tapas aromatizadoras y colocación de producto.**
 - `references/prompt-standards.md` — **campos obligatorios de todo prompt de imagen/video, negative prompt base, regla de escala, veracidad física y prompt ejemplar. Lectura obligatoria ANTES del paso 9.**
+- `references/videos-cliente.md` — **lenguaje audiovisual de 8 videos reales del cliente (ritmo de corte, mezcla de tomas, apertura/cierre, luz, atrezo, personas, texto en pantalla) y los dos arquetipos de música. Lectura obligatoria ANTES de escribir cualquier prompt de video.**
 - `references/especificaciones-fluidos.md` — **especificaciones de física de fluidos para vertido de tequila en copa Riedel (video): ultrabaja viscosidad (~1.2 cP), desactivación de emisores de fondo (cero carbonatación ascendente), microburbujas mecánicas de estallido instantáneo, estabilización en <1.5 s, óptica sin oscurecimiento central y directivas multimodales.**
 - `references/evaluacion-sentido-comun-escena.md` — **evaluación de sentido común visual y verosimilitud de escena: menaje y vajilla obligatoria para alimentos (cero comida sin plato), soporte para copas, preservación de lo primordial de la botella y física creíble de bodegón.**
 - `references/showcase-rules.md` — **cómo generar la Pasarela Web del paso 11 sin reescribir el template completo.**
@@ -101,13 +103,14 @@ Cada idea debe pasar el filtro: ¿demuestra creatividad trascendental, innovaci�
 
 1. **Pregunta OBLIGATORIA de red(es) destino (`{{plataformas_destino}}`):** Si el usuario no especificó las redes en su mensaje de inicio, el agente **DEBE PREGUNTAR SIEMPRE** presentando sin excepción la lista completa de las 5 redes sociales oficiales más la opción «Todas»:
     - 1. Facebook
-    - 2. Instagram
-    - 3. LinkedIn
-    - 4. YouTube
-    - 5. TikTok
-    - 6. Todas las anteriores
+    - 1. Instagram
+    - 1. LinkedIn
+    - 1. YouTube
+    - 1. TikTok
+    - 1. Todas las anteriores
 
     Formular la consulta con opciones interactivas clickeables en Markdown para Claude / Codex / Web:
+
     ```markdown
     *«¿En qué redes sociales deseas enfocar esta campaña? (puedes elegir una, varias o todas):»*
 
@@ -118,6 +121,7 @@ Cada idea debe pasar el filtro: ¿demuestra creatividad trascendental, innovaci�
     - [🔘 5. TikTok](#)
     - [🔘 6. Todas las anteriores](#)
     ```
+
     *(El usuario puede responder haciendo clic, indicando los números o nombres de las redes que desea combinar, o diciendo «Todas»)*. Usar la matriz técnica de `references/platforms-process.md` para adaptar la gramática de cada red seleccionada.
 2. **Detectar fechas próximas.** Ejecutar el script `sub-skill/obtener-feriados-oficiales-no-oficiales/obtener_feriados.py` (siguiendo las instrucciones de `sub-skill/obtener-feriados-oficiales-no-oficiales/README.md`) y leer `references/fechas-alcohol.md` (fechas de bebidas + prioridades de marca). Cruzar ambas.
 3. **Preguntar OBLIGATORIAMENTE las fechas al usuario:** Presentar la lista de fechas festivas/efemérides detectadas (ventana de 30 días) y **preguntarle siempre y explícitamente**: *"¿A cuál de estas fechas festivas o del mundo de las bebidas deseas enfocar la campaña, o tienes en mente alguna fecha/efeméride personalizada?"*. **NO continuar a la ideación sin la confirmación del usuario.**
@@ -130,15 +134,16 @@ Cada idea debe pasar el filtro: ¿demuestra creatividad trascendental, innovaci�
 3c. **Pregunta OBLIGATORIA de sugerencias creativas (con opciones clickeables para Claude / Codex):**
     Inmediatamente después del paso de motivo gastronómico, el agente **DEBE PREGUNTAR SIEMPRE**:
     > *«Antes de comenzar, ¿te gustaría darme sugerencias para proceder con la creación de los prompts y 'copy'?»*
-    
+
     Para garantizar que en **Claude**, **Codex** y cualquier cliente web las opciones se presenten interactivas y clickeables (ya que en ocasiones las interfaces omiten botones nativos), el agente debe estructurar la pregunta con **opciones clickeables en formato interactivo Markdown dual**:
-    
+
     ```markdown
     [🔘 Sí, dar sugerencias](#)
     [🔘 No, te lo dejo todo a ti agente](#)
     ```
+
     *(O como lista de selección directa: `1. Sí, dar sugerencias` | `2. No, te lo dejo todo a ti agente`)*.
-    
+
     - **Si el usuario elige «Sí, dar sugerencias» (o «Sí»):** El agente le pide amablemente sus sugerencias, ideas o directrices creativas y las toma como guía prioritaria para los conceptos, copys y prompts.
     - **Si el usuario elige «No, te lo dejo todo a ti agente»:** El agente asume total autonomía creativa respetando rigurosamente la memoria de marca, el filtro de Locura Genial y las respuestas previas.
 4. **Preguntar el producto** (`{{producto}}`): ¿la publicidad va ligada a un producto específico o al portafolio completo? Presentar las opciones desde `references/productos.md`.
@@ -147,14 +152,16 @@ Cada idea debe pasar el filtro: ¿demuestra creatividad trascendental, innovaci�
     **5a. CONSULTAR OBLIGATORIAMENTE REFERENCIAS VISUALES** (`{{carpeta_referencias}}` o `{{imagenes_referencia}}`). Las referencias previas **cambian en cada campaña**: nunca asumirlas ni reutilizar una anterior. El agente **DEBE PREGUNTAR SIEMPRE** presentando sin excepción las cuatro opciones mediante botones clickeables en Markdown:
 
     > *«Para revisar referencias visuales previas y no repetir estilos, ¿cómo prefieres proporcionar tus referencias?:»*
-    > 
-    > - [🔘 1. Link de OneDrive, SharePoint o Google Drive (con las piezas previas)](#)
+    >
+    > - [🔘 1. Nube (OneDrive, SharePoint o Google Drive — con link de carpeta o por búsqueda directa con conector sin link)](#)
     > - [🔘 2. Ruta de carpeta local si trabajas en cowork o en tu equipo](#)
     > - [🔘 3. Adjuntar aquí en el chat de 1 a 3 imágenes propias de muestra](#)
     > - [🔘 4. Ninguna (inspirarse directamente con el acervo y campañas previas que ya tiene la skill)](#)
 
-    - **Si el usuario comparte link de OneDrive/SharePoint:** Activar el plugin **Microsoft 365** y seguir `sub-skill/leer-imagenes-onedrive/README.md` (pasos 5b, 5c, 5d para leer los `.docx` de análisis).
-    - **Si el usuario comparte link de Google Drive:** El agente revisa los documentos o imágenes contenidos en el enlace compartido para extraer conceptos y directrices de no-repetición.
+    - **Si el usuario elige Nube (OneDrive/SharePoint o Google Drive):**
+      - **Con link:** Si comparte el enlace, el agente localiza la carpeta desde la URL (para OneDrive/SharePoint activa el plugin **Microsoft 365** y sigue `sub-skill/leer-imagenes-onedrive/README.md`; para Google Drive inspecciona el enlace compartido).
+      - **Sin link (búsqueda directa con conector):** Si el usuario prefiere no proporcionar link o indica el nombre/término de la carpeta (o pide buscarla), el agente **busca directamente en las carpetas a través del conector seleccionado** (`sharepoint_folder_search` en Microsoft 365 MCP, o búsqueda de carpetas en Google Drive MCP), **siempre y cuando tenga acceso al conector**. Si no tiene acceso al conector o no localiza la carpeta, le solicita amablemente el enlace o le ofrece continuar con las otras alternativas.
+      - En ambos casos, sigue los pasos 5b, 5c y 5d para confirmar alcance y leer los `.docx` de análisis o fichas disponibles.
     - **Si el usuario indica una carpeta local / cowork:** El agente lee directamente los archivos de la ruta especificada en disco para identificar estilos anteriores.
     - **Si el usuario adjunta de 1 a 3 imágenes propias en el chat:** El agente las analiza para identificar estilo visual, paleta, cristalería y encuadres, heredando el ADN positivo y evitando duplicar la composición exacta.
     - **Si el usuario responde «Ninguna» o elige inspirarse con la skill:** Se avanza de inmediato sin bloquear, utilizando como inspiración el acervo histórico que ya tiene la skill en `references/old_campaigns/` (`resumen_old_campaigns.md`), `references/loco-tequila/` y `references/brand-context.md`.
@@ -165,6 +172,19 @@ Cada idea debe pasar el filtro: ¿demuestra creatividad trascendental, innovaci�
 
     **5d. Reportar** qué se detectó (red + fecha), **cuántos documentos se leyeron efectivamente** de los seleccionados, con qué **ADN** se mantendrá coherencia y qué elementos **INCIDENTAL** quedan **excluidos**.
 6. **Preguntar el medio** (`{{medio}}`): imagen, video o ambas. Define qué prompts se escriben y, más adelante, qué se puede ejecutar en el paso 12. Los extras (leaderboard y generación con OpenRouter) **no se ofrecen aquí**: se ofrecen en el paso 12, ya con la pasarela entregada, para no interrumpir la producción.
+6b. **Pregunta OBLIGATORIA de duración de video** (`{{duracion_video}}`), **solo si `{{medio}}` es video o ambas**, una sola vez para toda la campaña:
+
+    ```markdown
+    *«¿Qué duración total deseas para los videos de esta campaña? (se generan en tramos encadenados de 10 segundos):»*
+
+    - [🔘 10 segundos (1 prompt)](#)
+    - [🔘 20 segundos (2 prompts encadenados)](#)
+    - [🔘 30 segundos (3 prompts encadenados)](#)
+    - [🔘 45 segundos (5 prompts: 4 de 10 s + cierre de 5 s)](#)
+    - [🔘 60 segundos (6 prompts encadenados)](#)
+    ```
+
+    Los modelos de video rinden mejor en clips de ~10 s, así que cada video se entrega como una cadena de prompts, uno por tramo, y **cada tramo que continúa la misma toma se genera usando como referencia el video del tramo anterior**; los tramos que cambian de plano se anclan a la foto de la botella (`references/prompt-standards.md` §2.3). Si la duración no encaja con alguna red elegida (TikTok 15–34 s, YouTube Shorts <60 s), avisarlo en una línea y seguir.
 7. **Ideación:** generar `{{numero_ideas}}` conceptos por red según `{{inventiva}}` (respetando el tope de 6 conceptos totales), cada uno anclado a la fecha festiva y al producto elegidos, conectado a una persona objetivo (Alejandro / Ana / Leonardo / efecto halo).
 8. **Reescritura en copys listos (Calibración de Tono y Regla «Anti-Novela»):** Redactar copys nativos respetando la gramática técnica de cada red y la inyección de keywords (1 territorio mítico + 1 persona + 1 categoría; máx. 5):
     - **Regla «Anti-Novela» (Prohibición de Storytelling Barroco):** Prohibición absoluta de textos tipo novela, cuentos largos o prosas poéticas sobre el tiempo o el más allá. El copy debe ser conciso, afilado y magnético: de 2 a 3 oraciones contundentes (35 a 50 palabras para feed de Instagram/Facebook; 1 sola línea para Stories y TikTok), con gancho frontal de menos de 125 caracteres que atrape al instante antes del botón «...más / ver más».
@@ -176,14 +196,19 @@ Cada idea debe pasar el filtro: ¿demuestra creatividad trascendental, innovaci�
     - **Preservación de lo Primordial de la Botella:** Garantizar que el prompt ancle en sus primeros 20 tokens los rasgos canónicos de la botella (silueta cónica trapezoidal, base maciza de 2 cm, relieve rojo vítreo y cápsula codificada) más la directiva de preservación estricta para evitar botellas genéricas.
     - **Soporte Estable de Cristalería:** Asegurar que la copa Riedel repose con gravedad sobre superficies sólidas o posavasos con sombras de contacto creíbles.
     - *Si la escena ideada omite el plato o soporte, el agente lo incorpora automáticamente antes de generar el prompt.*
-9. **Generar prompts ultra detallados** para IA de imagen y/o video según `{{medio}}`, alineados a cada copy. **Leer `references/prompt-standards.md` antes de escribir el primer prompt** y cumplir sus 7 campos obligatorios (sujeto, lente/encuadre, iluminación, paleta, estilo, `--ar`, negative prompt). Con 3+ redes, aplicar la regla de prompt maestro + variantes de encuadre (§4). **Veracidad física y cumplimiento 2026:** Describir la botella con absoluta fidelidad anatómica (`references/loco-tequila/bottle_tequila_offiicial_images/resumen_bottle_tequila_offiicial_images.md`) — silueta cónica, base de cristal macizo de 2 cm, cápsulas por color y serigrafía vítrea en rojo cochinilla, sin etiquetas adhesivas de papel ni alteraciones engañosas de producto (FTC / TikTok Shop). Incorporar los estándares de cristalería oficial y estilismo de `references/old_campaigns/resumen_old_campaigns.md`. Si `{{medio}}` incluye video y se muestra servido o líquido en movimiento, aplicar obligatoriamente los parámetros hidrodinámicos de `references/especificaciones-fluidos.md` y `prompt-standards.md` §2.1 (emisores de fondo apagados, microburbujas mecánicas de estallido instantáneo, reposo en <1.5s, lágrimas finas en copa Riedel y cero oscurecimiento central), incorporando las directivas multimodales (`ADD: PRESERVE EXACT BOTTLE MORPHOLOGY` y/o `MATCH POUR PHYSICS`) si el usuario aportó referencias. Si se confirmó motivo gastronómico en el paso 3b, integrar con rigor estético y fotográfico los platillos tradicionales, texturas culinarias (nogada aterciopelada, mole brillante, pan de muerto con azahar) y maridajes descritos en `references/calendario-gastronomico-mexicano.md`.
+9. **Generar prompts ultra detallados** para IA de imagen y/o video según `{{medio}}`, alineados a cada copy. **Leer `references/prompt-standards.md` antes de escribir el primer prompt** y cumplir sus 7 campos obligatorios (sujeto, lente/encuadre, iluminación, paleta, estilo, `--ar`, negative prompt). Con 3+ redes, aplicar la regla de prompt maestro + variantes de encuadre (§4). **Veracidad física y cumplimiento 2026:** Describir la botella con absoluta fidelidad anatómica (`references/loco-tequila/bottle_tequila_offiicial_images/resumen_bottle_tequila_offiicial_images.md`) — silueta cónica, base de cristal macizo de 2 cm, cápsulas por color y serigrafía vítrea en rojo cochinilla, sin etiquetas adhesivas de papel ni alteraciones engañosas de producto (FTC / TikTok Shop). Incorporar los estándares de cristalería oficial y estilismo de `references/old_campaigns/resumen_old_campaigns.md`. Si `{{medio}}` incluye video y se muestra servido o líquido en movimiento, aplicar obligatoriamente los parámetros hidrodinámicos de `references/especificaciones-fluidos.md` y `prompt-standards.md` §2.1 (emisores de fondo apagados, microburbujas mecánicas de estallido instantáneo, reposo en <1.5s, lágrimas finas en copa Riedel y cero oscurecimiento central), incorporando las directivas multimodales (`ADD: PRESERVE EXACT BOTTLE MORPHOLOGY` y/o `MATCH POUR PHYSICS`) si el usuario aportó referencias. **En video, leer `references/videos-cliente.md` y escribir un prompt por tramo según `{{duracion_video}}`** (`prompt-standards.md` §2.0–§2.4):
+    - Orden canónico en inglés limpio (`Format → CONTINUATION/referencias → SETTING & LIGHTING → ACTIVE REFERENCES → ACTION & BEATS → CAMERA → PRESERVATION & LOCKS`), una sola acción principal por tramo y menciones `@` con rol explícito.
+    - Repartir los tramos con la mezcla de tomas del cliente: cada tramo es `continuation` (misma toma, abre con `CONTINUATION` desde el video previo) o `cut` (plano nuevo anclado a la botella).
+    - Cada tramo en **versión completa** (con biblia de continuidad) y **versión compacta de máximo 500 caracteres**; negative prompt íntegro en su casilla, nunca dentro del positivo; cero meta-texto en español en el positivo.
+    - **Ningún texto pedido al modelo:** tercio inferior limpio y sonido `ambient room tone and foley only, no music`.
+    - Por cada video, además: **prompt musical** (arquetipo A o B, duración total, resuelve en el end card; licencia `[no disponible]`) y **bloque de postproducción** (orden de montaje, tarjetas de texto con tiempos, end card del logo rojo sobre negro y la leyenda obligatoria `+18 · Evita el exceso · #EspírituDeOrigen`). Si se confirmó motivo gastronómico en el paso 3b, integrar con rigor estético y fotográfico los platillos tradicionales, texturas culinarias (nogada aterciopelada, mole brillante, pan de muerto con azahar) y maridajes descritos en `references/calendario-gastronomico-mexicano.md`.
 10. **Verificación de guardrails y QA Multicanal:** Validar contra +18, consumo responsable, coherencia terminológica y Locura Genial usando `references/qa-checklist.md` y el Checklist Pre-Flight de `references/manual-cumplimiento-ia-2026.md`. Auditar el nivel de riesgo:
     - **Nivel 1 (Asistencia):** Textos y copys sin simulación engañosa. Aprobación directa.
     - **Nivel 2 (Sintético Realista):** Imágenes/videos fotorrealistas. Definir la advertencia de autodivulgación obligatoria para pauta (Meta Ads Manager "AI Info", YouTube Studio "Contenido sintético", TikTok AIGC) para evitar supresión de alcance algorítmico o suspensión de cuenta.
     - **Nivel 3 (Engañoso / Slop):** Prohibición absoluta.
     Si un prompt no cumple los 7 campos o los guardrails, **reescribirlo en silencio y volver a verificar — no preguntar al usuario.**
 11. **Entrega final dual:**
-    - Texto estructurado con la plantilla de salida ([output-template.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/output-template.md)), incluyendo ficha técnica de cumplimiento IA 2026 (clasificación de nivel y directriz de toggle por plataforma).
+    - Texto estructurado con la plantilla de salida ([output-template.md](references/output-template.md)), incluyendo ficha técnica de cumplimiento IA 2026 (clasificación de nivel y directriz de toggle por plataforma).
     - **Pasarela Web Interactiva:** copiar `references/showcase-template.html` a `showcase/campaign-<fecha>-<slug>.html`, sustituir **solo** el bloque `const CAMPAIGN = {…}` con los datos generados, y publicarlo con la herramienta `Artifact` entregando el link al usuario. Procedimiento completo en `references/showcase-rules.md`. **Nunca reescribir el template completo** y nunca cerrar la entrega sin el archivo escrito.
 12. **Extras posteriores a la entrega.** **Solo cuando el paso 11 ya está cumplido** (archivo escrito y link entregado). Preguntar una sola vez, ofreciendo las dos opciones juntas:
 
@@ -237,7 +262,11 @@ Cada idea debe pasar el filtro: ¿demuestra creatividad trascendental, innovaci�
     7. **Generar** quitando `--dry-run`.
     8. **Entregar, por cada pieza, las tres cosas juntas:** la **pieza** (por su `file_path`), el **copy** de la pasarela y el **prompt + especificaciones** (modelo, aspecto, dimensiones, lente/paleta o duración/movimiento/escenas, y costo).
 
-    **Reportar siempre los avisos que devuelva el script** (`aviso_aspect_ratio`, `aviso_duracion`, `aviso_costo`, `aviso_catalogo`): son los casos en que lo generado **no** corresponde exactamente a lo que pedía el prompt — por ejemplo un `prompt_video` de 24 s que solo pudo generarse como fragmento de 8 s. Callarlos deja al usuario creyendo que recibió la pieza completa.
+    **Videos por tramos:** cada tramo se genera **por separado**; el modelo no recibe el tramo anterior como referencia, así que la continuidad depende de la biblia de continuidad escrita en cada prompt. Entregar los tramos en orden y decirle al usuario que se unen en el editor (o que, para máxima consistencia, puede regenerar los tramos N>1 en una herramienta que acepte el video previo como referencia, copiándolos de la pasarela).
+
+    La música no se genera con este script: el prompt musical queda en la pasarela para ejecutarlo en una herramienta de audio (Suno, Udio, Stable Audio).
+
+    **Reportar siempre los avisos que devuelva el script** (`aviso_aspect_ratio`, `aviso_duracion`, `aviso_costo`, `aviso_catalogo`, `aviso_encadenado`, `aviso_longitud`): son los casos en que lo generado **no** corresponde exactamente a lo que pedía el prompt — por ejemplo un tramo de 10 s que el modelo solo admite en 8 s. Callarlos deja al usuario creyendo que recibió la pieza completa.
 
     **Revisar cada pieza generada contra los guardrails** antes de entregarla. Si viola `references/brand-context.md` (figura que parezca menor de edad, botella de competidor, signos de exceso) o las pautas de fidelidad física de `references/manual-cumplimiento-ia-2026.md`, **decirlo y descartarla** — no entregarla porque "así salió el modelo".
 

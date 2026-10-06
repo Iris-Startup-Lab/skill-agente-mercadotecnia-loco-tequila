@@ -35,6 +35,8 @@ Redactar copy nuevo respetando la gramática nativa (tabla sección 7), nunca co
 | Duración video | 15–90s | 3–10 min (long) / <60s (Shorts) | 30–90s | 15–34s |
 | CTA | "Conoce más", "Encuéntranos en" | "Suscríbete", "Ve el proceso completo" | "Conoce nuestra historia", "Hablemos" | Comentario/duet, no CTA de venta directa |
 
+**Duración de video de la skill (`{{duracion_video}}`: 10, 20, 30, 45 o 60 s, en tramos encadenados de 10 s; `prompt-standards.md` §2.3) frente a cada red:** Facebook admite de 20 a 60 s; YouTube Shorts de 10 a 45 s (60 s queda en el límite de <60 s); LinkedIn de 30 a 60 s; TikTok 20 o 30 s (10 s queda por debajo y 45–60 s por encima de su rango nativo de 15–34 s). Si la duración elegida cae fuera del rango de una red seleccionada, avisarlo en una línea y continuar; nunca bloquear.
+
 **Paso 5 — Inyección de palabras clave homogenizadas** (glosario, sección 10) en: copy visible, título, descripción, alt-text de imagen, hashtags, subtítulos/closed captions.
 
 **Paso 6 — Verificación de guardrails** (sección 6) y filtro de Locura Genial.

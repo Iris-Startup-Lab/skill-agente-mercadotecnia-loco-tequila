@@ -27,7 +27,7 @@ flowchart TD
 
     subgraph FASE2 ["🔍 FASE 2: Auditoría y No-Repetición Visual"]
         F --> G{"❓ PREGUNTA OBLIGATORIA (Clickeable):<br/>¿Cómo proporcionar referencias previas?<br/><i>(OneDrive/GoogleDrive, Carpeta local/cowork, Chat, Ninguna/Acervo)</i>"}:::questionNode
-        G -- Nube (OneDrive/GDrive) --> H["5a. Lectura de Nube vía MCP / Enlace<br/><i>(Auditoría de máx. 10 archivos para conocer temáticas previas)</i>"]:::subSkillNode
+        G -- Nube (OneDrive/GDrive) --> H["5a. Lectura de Nube vía Enlace o Conector<br/><i>(Auditoría con link o búsqueda directa sin link vía conector)</i>"]:::subSkillNode
         G -- Carpeta local / Cowork --> H2["5b. Lectura de Directorio Local<br/><i>(Extracción de campañas previas en disco)</i>"]:::stepNode
         G -- Imágenes en Chat --> I["5c. Análisis Visual en Chat<br/><i>(Análisis de 1 a 3 fotos de muestra)</i>"]:::stepNode
         G -- Ninguna / Acervo --> J["6. Inspiración con Acervo Propio de la Skill<br/><i>(references/old_campaigns/ y references/loco-tequila/)</i>"]:::stepNode
@@ -79,7 +79,7 @@ flowchart TD
 
 ### 🔍 Fase 2: Auditoría y No-Repetición Visual (Nube, Carpeta Local/Cowork, Chat o Acervo)
 - **Consulta Obligatoria al Cliente:** Se formulan las 4 opciones de trabajo:
-  1. *Link de OneDrive, SharePoint o Google Drive:* Se auditan metadatos o documentos de análisis de las últimas campañas (hasta 10 archivos) para registrar qué conceptos ya fueron explotados.
+  1. *Nube (OneDrive, SharePoint o Google Drive):* El cliente puede proporcionar el link o solicitar la búsqueda directa sin link si el agente tiene conector activo (Microsoft 365 o Google Drive MCP), auditando hasta 10 archivos para registrar qué conceptos ya fueron explotados.
   2. *Carpeta local / Cowork:* El cliente indica la ruta de su equipo o red compartida para revisar campañas previas en disco.
   3. *Imágenes en chat:* Se invita al cliente a adjuntar de 1 a 3 imágenes de muestra para calibrar el tono estético sin duplicar ejecuciones pasadas.
   4. *Ninguna (Acervo de la skill):* Si el cliente no aporta referencias externas, el agente avanza de inmediato inspirándose en las campañas históricas (`references/old_campaigns/resumen_old_campaigns.md`) y el producto canónico de la propia skill.

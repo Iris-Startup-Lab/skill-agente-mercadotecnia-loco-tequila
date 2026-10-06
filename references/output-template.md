@@ -87,22 +87,50 @@ La skill entrega el resultado como **texto normal de la conversación** (sin blo
 
 ### 🎬 PROMPT DE VIDEO — [nombre del concepto]
 
-> **Prompt principal (descripción de escenas):**
-> [Descripción ultra detallada por escena: acción, encuadre, movimiento de cámara, iluminación, paleta, sonido/ambiente, ritmo, y texto en pantalla. Indicar duración total y estructura.]
+> **Duración total:** [10 / 20 / 30 / 45 / 60 s] · **Tramos:** [1 / 2 / 3 / 5 / 6] (encadenados de 10 s; ver `prompt-standards.md` §2.0–§2.4)
+> **Relación de aspecto:** [9:16 / 16:9 / 1:1] · **Sonido de los tramos:** solo ambiente y efectos (la música va aparte)
 >
-> **Escenas (desglose):**
-> - Escena 1 (0–Xs): [descripción]
-> - Escena 2 (Xs–Ys): [descripción]
-> - …
+> **Biblia de continuidad (va literal en la versión completa de cada tramo):**
+> [morfología canónica de la botella, cristalería Riedel, lente base, esquema de iluminación, paleta y descriptores de fluidos si hay líquido]
 >
-> **Negative prompt (si aplica):**
-> [texto no deseado, menores, consumo excesivo, marcas de agua, etc.]
+> 💡 *Genera los tramos en orden. En los tramos de **Continuación**, da a tu herramienta el video del tramo anterior (extenderlo, video de referencia o su último fotograma). En los de **Corte**, adjunta la foto oficial de la botella. Renombra `@Image1` / `@Frame1` / `@Video1` según cómo nombre las referencias tu herramienta. Usa la versión compacta en Higgsfield, Runway o Dreamina.*
+
+#### Tramo 1 de [N] · 0–10 s · Corte
+
+> **Referencia de entrada:** [@Image1 = foto oficial de la botella · o ninguna]
 >
-> **Parámetros técnicos sugeridos:**
-> - Relación de aspecto: [9:16 / 16:9 / 1:1]
-> - Duración: [ ]
-> - Estilo/modelo sugerido: [cinematográfico / animación / motion graphics]
-> - Audio/música: [dirección sonora; sin licencia comercial especificada]
+> **Prompt completo** (en inglés, orden canónico, sin encabezados en español):
+> `[Format & duration] SETTING & LIGHTING: … ACTIVE REFERENCES: … ACTION & BEATS: 0–3s … 3–6s … 6–10s … CAMERA: … PRESERVATION & LOCKS: …` — incluye el gancho visual de los primeros 2 s.
+>
+> **Prompt compacto** ([N] / 500 caracteres):
+> `[mismo orden, con el candado corto de botella]`
+>
+> **Negative prompt** (casilla aparte): [§3.1 íntegro + §3.2 si hay líquido]
+>
+> **Beats:** 0–3s [ ] · 3–6s [ ] · 6–10s [ ] · **Cámara:** [ ] · **Fotograma de salida:** [botella, copa, encuadre, luz, líquido en reposo]
+
+#### Tramo 2 de [N] · 10–20 s · [Continuación / Corte]
+
+> **Referencia de entrada:** [Continuación: @Frame1 = video o último fotograma del Tramo 1 · Corte: @Image1]
+>
+> **Prompt completo:** `[Format & duration]. CONTINUATION FROM SEGMENT 1: …` (solo si es Continuación) + resto del orden canónico.
+>
+> *(Misma estructura por tramo. Ningún tramo pide texto en pantalla; el final deja el tercio inferior limpio. En 45 s, el tramo 5 dura 5 s.)*
+
+#### 🎵 Música — [nombre del concepto]
+
+> **Arquetipo:** [A Organic Deep House / Lounge · B Neoclásico cinemático] · **BPM:** [ ] · **Modo:** [ ] · **Duración:** [= total del video]
+> **Estructura:** [qué pasa en cada tramo; resuelve en el end card]
+> **Prompt (EN, Suno / Udio / Stable Audio):** `[Genre: …] [Tempo: …] [Key: …] [Instruments: …] [Mood: …] [Structure: …] [Production: …] [Negative: …]`
+> **Prompt (ES):** [ ]
+> **Derechos comerciales:** `[no disponible]` — dependen del plan de la herramienta musical.
+
+#### ✂️ Postproducción — [nombre del concepto]
+
+> **Orden de montaje:** [Tramo 1 → … ; cortes sugeridos cada 1.5–3 s]
+> **Tarjetas de texto en pantalla:** [0–3 s «…»] · [3–6 s «…»] · … (una frase partida en 4–5 tarjetas)
+> **End card:** logo oficial «Loco» rojo sobre negro, 2–3 s.
+> **Leyenda obligatoria:** `+18 · Evita el exceso · #EspírituDeOrigen` (visible en el montaje final).
 
 ---
 

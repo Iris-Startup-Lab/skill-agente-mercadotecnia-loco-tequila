@@ -70,9 +70,14 @@ venv.bak/
 feriados*.json
 temp/
 scratch/
+.claude/
 
 # Medios generados con OpenRouter (borradores de trabajo, no piezas aprobadas)
 outputs/
+
+# Carpeta de capacitación
+capacitacion/
+new_references_to_delete/
 
 # Credenciales — la API Key de OpenRouter NUNCA se versiona
 *.key

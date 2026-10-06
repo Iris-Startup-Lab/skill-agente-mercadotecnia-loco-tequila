@@ -53,8 +53,8 @@ Aplica para **Loco Blanco**, **Loco Ámbar** y **Loco Puro Corazón**:
 
 ## 3. Desglose de Carpetas de Referencia
 
-- [resumen_loco_blanco.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/loco-tequila/bottle_tequila_offiicial_images/loco_blanco/resumen_loco_blanco.md)
-- [resumen_loco_ambar.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/loco-tequila/bottle_tequila_offiicial_images/loco_ambar/resumen_loco_ambar.md)
-- [resumen_loco_puro_corazon.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/loco-tequila/bottle_tequila_offiicial_images/loco_puro_corazon/resumen_loco_puro_corazon.md)
-- [resumen_loco_aureo.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/loco-tequila/bottle_tequila_offiicial_images/loco_aureo/resumen_loco_aureo.md)
-- [resumen_loco_hierofante.md](file:///e:/Users/1167486/Local/scripts/skills_generales/agente-mercadotecnia-loco-tequila/references/loco-tequila/bottle_tequila_offiicial_images/loco_hierofante/resumen_loco_hierofante.md)
+- [resumen_loco_blanco.md](loco_blanco/resumen_loco_blanco.md)
+- [resumen_loco_ambar.md](loco_ambar/resumen_loco_ambar.md)
+- [resumen_loco_puro_corazon.md](loco_puro_corazon/resumen_loco_puro_corazon.md)
+- [resumen_loco_aureo.md](loco_aureo/resumen_loco_aureo.md)
+- [resumen_loco_hierofante.md](loco_hierofante/resumen_loco_hierofante.md)

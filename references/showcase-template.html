@@ -533,6 +533,87 @@
       font-weight: 500;
       margin-right: 6px;
     }
+
+    /* Tramos encadenados de video (segments[]) */
+    .segments-block {
+      margin-bottom: 16px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+    }
+    .segments-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .segments-pills {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .segments-pills .media-btn {
+      border: 1px solid var(--border-subtle);
+    }
+    .segments-timeline {
+      display: flex;
+      gap: 3px;
+      height: 8px;
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+    .segments-timeline span {
+      background: rgba(212, 175, 55, 0.18);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .segments-timeline span.active { background: var(--brand-gold); }
+    .segment-hint {
+      margin-top: 10px;
+      font-size: 11.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .handoff-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .handoff-item {
+      background: var(--bg-dark);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+    }
+    .version-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .char-counter {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .char-counter.over { color: #FF8A80; font-weight: 700; }
+    .handoff-item .m-lbl {
+      font-size: 10px;
+      text-transform: uppercase;
+      color: var(--brand-gold-bright);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .handoff-item .m-val {
+      font-size: 12.5px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
     /* Toast */
     .toast-box {
       position: fixed;
@@ -639,19 +720,75 @@
               <button class="btn-copy" onclick="copyCurrentPrompt(this)">
                 📋 Copiar Prompt Completo
               </button>
+              <button id="btn-copy-negative" class="btn-copy zone-hidden" onclick="copyCurrentNegative(this)">
+                🚫 Copiar negativo
+              </button>
+              <button id="btn-copy-all-segments" class="btn-copy zone-hidden" onclick="copyAllSegments(this)">
+                🗒 Copiar guion completo
+              </button>
             </div>
           </div>
+
+          <!-- Tramos encadenados de 10 s: solo visible en video con segments[] -->
+          <div id="segments-block" class="segments-block zone-hidden">
+            <div class="segments-head">
+              <span id="segments-title" class="scenes-title" style="margin-bottom:0;">⛓ Tramos encadenados</span>
+              <div id="segments-pills" class="segments-pills"></div>
+            </div>
+            <div id="segments-timeline" class="segments-timeline"></div>
+            <div class="segment-hint">Genera los tramos en orden. En los tramos de <strong>Continuación</strong>, dale a tu herramienta el video del tramo anterior (extenderlo, video de referencia o su último fotograma). En los de <strong>Corte</strong>, adjunta la foto oficial de la botella. Renombra @Image1 / @Frame1 / @Video1 según cómo nombre las referencias tu herramienta.</div>
+          </div>
+
+          <!-- Versión completa / compacta del prompt de video -->
+          <div id="version-row" class="version-row zone-hidden">
+            <div id="version-switch" class="media-switch">
+              <button id="version-btn-full" class="media-btn active" onclick="setPromptVersion('full')">Completa</button>
+              <button id="version-btn-compact" class="media-btn" onclick="setPromptVersion('compact')">Compacta</button>
+            </div>
+            <span id="char-counter" class="char-counter"></span>
+          </div>
+
           <div id="prompt-text-display" class="prompt-text">Cargando prompt...</div>
 
           <!-- Desglose por escena: solo visible en medio video -->
           <div id="scenes-block" class="scenes-block zone-hidden">
-            <span class="scenes-title">🎬 Desglose por escena</span>
+            <span class="scenes-title">🎬 Beats del tramo</span>
             <ol id="scenes-list" class="scenes-list"></ol>
+          </div>
+
+          <!-- Música: solo visible en el medio 🎵 -->
+          <div id="music-block" class="scenes-block zone-hidden">
+            <span class="scenes-title">🎵 Estructura y notas</span>
+            <div id="music-structure" class="segment-hint" style="margin-top:0;"></div>
+            <div id="music-es" class="segment-hint"></div>
+            <div id="music-neg" class="segment-hint"></div>
+            <div id="music-rights" class="segment-hint"></div>
+          </div>
+
+          <!-- Traspaso entre tramos: referencia de entrada y fotograma de salida -->
+          <div id="handoff-grid" class="handoff-grid zone-hidden">
+            <div class="handoff-item">
+              <span class="m-lbl">⬅ Referencia de entrada</span>
+              <span id="handoff-in" class="m-val"></span>
+            </div>
+            <div class="handoff-item">
+              <span class="m-lbl">➡ Fotograma de salida</span>
+              <span id="handoff-out" class="m-val"></span>
+            </div>
+          </div>
+
+          <!-- Postproducción: textos, end card y leyenda (nunca generados por el modelo) -->
+          <div id="post-block" class="scenes-block zone-hidden">
+            <span class="scenes-title">✂️ Postproducción (se monta en el editor)</span>
+            <div id="post-order" class="segment-hint" style="margin-top:0;"></div>
+            <ol id="post-cards" class="scenes-list" style="margin-top:8px;"></ol>
+            <div id="post-endcard" class="segment-hint"></div>
+            <div id="post-legal" class="segment-hint" style="color: var(--brand-gold-bright); font-weight:600;"></div>
           </div>
 
           <div class="meta-grid">
             <div class="meta-item">
-              <span class="m-lbl">Aspect Ratio Recomendado</span>
+              <span id="meta-lbl-1" class="m-lbl">Aspect Ratio Recomendado</span>
               <span id="meta-ar" class="m-val">4:5 (1080x1350)</span>
             </div>
             <div class="meta-item">
@@ -745,19 +882,67 @@
             color_palette: "Deep Wine, Obsidian Black, Volcanic Silver",
             negative_prompt: "underage, minors, drunk, drunkenness, excessive drinking, cheap glass, competitor bottles, Casa Dragones bottle, Clase Azul bottle, text watermark, blurry, low resolution"
           },
+          // Video en tramos encadenados de 10 s (prompt-standards.md §2.0–§2.4): 20 s → 2 tramos,
+          // con prompt musical y bloque de postproducción. Ningún tramo pide texto al modelo.
           prompt_video: {
-            text: "Vertical 9:16 cinematic sequence following the four-barrel resting process of Loco Ámbar at Hacienda La Providencia. Editorial chiaroscuro throughout, deep wine and obsidian palette with volcanic silver highlights, 50mm f/1.8 look, luxury documentary grade.",
+            text: "Spot vertical de 20 s en dos tramos: bodegón de Loco Ámbar revelado por un barrido de luz de vela (corte) y servido en copa Riedel hasta el plano héroe final (continuación).",
             aspect_ratio: "9:16 (1080x1920)",
-            duration: "24 s",
-            camera_movement: "Escena 1 dolly in lento · Escena 2 tripié fijo · Escena 3 deriva a mano",
-            audio: "Percusión de barro en crescendo, sin voz en off. Sin licencia comercial especificada.",
-            scenes: [
-              { time: "0–3 s", description: "Gancho: primer plano de la duela de roble abriéndose, polvo de madera suspendido en un haz de luz dura." },
-              { time: "3–12 s", description: "Cuatro barricas distintas en sucesión rítmica; cada corte revela un tono de ámbar más profundo." },
-              { time: "12–20 s", description: "La botella de Loco Ámbar entra en cuadro sobre piedra volcánica; el líquido atrapa la luz lateral." },
-              { time: "20–24 s", description: "Cierre sobre el tagline en pantalla y la leyenda +18 · Evita el exceso." }
+            total_duration: "20 s",
+            duration: "20 s · 2 tramos de 10 s",
+            continuity_bible: "Loco Ámbar bottle with exact conical trapezoidal crystal silhouette, thick 2cm solid crystal base, raised red enamel 'Loco' relief, copper-bronze capsule, no paper labels; narrow tulip-shaped Riedel crystal tasting glass; dark walnut table, bronze candelabra with lit taper candles, blurred black-and-white contemporary agave artwork behind; warm candlelight key from camera left with golden backlight through the liquid; 50mm f/1.8 look; amber, deep wine, ivory and dark wood palette.",
+            audio: "Solo ambiente y efectos en los tramos; música aparte (arquetipo B).",
+            compact_limit: 500,
+            negative_prompt: "underage, minors, drunk, drunkenness, excessive drinking, cheap glass, competitor bottles, Casa Dragones bottle, Clase Azul bottle, generic liquor bottle, cylindrical bottle, paper label, sticker label, screw cap, flat base, thin glass, old-fashioned glass, ice cubes, salt rim, lime wedge on rim, shot glass, tequila production process, harvesting agave, jimador, industrial distillery, distillation stills, factory workers, text watermark, gibberish text, misspelled words, deformed text, oversized text, viscous, syrupy, honey-like pour, thick fluid, oily texture, bottom emitters, continuous bubbles from bottom, carbonation, fizzy, bubbles, foam, cloudy liquid, central darkening, caballito, tumbler, champagne flute, blurry, low resolution",
+            segments: [
+              {
+                index: 1, time: "0–10 s", duration_s: 10, shot_type: "cut",
+                reference_input: "@Image1 = foto oficial de la botella de Loco Ámbar (opcional).",
+                text: "Vertical 9:16, 10 seconds. SETTING & LIGHTING: dark walnut table, bronze candelabra with lit taper candles, blurred black-and-white contemporary agave artwork behind, warm candlelight key from camera left, golden backlight through the amber liquid, amber, deep wine, ivory and dark wood palette. ACTIVE REFERENCES: @Image1 as master product reference for the exact Loco Ámbar bottle. ACTION & BEATS: 0–3s near darkness, a candle flame flickers and reveals the raised red enamel 'Loco' relief. 3–7s the warm light slowly sweeps across the conical trapezoidal crystal bottle with thick 2cm solid base and copper-bronze capsule, the liquid glowing luminous golden amber. 7–10s the bottle stands fully lit beside an empty narrow tulip-shaped Riedel crystal tasting glass with real contact shadows. CAMERA: slow dolly in from medium shot to medium close-up, 50mm f/1.8, shallow depth of field. PRESERVATION & LOCKS: bottle static and rigid, preserve exact bottle morphology and label from @Image1, do not redraw typography, clean negative space in the lower third, ambient room tone and candle crackle only, no music.",
+                text_compact: "Vertical 9:16, 10s. SETTING: walnut table, lit candles, warm candlelight, golden backlight, amber and wine palette. REFS: @Image1 exact bottle. BEATS: 0-3s flame reveals red 'Loco' relief; 3-7s light sweeps the bottle, liquid glows amber; 7-10s bottle fully lit beside empty Riedel tulip glass. CAMERA: slow dolly in, 50mm f/1.8. LOCKS: bottle rigid, preserve exact bottle and label from @Image1, no new text, clean lower third, ambient sound only, no music.",
+                camera_movement: "Dolly in lento de plano medio a plano medio corto",
+                scenes: [
+                  { time: "0–3 s", description: "Gancho: casi oscuridad; la llama de una vela revela el relieve rojo «Loco»." },
+                  { time: "3–7 s", description: "La luz cálida barre la botella; el ámbar se enciende." },
+                  { time: "7–10 s", description: "Botella en héroe junto a la copa Riedel vacía." }
+                ],
+                exit_frame: "Plano medio corto, cámara quieta: botella de Loco Ámbar al centro, totalmente iluminada con luz de vela desde la izquierda; copa Riedel vacía a la derecha con sombra de contacto; candelabro y cuadro de agave desenfocados."
+              },
+              {
+                index: 2, time: "10–20 s", duration_s: 10, shot_type: "continuation",
+                reference_input: "@Frame1 = video del Tramo 1 (extenderlo, video de referencia o su último fotograma).",
+                text: "Vertical 9:16, 10 seconds. CONTINUATION FROM SEGMENT 1: Starts exactly from @Frame1 (final frame of the previous segment) with no cut, no jump and identical lighting, lens, color palette, set and bottle design. Continue the camera movement seamlessly. Opening frame: medium close-up, Loco Ámbar bottle centered and fully lit by candlelight from the left, empty Riedel glass on the right with contact shadow, candelabra and agave artwork blurred behind. SETTING & LIGHTING: same dark walnut table, warm candlelight key from camera left, golden backlight through the liquid. ACTIVE REFERENCES: @Frame1 as starting frame, @Image1 as master product reference. ACTION & BEATS: 0–4s an adult hand lifts the bottle and pours into the narrow tulip-shaped Riedel crystal tasting glass, water-thin fluid dynamics, ultra-low viscosity crisp laminar stream, no bottom emitters, mechanical impact micro-bubbles that burst instantly. 4–7s the bottle returns to the table and the liquid settles into a completely still surface within 1.5 seconds, thin transparent tequila tears on the inner walls, luminous golden-amber clarity with no central darkening. 7–10s static hero frame of bottle and served glass. CAMERA: slow orbit to a close-up of the glass, then static tripod. PRESERVATION & LOCKS: preserve exact bottle morphology and label from @Image1, do not redraw typography, clean negative space in the lower third for the logo end card, ambient room tone and soft pour sound only, no music.",
+                text_compact: "Vertical 9:16, 10s. CONTINUATION: start exactly from @Frame1, same light, lens and set. BEATS: 0-4s adult hand pours into Riedel tulip glass, water-thin still spirit, no bubbles; 4-7s bottle back on table, liquid settles in 1.5s, thin tears, clear amber; 7-10s static hero of bottle and glass. CAMERA: slow orbit to close-up, then static. LOCKS: preserve exact bottle and label from @Image1, no new text, clean lower third, ambient sound only, no music.",
+                camera_movement: "Órbita lenta a primer plano de la copa y cierre en tripié fijo",
+                scenes: [
+                  { time: "0–4 s", description: "Una mano adulta sirve en la copa Riedel; vertido fino, sin burbujas." },
+                  { time: "4–7 s", description: "El líquido queda inmóvil en menos de 1.5 s; lágrimas finas en el cristal." },
+                  { time: "7–10 s", description: "Plano héroe fijo de botella y copa servida; tercio inferior limpio." }
+                ],
+                exit_frame: "Plano fijo de cierre: botella y copa servida en reposo total, tercio inferior limpio para el end card."
+              }
             ],
-            negative_prompt: "underage, minors, drunk, drunkenness, excessive drinking, cheap glass, competitor bottles, Casa Dragones bottle, Clase Azul bottle, text watermark, blurry, low resolution"
+            music: {
+              archetype: "B — Neoclásico cinemático",
+              bpm: 88,
+              key_mode: "Re menor",
+              duration: "20 s",
+              structure: "0–10 s piano con fieltro casi solo (bodegón); 10–17 s entran las cuerdas con el servido; 17–20 s acorde sostenido y fade-out sobre el end card.",
+              prompt_en: "[Genre: Cinematic Neoclassical, Warm Acoustic Ambient, Modern Chamber] [Tempo: 88 BPM, 3/4] [Key: D minor] [Instruments: felted grand piano, warm string ensemble, sustained cello, sparse bell chimes] [Mood: timeless elegance, intimate celebration, refined] [Structure: 20 s, solo piano intro 0-10 s, strings enter at 10 s with the pour, sustained resolving chord and soft fade-out in the last 3 s] [Production: natural room acoustics, warm hall reverb, uncompressed dynamics] [Negative: drums, electronic beats, synth leads, vocals, choir, aggressive brass]",
+              prompt_es: "Pieza neoclásica de 20 s a 88 BPM en Re menor: piano de cola con fieltro solo en los primeros 10 s, entran cuerdas cálidas con el servido y cierra con un acorde sostenido que se desvanece en los últimos 3 s. Instrumental, reverberación de sala, sin percusión ni voces.",
+              negative_tags: "drums, electronic beats, synth leads, vocals, choir, aggressive brass",
+              rights: "[no disponible]"
+            },
+            post_production: {
+              edit_order: "Tramo 1 → Tramo 2. Cortes sugeridos: 0–3 s, 3–7 s, 7–10 s del tramo 1; 10–14 s y 14–17 s del tramo 2; 17–20 s plano héroe y end card.",
+              text_cards: [
+                { time: "0–3 s", text: "Cuatro maderas." },
+                { time: "3–7 s", text: "Un solo carácter." },
+                { time: "10–14 s", text: "Loco Ámbar," },
+                { time: "14–17 s", text: "Tequila Reposado" }
+              ],
+              end_card: "Logo oficial «Loco» rojo sobre negro, 17–20 s",
+              legal: "+18 · Evita el exceso · #EspírituDeOrigen"
+            }
           },
           copy: {
             headline: "Cuatro maderas. Un solo carácter.",
@@ -775,7 +960,10 @@
 
     let currentIndex = 0;
     let currentMode = "all";
-    let currentMedia = "image"; // "image" | "video" — medio de prompt activo
+    let currentMedia = "image";   // "image" | "video" | "music" — medio de prompt activo
+    let currentSegment = 0;       // tramo activo del video encadenado (segments[])
+    let currentVersion = "full";  // "full" | "compact" — versión del prompt de video
+    const COMPACT_LIMIT_DEFAULT = 500;
 
     function initApp() {
       if (!CAMPAIGN || !CAMPAIGN.items || CAMPAIGN.items.length === 0) return;
@@ -786,20 +974,43 @@
       renderCurrentConcept();
     }
 
-    // Medios disponibles en un concepto: "image" si trae prompt, "video" si trae prompt_video.
+    // Tramos encadenados de un prompt de video (vacío si es un video de un solo bloque).
+    function segmentosDe(p) {
+      return p && Array.isArray(p.segments) ? p.segments.filter(s => s && s.text) : [];
+    }
+
+    // Prompt musical del video (uno por video), si existe.
+    function musicaDe(item) {
+      const m = item && item.prompt_video && item.prompt_video.music;
+      return m && (m.prompt_en || m.prompt_es) ? m : null;
+    }
+
+    // Medios disponibles en un concepto: imagen, video y, si el video trae música, música.
     function mediosDe(item) {
       const m = [];
       if (item && item.prompt && item.prompt.text) m.push("image");
-      if (item && item.prompt_video && item.prompt_video.text) m.push("video");
+      const pv = item && item.prompt_video;
+      if (pv && (pv.text || segmentosDe(pv).length)) m.push("video");
+      if (musicaDe(item)) m.push("music");
       return m;
     }
 
-    // Etiqueta corta para la pestaña: IMG, VID o IMG+VID.
+    // Etiqueta corta para la pestaña: IMG, VID o IMG+VID (×N si va por tramos, ♪ si trae música).
     function etiquetaMedios(item) {
       const m = mediosDe(item);
-      if (m.length === 2) return "IMG+VID";
-      if (m.length === 1) return m[0] === "video" ? "VID" : "IMG";
-      return "—";
+      const partes = [];
+      if (m.includes("image")) partes.push("IMG");
+      if (m.includes("video")) {
+        const n = segmentosDe(item.prompt_video).length;
+        partes.push("VID" + (n > 1 ? ` ×${n}` : ""));
+      }
+      if (!partes.length) return "—";
+      return partes.join("+") + (m.includes("music") ? " ♪" : "");
+    }
+
+    function etiquetaTipoTramo(s) {
+      if (!s || !s.shot_type) return "";
+      return s.shot_type === "continuation" ? "Continuación" : "Corte";
     }
 
     function renderTabs() {
@@ -815,10 +1026,110 @@
       document.getElementById("concept-counter").textContent = `${currentIndex + 1} / ${CAMPAIGN.items.length}`;
     }
 
-    // Cambia entre prompt de imagen y de video dentro del mismo concepto.
+    // Cambia entre prompt de imagen, de video y musical dentro del mismo concepto.
     function setMedia(medio) {
       currentMedia = medio;
+      currentSegment = 0;
       renderCurrentConcept();
+    }
+
+    function setSegment(idx) {
+      currentSegment = idx;
+      renderCurrentConcept();
+    }
+
+    function setPromptVersion(version) {
+      currentVersion = version;
+      renderCurrentConcept();
+    }
+
+    // Texto del tramo según la versión activa (la compacta solo si existe).
+    function textoActivo(tramo) {
+      if (!tramo) return "";
+      return currentVersion === "compact" && tramo.text_compact ? tramo.text_compact : tramo.text;
+    }
+
+    // Píldoras y línea de tiempo proporcional de los tramos del video activo.
+    function renderSegments(p, tramos) {
+      const block = document.getElementById("segments-block");
+      const copyAll = document.getElementById("btn-copy-all-segments");
+      if (tramos.length < 2) {
+        block.classList.add("zone-hidden");
+        // Con un solo tramo, el guion completo solo aporta si hay música o postproducción.
+        if (tramos.length === 1 && (p.music || p.post_production)) copyAll.classList.remove("zone-hidden");
+        else copyAll.classList.add("zone-hidden");
+        return;
+      }
+      block.classList.remove("zone-hidden");
+      copyAll.classList.remove("zone-hidden");
+      document.getElementById("segments-title").textContent =
+        `⛓ ${tramos.length} tramos encadenados · ${p.total_duration || p.duration || ""}`.trim();
+
+      const pills = document.getElementById("segments-pills");
+      pills.innerHTML = "";
+      const timeline = document.getElementById("segments-timeline");
+      timeline.innerHTML = "";
+      tramos.forEach((s, i) => {
+        const tipo = etiquetaTipoTramo(s);
+        const b = document.createElement("button");
+        b.className = `media-btn ${i === currentSegment ? "active" : ""}`;
+        b.textContent = `Tramo ${i + 1} · ${s.time || ""}${tipo ? " · " + tipo : ""}`;
+        b.onclick = () => { setSegment(i); };
+        pills.appendChild(b);
+
+        const bar = document.createElement("span");
+        bar.className = i === currentSegment ? "active" : "";
+        bar.style.flex = String(Number(s.duration_s) || 10);
+        bar.title = `Tramo ${i + 1} · ${s.time || ""}`;
+        bar.onclick = () => { setSegment(i); };
+        timeline.appendChild(bar);
+      });
+    }
+
+    // Interruptor Completa / Compacta con contador de caracteres.
+    function renderVersionRow(p, tramo) {
+      const row = document.getElementById("version-row");
+      if (!tramo || !tramo.text_compact) { row.classList.add("zone-hidden"); return; }
+      row.classList.remove("zone-hidden");
+      document.getElementById("version-btn-full").className = `media-btn ${currentVersion === "full" ? "active" : ""}`;
+      document.getElementById("version-btn-compact").className = `media-btn ${currentVersion === "compact" ? "active" : ""}`;
+      const limite = Number(p.compact_limit) || COMPACT_LIMIT_DEFAULT;
+      const counter = document.getElementById("char-counter");
+      const largo = textoActivo(tramo).length;
+      if (currentVersion === "compact") {
+        const excede = largo > limite;
+        counter.textContent = `${largo} / ${limite} caracteres${excede ? " — excede el tope de herramientas como Higgsfield" : ""}`;
+        counter.className = `char-counter ${excede ? "over" : ""}`;
+      } else {
+        counter.textContent = `${largo} caracteres · para Gemini/Veo/Flow, Kling o Seedance`;
+        counter.className = "char-counter";
+      }
+    }
+
+    // Caja de postproducción: orden de montaje, tarjetas de texto, end card y leyenda.
+    function renderPostProduction(p, visible) {
+      const block = document.getElementById("post-block");
+      const pp = p && p.post_production;
+      if (!visible || !pp) { block.classList.add("zone-hidden"); return; }
+      block.classList.remove("zone-hidden");
+      document.getElementById("post-order").textContent = pp.edit_order ? "Orden de montaje: " + pp.edit_order : "";
+      const cards = Array.isArray(pp.text_cards) ? pp.text_cards : [];
+      document.getElementById("post-cards").innerHTML = cards.map(c =>
+        `<li><span class="scene-time">${c.time || ""}</span>«${c.text || ""}»</li>`
+      ).join("");
+      document.getElementById("post-endcard").textContent = pp.end_card ? "End card: " + pp.end_card : "";
+      document.getElementById("post-legal").textContent = "Leyenda obligatoria: " + (pp.legal || "+18 · Evita el exceso · #EspírituDeOrigen");
+    }
+
+    // Bloque de música: estructura, versión en español, negativos y derechos.
+    function renderMusic(m) {
+      const block = document.getElementById("music-block");
+      if (!m) { block.classList.add("zone-hidden"); return; }
+      block.classList.remove("zone-hidden");
+      document.getElementById("music-structure").textContent = m.structure ? "Estructura: " + m.structure : "";
+      document.getElementById("music-es").textContent = m.prompt_es ? "En español: " + m.prompt_es : "";
+      document.getElementById("music-neg").textContent = m.negative_tags ? "Excluir: " + m.negative_tags : "";
+      document.getElementById("music-rights").textContent = "Derechos comerciales: " + (m.rights || "[no disponible]") + " — dependen del plan de la herramienta musical.";
     }
 
     function renderMediaSwitch(item) {
@@ -828,7 +1139,7 @@
       // Con un solo medio el switch no aporta: se oculta.
       if (medios.length < 2) { cont.classList.add("zone-hidden"); return; }
       cont.classList.remove("zone-hidden");
-      const etiquetas = { image: "🎨 Imagen", video: "🎬 Video" };
+      const etiquetas = { image: "🎨 Imagen", video: "🎬 Video", music: "🎵 Música" };
       medios.forEach(m => {
         const b = document.createElement("button");
         b.className = `media-btn ${m === currentMedia ? "active" : ""}`;
@@ -840,18 +1151,21 @@
 
     function selectConcept(idx) {
       currentIndex = idx;
+      currentSegment = 0;
       renderTabs();
       renderCurrentConcept();
     }
 
     function nextConcept() {
       currentIndex = (currentIndex + 1) % CAMPAIGN.items.length;
+      currentSegment = 0;
       renderTabs();
       renderCurrentConcept();
     }
 
     function prevConcept() {
       currentIndex = (currentIndex - 1 + CAMPAIGN.items.length) % CAMPAIGN.items.length;
+      currentSegment = 0;
       renderTabs();
       renderCurrentConcept();
     }
@@ -892,48 +1206,101 @@
       document.getElementById("stage-plat").textContent = item.platform;
       document.getElementById("stage-persona").textContent = `Persona: ${item.target_persona}`;
 
-      // Prompt — según el medio activo (imagen o video)
+      // Prompt — según el medio activo (imagen, video o música)
       const medios = mediosDe(item);
       if (!medios.includes(currentMedia)) currentMedia = medios[0] || "image";
       renderMediaSwitch(item);
 
       const esVideo = currentMedia === "video";
-      const p = esVideo ? item.prompt_video : item.prompt;
+      const esMusica = currentMedia === "music";
+      const p = esMusica || esVideo ? item.prompt_video : item.prompt;
       const scenesBlock = document.getElementById("scenes-block");
       const scenesList = document.getElementById("scenes-list");
+      const handoff = document.getElementById("handoff-grid");
+      const negBtn = document.getElementById("btn-copy-negative");
+      document.getElementById("meta-lbl-1").textContent = "Aspect Ratio Recomendado";
 
-      document.getElementById("prompt-box-title").textContent = esVideo
-        ? "🎬 Prompt Generativo Ultra Detallado (Text-to-Video)"
-        : "📦 Prompt Generativo Ultra Detallado (Text-to-Image)";
+      // Video por tramos: el contenido visible es el del tramo activo.
+      const tramos = esVideo ? segmentosDe(p) : [];
+      if (currentSegment >= tramos.length) currentSegment = 0;
+      const tramo = tramos.length ? tramos[currentSegment] : null;
+      renderSegments(p || {}, tramos);
+      renderVersionRow(p || {}, tramo);
+      renderPostProduction(p, esVideo);
+      renderMusic(esMusica ? musicaDe(item) : null);
 
-      if (!p) {
-        document.getElementById("prompt-text-display").textContent =
-          "Este concepto no incluye prompt de " + (esVideo ? "video" : "imagen") + ".";
-        ["meta-ar", "meta-cam", "meta-pal"].forEach(id => {
-          document.getElementById(id).textContent = "[no disponible]";
-        });
+      if (esMusica) {
+        const m = musicaDe(item);
+        document.getElementById("prompt-box-title").textContent = "🎵 Prompt Musical (Text-to-Music) — pista completa del video";
+        document.getElementById("prompt-text-display").textContent = m.prompt_en || m.prompt_es;
+        document.getElementById("meta-lbl-1").textContent = "Arquetipo";
+        document.getElementById("meta-ar").textContent = m.archetype || "[no disponible]";
+        document.getElementById("meta-lbl-2").textContent = "BPM · Modo";
+        document.getElementById("meta-cam").textContent = [m.bpm ? m.bpm + " BPM" : "", m.key_mode || ""].filter(Boolean).join(" · ") || "[no disponible]";
+        document.getElementById("meta-lbl-3").textContent = "Duración";
+        document.getElementById("meta-pal").textContent = m.duration || p.total_duration || "[no disponible]";
         scenesBlock.classList.add("zone-hidden");
+        handoff.classList.add("zone-hidden");
+        negBtn.classList.add("zone-hidden");
+        document.getElementById("btn-copy-all-segments").classList.add("zone-hidden");
       } else {
-        document.getElementById("prompt-text-display").textContent = p.text;
-        document.getElementById("meta-ar").textContent = p.aspect_ratio || "[no disponible]";
+        const titulo = tramos.length > 1
+          ? `🎬 Prompt Generativo Ultra Detallado (Text-to-Video) — Tramo ${currentSegment + 1} de ${tramos.length}${etiquetaTipoTramo(tramo) ? " · " + etiquetaTipoTramo(tramo) : ""}`
+          : "🎬 Prompt Generativo Ultra Detallado (Text-to-Video)";
+        document.getElementById("prompt-box-title").textContent = esVideo
+          ? titulo
+          : "📦 Prompt Generativo Ultra Detallado (Text-to-Image)";
 
-        // El segundo y tercer slot cambian de significado según el medio.
-        document.getElementById("meta-lbl-2").textContent = esVideo ? "Duración" : "Configuración Óptica & Lente";
-        document.getElementById("meta-cam").textContent =
-          (esVideo ? p.duration : p.camera_settings) || "[no disponible]";
-        document.getElementById("meta-lbl-3").textContent = esVideo ? "Movimiento de Cámara" : "Paleta Institucional";
-        document.getElementById("meta-pal").textContent =
-          (esVideo ? p.camera_movement : p.color_palette) || "[no disponible]";
+        const negativo = esVideo && p ? ((tramo && tramo.negative_prompt) || p.negative_prompt) : null;
+        negBtn.classList[negativo ? "remove" : "add"]("zone-hidden");
 
-        // Desglose por escena, solo en video
-        const escenas = Array.isArray(p.scenes) ? p.scenes : [];
-        if (esVideo && escenas.length) {
-          scenesList.innerHTML = escenas.map(s =>
-            `<li><span class="scene-time">${s.time || ""}</span>${s.description || ""}</li>`
-          ).join("");
-          scenesBlock.classList.remove("zone-hidden");
-        } else {
+        if (!p) {
+          document.getElementById("prompt-text-display").textContent =
+            "Este concepto no incluye prompt de " + (esVideo ? "video" : "imagen") + ".";
+          ["meta-ar", "meta-cam", "meta-pal"].forEach(id => {
+            document.getElementById(id).textContent = "[no disponible]";
+          });
           scenesBlock.classList.add("zone-hidden");
+          handoff.classList.add("zone-hidden");
+        } else {
+          document.getElementById("prompt-text-display").textContent = tramo ? textoActivo(tramo) : p.text;
+          document.getElementById("meta-ar").textContent = p.aspect_ratio || "[no disponible]";
+
+          // El segundo y tercer slot cambian de significado según el medio.
+          let duracion = p.duration;
+          if (tramo && tramos.length > 1) {
+            const seg = tramo.duration_s ? `${tramo.duration_s} s` : (tramo.time || "");
+            duracion = `Tramo ${currentSegment + 1}/${tramos.length} · ${seg} (total ${p.total_duration || p.duration || "[no disponible]"})`;
+          } else if (tramo && tramo.duration_s) {
+            duracion = p.total_duration || `${tramo.duration_s} s`;
+          }
+          document.getElementById("meta-lbl-2").textContent = esVideo ? "Duración" : "Configuración Óptica & Lente";
+          document.getElementById("meta-cam").textContent =
+            (esVideo ? duracion : p.camera_settings) || "[no disponible]";
+          document.getElementById("meta-lbl-3").textContent = esVideo ? "Movimiento de Cámara" : "Paleta Institucional";
+          document.getElementById("meta-pal").textContent =
+            (esVideo ? ((tramo && tramo.camera_movement) || p.camera_movement) : p.color_palette) || "[no disponible]";
+
+          // Traspaso entre tramos: qué referencia recibe y con qué fotograma termina.
+          if (tramo && (tramo.reference_input || tramo.exit_frame)) {
+            document.getElementById("handoff-in").textContent = tramo.reference_input || "[no disponible]";
+            document.getElementById("handoff-out").textContent = tramo.exit_frame || "[no disponible]";
+            handoff.classList.remove("zone-hidden");
+          } else {
+            handoff.classList.add("zone-hidden");
+          }
+
+          // Beats / escenas, solo en video (del tramo activo si lo hay)
+          const fuente = tramo || p;
+          const escenas = Array.isArray(fuente.scenes) ? fuente.scenes : [];
+          if (esVideo && escenas.length) {
+            scenesList.innerHTML = escenas.map(s =>
+              `<li><span class="scene-time">${s.time || ""}</span>${s.description || ""}</li>`
+            ).join("");
+            scenesBlock.classList.remove("zone-hidden");
+          } else {
+            scenesBlock.classList.add("zone-hidden");
+          }
         }
       }
       document.getElementById("meta-fil").textContent = item.filter_justification;
@@ -954,17 +1321,98 @@
         copyUniversal(document.getElementById("prompt-text-display").innerText, btn, "✓ Prompt copiado al portapapeles");
         return;
       }
+
+      // Música: solo el prompt musical.
+      if (currentMedia === "music") {
+        const m = musicaDe(item);
+        if (!m) { showToast("⚠ Este concepto no tiene prompt musical"); return; }
+        copyUniversal(m.prompt_en || m.prompt_es, btn, "✓ Prompt musical copiado al portapapeles");
+        return;
+      }
+
       const esVideo = currentMedia === "video";
       const p = esVideo ? item.prompt_video : item.prompt;
-      if (!p || !p.text) { showToast("⚠ Este concepto no tiene prompt de " + (esVideo ? "video" : "imagen")); return; }
+      const tramos = esVideo ? segmentosDe(p) : [];
+      if (!p || !(p.text || tramos.length)) { showToast("⚠ Este concepto no tiene prompt de " + (esVideo ? "video" : "imagen")); return; }
 
-      // Se copia el prompt completo del medio activo: texto + escenas + negative prompt.
-      const partes = [p.text];
-      if (esVideo && Array.isArray(p.scenes) && p.scenes.length) {
-        partes.push("\nESCENAS:\n" + p.scenes.map(s => `${s.time || ""} ${s.description || ""}`.trim()).join("\n"));
+      // Video por tramos: SOLO el prompt positivo limpio del tramo activo, sin
+      // encabezados en español (el modelo podría renderizarlos como subtítulos).
+      // El negativo se copia aparte con «Copiar negativo».
+      if (tramos.length) {
+        const i = Math.min(currentSegment, tramos.length - 1);
+        const version = currentVersion === "compact" && tramos[i].text_compact ? "compacta" : "completa";
+        copyUniversal(textoActivo(tramos[i]), btn, `✓ Tramo ${i + 1} de ${tramos.length} (versión ${version}) copiado`);
+        return;
       }
+
+      // Video de un solo bloque (campañas anteriores): texto y escenas, sin encabezados.
+      if (esVideo) {
+        const partes = [p.text];
+        if (Array.isArray(p.scenes) && p.scenes.length) {
+          partes.push(p.scenes.map(s => `${s.time || ""} ${s.description || ""}`.trim()).join("\n"));
+        }
+        copyUniversal(partes.join("\n\n"), btn, "✓ Prompt de video copiado al portapapeles");
+        return;
+      }
+
+      // Imagen: texto + negative prompt.
+      const partes = [p.text];
       if (p.negative_prompt) partes.push("\nNEGATIVE PROMPT:\n" + p.negative_prompt);
-      copyUniversal(partes.join("\n"), btn, `✓ Prompt de ${esVideo ? "video" : "imagen"} copiado al portapapeles`);
+      copyUniversal(partes.join("\n"), btn, "✓ Prompt de imagen copiado al portapapeles");
+    }
+
+    function copyCurrentNegative(btn) {
+      const item = CAMPAIGN.items[currentIndex];
+      const p = item && item.prompt_video;
+      const tramos = segmentosDe(p);
+      const tramo = tramos.length ? tramos[Math.min(currentSegment, tramos.length - 1)] : null;
+      const neg = (tramo && tramo.negative_prompt) || (p && p.negative_prompt);
+      if (!neg) { showToast("⚠ Este video no tiene negative prompt"); return; }
+      copyUniversal(neg, btn, "✓ Negative prompt copiado: pégalo en la casilla negativa de tu herramienta");
+    }
+
+    // Guion completo para el editor (NO para pegar en la herramienta): tramos con
+    // ambas versiones, beats, referencias, negativo, música y postproducción.
+    function textoTramo(p, tramos, i) {
+      const s = tramos[i];
+      const tipo = etiquetaTipoTramo(s);
+      const partes = [`=== TRAMO ${i + 1}/${tramos.length} (${s.time || ""}${s.duration_s ? " · " + s.duration_s + " s" : ""}${tipo ? " · " + tipo : ""}) ===`];
+      if (s.reference_input) partes.push("REFERENCIA DE ENTRADA: " + s.reference_input);
+      partes.push("\nPROMPT COMPLETO:\n" + s.text);
+      if (s.text_compact) partes.push(`\nPROMPT COMPACTO (${s.text_compact.length} caracteres):\n` + s.text_compact);
+      if (Array.isArray(s.scenes) && s.scenes.length) {
+        partes.push("\nBEATS:\n" + s.scenes.map(e => `${e.time || ""} ${e.description || ""}`.trim()).join("\n"));
+      }
+      if (s.exit_frame) partes.push("\nFOTOGRAMA DE SALIDA: " + s.exit_frame);
+      const neg = s.negative_prompt || p.negative_prompt;
+      if (neg) partes.push("\nNEGATIVE PROMPT:\n" + neg);
+      return partes.join("\n");
+    }
+
+    function copyAllSegments(btn) {
+      const item = CAMPAIGN.items[currentIndex];
+      const p = item && item.prompt_video;
+      const tramos = segmentosDe(p);
+      if (!tramos.length) { showToast("⚠ Este concepto no tiene tramos de video"); return; }
+      const bloques = tramos.map((_, i) => textoTramo(p, tramos, i));
+      const m = musicaDe(item);
+      if (m) {
+        bloques.push(["=== MÚSICA ===",
+          [m.archetype, m.bpm ? m.bpm + " BPM" : "", m.key_mode, m.duration].filter(Boolean).join(" · "),
+          m.structure ? "Estructura: " + m.structure : "",
+          m.prompt_en || "", m.prompt_es ? "ES: " + m.prompt_es : "",
+          "Derechos comerciales: " + (m.rights || "[no disponible]")].filter(Boolean).join("\n"));
+      }
+      const pp = p.post_production;
+      if (pp) {
+        const tarjetas = (pp.text_cards || []).map(c => `${c.time || ""} «${c.text || ""}»`).join("\n");
+        bloques.push(["=== POSTPRODUCCIÓN ===",
+          pp.edit_order ? "Orden de montaje: " + pp.edit_order : "",
+          tarjetas ? "Tarjetas de texto:\n" + tarjetas : "",
+          pp.end_card ? "End card: " + pp.end_card : "",
+          "Leyenda obligatoria: " + (pp.legal || "+18 · Evita el exceso · #EspírituDeOrigen")].filter(Boolean).join("\n"));
+      }
+      copyUniversal(bloques.join("\n\n"), btn, `✓ Guion completo (${tramos.length} tramos) copiado al portapapeles`);
     }
 
     function copyCurrentCopy(btn) {

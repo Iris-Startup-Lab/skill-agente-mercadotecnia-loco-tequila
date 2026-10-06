@@ -28,7 +28,7 @@ La verificación es objetiva: existe el archivo, o no existe. No se marca como c
    - Todo lo que está entre `// ===== CAMPAIGN:START` y `// ===== CAMPAIGN:END =====` → el dataset generado (§3).
    - El literal `__LOGO_BASE64__` → el contenido de `showcase/assets/logo_base64.txt` (§4).
 
-Todo lo demás —CSS, HTML estructural, las funciones `initApp`, `renderTabs`, `selectConcept`, `nextConcept`, `prevConcept`, `setViewMode`, `renderCurrentConcept`, `copyCurrentPrompt`, `copyCurrentCopy`, `copyUniversal`, `showToast`— **se hereda intacto**. No hay que reescribir ni verificar esas funciones: ya funcionan.
+Todo lo demás —CSS, HTML estructural, las funciones `initApp`, `renderTabs`, `selectConcept`, `nextConcept`, `prevConcept`, `setViewMode`, `renderCurrentConcept`, `renderSegments`, `setSegment`, `setPromptVersion`, `renderMusic`, `renderPostProduction`, `copyCurrentPrompt`, `copyCurrentNegative`, `copyAllSegments`, `copyCurrentCopy`, `copyUniversal`, `showToast`— **se hereda intacto**. No hay que reescribir ni verificar esas funciones: ya funcionan.
 
 Esto reduce el costo de salida del paso 11 de ~10 000 tokens a unos ~1 500. Esos tokens liberados son exactamente los que necesitan los prompts de imagen (ver `references/prompt-standards.md` §4).
 
@@ -56,17 +56,55 @@ const CAMPAIGN = {
         negative_prompt: "<cadena base de prompt-standards.md §3>"
       },
       // PROMPT DE VIDEO — obligatorio si {{medio}} es video o ambas; omitir si es solo imagen
+      // Un tramo por cada 10 s de {{duracion_video}} (prompt-standards.md §2.0–§2.4).
       prompt_video: {
-        text: "<prompt de video: los 7 campos de §1 + los 3 de §2>",
+        text: "<resumen del spot completo en una o dos líneas>",
         aspect_ratio: "9:16 (1080x1920)",
-        duration: "24 s",
-        camera_movement: "<movimiento por escena>",
-        audio: "<dirección sonora; sin afirmar licencias que no se tienen>",
-        scenes: [
-          { time: "0–3 s", description: "<gancho>" },
-          { time: "3–12 s", description: "<desarrollo>" }
+        total_duration: "20 s",
+        duration: "20 s · 2 tramos de 10 s",
+        continuity_bible: "<descriptores fijos que van literal en la versión completa de cada tramo>",
+        audio: "Solo ambiente y efectos en los tramos; música aparte",
+        negative_prompt: "<cadena base de prompt-standards.md §3.1 + §3.2, íntegra>",
+        compact_limit: 500,                 // tope de la versión compacta (caracteres)
+        segments: [
+          {
+            index: 1, time: "0–10 s", duration_s: 10,
+            shot_type: "cut",                 // "cut" (plano nuevo) | "continuation" (misma toma)
+            reference_input: "@Image1 = foto oficial de la botella (opcional)",
+            text: "<prompt completo en inglés, orden canónico, SIN encabezados en español ni texto pedido al modelo>",
+            text_compact: "<mismo orden, ≤500 caracteres, candado corto de botella>",
+            camera_movement: "<movimiento del tramo>",
+            scenes: [
+              { time: "0–3 s", description: "<beat 1: gancho visual>" },
+              { time: "3–10 s", description: "<beat 2>" }
+            ],
+            exit_frame: "<último fotograma: botella, copa, encuadre, luz, líquido en reposo>"
+          },
+          {
+            index: 2, time: "10–20 s", duration_s: 10,
+            shot_type: "continuation",
+            reference_input: "@Frame1 = video o último fotograma del Tramo 1",
+            text: "Vertical 9:16, 10 seconds. CONTINUATION FROM SEGMENT 1: … SETTING & LIGHTING: … PRESERVATION & LOCKS: … clean lower third …",
+            text_compact: "…", camera_movement: "…", scenes: [ … ], exit_frame: "…"
+          }
         ],
-        negative_prompt: "<cadena base de prompt-standards.md §3>"
+        // Uno por video (references/videos-cliente.md §3)
+        music: {
+          archetype: "B — Neoclásico cinemático", bpm: 88, key_mode: "Re menor",
+          duration: "20 s",
+          structure: "<qué pasa en cada tramo; resuelve en el end card>",
+          prompt_en: "[Genre: …] [Tempo: …] [Key: …] [Instruments: …] [Mood: …] [Structure: …] [Production: …]",
+          prompt_es: "<versión en español>",
+          negative_tags: "vocals, drums, electronic beats, choir, aggressive brass",
+          rights: "[no disponible]"
+        },
+        // Textos, logo y leyenda NUNCA los genera el modelo: se montan aquí.
+        post_production: {
+          edit_order: "<Tramo 1 → Tramo 2; cortes sugeridos cada 1.5–3 s>",
+          text_cards: [ { time: "0–3 s", text: "<frase 1>" }, { time: "3–6 s", text: "<frase 2>" } ],
+          end_card: "Logo oficial «Loco» rojo sobre negro, 2–3 s",
+          legal: "+18 · Evita el exceso · #EspírituDeOrigen"
+        }
       },
       copy: {
         headline: "", body: "", call_to_action: "",
@@ -90,9 +128,14 @@ La pasarela detecta sola qué medios trae cada concepto y se adapta — no hay q
 - **Switch de medio:** si el concepto trae los dos, aparecen las píldoras 🎨 Imagen / 🎬 Video dentro de la caja de prompt. Con un solo medio el switch se oculta.
 - **La caja se re-etiqueta:** el título alterna entre *(Text-to-Image)* y *(Text-to-Video)*, y los slots 2 y 3 de la rejilla cambian de significado — en imagen son **Lente** y **Paleta**; en video son **Duración** y **Movimiento de Cámara**.
 - **Desglose por escena:** el bloque de escenas solo se muestra en modo video, alimentado por `scenes[]`.
-- **El botón de copiado** copia el prompt del medio activo, incluyendo escenas y negative prompt.
+- **El botón de copiado** de imagen copia el prompt con su negative prompt. En video copia **solo el prompt positivo limpio** del tramo activo (sin encabezados en español); el negativo se copia con su propio botón «Copiar negativo», para pegarlo en la casilla negativa de la herramienta.
+- **Tramos encadenados:** si `prompt_video` trae `segments[]`, aparece en modo video una franja de píldoras (*Tramo 1 · 0–10 s · Corte*, *Tramo 2 · 10–20 s · Continuación*…) con una línea de tiempo proporcional. Cada tramo muestra su prompt, sus beats, su **Referencia de entrada** y su **Fotograma de salida**. La rejilla muestra *Tramo 2/3 · 10 s (total 30 s)*. «Copiar guion completo» copia la cadena completa con separadores `=== TRAMO n/N ===` **para el editor, no para pegar en la herramienta**. La pestaña del concepto marca `VID ×N`.
+- **Completa / Compacta:** interruptor que alterna entre `text` y `text_compact`, con contador de caracteres y alerta si la compacta pasa de `compact_limit` (500 por defecto).
+- **🎵 Música:** si `prompt_video.music` existe, aparece una tercera píldora de medio con el arquetipo, BPM, duración, estructura y el prompt musical, y su botón de copiar.
+- **✂️ Postproducción:** si `prompt_video.post_production` existe, se muestra en modo video una caja con el orden de montaje, las tarjetas de texto con tiempos, el end card y la leyenda.
+- Un `prompt_video` sin `segments`, `music` ni `post_production` (campañas anteriores) se muestra como antes.
 
-Por eso el único requisito real es **poblar `prompt_video` cuando `{{medio}}` sea video o ambas**. Si se deja fuera, el prompt de video simplemente no existe en la pasarela — que era el hueco que tenía el template.
+Por eso el único requisito real es **poblar `prompt_video` con sus `segments[]` cuando `{{medio}}` sea video o ambas**. Si se deja fuera, el prompt de video simplemente no existe en la pasarela — que era el hueco que tenía el template.
 
 ## 4. Logotipo — usar el PNG en base64, no el SVG
 

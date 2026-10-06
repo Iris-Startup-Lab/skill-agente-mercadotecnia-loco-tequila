@@ -48,6 +48,11 @@ VIDEO_MODELS_URL = f"{OPENROUTER_BASE_URL}/videos/models"
 # subir con --max-duration cuando el usuario lo autorice explícitamente.
 MAX_VIDEO_DURATION_SECONDS = 10
 
+# Tope de la versión compacta de los prompts de video (caracteres). Confirmado
+# por el usuario para cubrir a las herramientas más estrictas (Higgsfield ~512).
+# Cada campaña puede fijar el suyo en `prompt_video.compact_limit`.
+COMPACT_PROMPT_LIMIT = 500
+
 # Catálogo fallback en caso de error de red en consulta en vivo
 FALLBACK_IMAGE_MODELS = [
     {
@@ -484,6 +489,13 @@ def parse_duration(raw: Optional[str]) -> Optional[int]:
     return int(m.group(1)) if m else None
 
 
+def video_segments(block: Optional[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Tramos encadenados de un prompt_video (vacío si es un video de un solo bloque)."""
+    if not block:
+        return []
+    return [s for s in (block.get("segments") or []) if isinstance(s, dict) and s.get("text")]
+
+
 def describe_concepts(campaign: Dict[str, Any]) -> List[Dict[str, Any]]:
     """Aplana los items de CAMPAIGN a una lista utilizable para generar."""
     out = []
@@ -493,9 +505,16 @@ def describe_concepts(campaign: Dict[str, Any]) -> List[Dict[str, Any]]:
         medios = []
         if prompt_img.get("text"):
             medios.append("image")
-        if prompt_vid.get("text"):
+        if prompt_vid.get("text") or video_segments(prompt_vid):
             medios.append("video")
+        tramos = video_segments(prompt_vid)
+        # La música no se genera con este script: se expone para que el agente
+        # la muestre y el usuario la ejecute en una herramienta de audio.
+        musica = prompt_vid.get("music") or None
         out.append({
+            "tramos_video": len(tramos) if tramos else (1 if "video" in medios else 0),
+            "musica": musica,
+            "postproduccion": prompt_vid.get("post_production") or None,
             "index": idx,
             "sku": item.get("sku"),
             "platform": item.get("platform"),
@@ -1078,6 +1097,8 @@ def generate_from_campaign(
     max_duration: int,
     negative_mode: str,
     dry_run: bool,
+    segments_spec: Optional[str] = None,
+    prompt_version: str = "full",
 ) -> Dict[str, Any]:
     campaign = load_campaign(campaign_path)
     concepts = describe_concepts(campaign)
@@ -1125,17 +1146,48 @@ def generate_from_campaign(
     costo_estimado = 0.0
     estimacion_incompleta = False
 
+    # Unidades a generar. En video por tramos (segments[]), cada tramo es una
+    # unidad independiente: el modelo NO recibe el tramo previo como referencia;
+    # la continuidad depende de la biblia de continuidad escrita en cada prompt.
+    unidades = []
+    total_tramos_encadenados = 0
     for idx in targets:
         concept = by_index[idx]
         block = concept["prompt"] if media_type == "image" else concept["prompt_video"]
+        tramos = video_segments(block) if media_type == "video" else []
+        if not tramos:
+            unidades.append((idx, concept, block, None, None, 0))
+            continue
+        numeros = resolve_indices(segments_spec, None, list(range(1, len(tramos) + 1)))
+        total_tramos_encadenados += len(numeros)
+        for n in numeros:
+            unidades.append((idx, concept, block, tramos[n - 1], n, len(tramos)))
+
+    for idx, concept, block, tramo, num_tramo, n_tramos in unidades:
+        # En un tramo, texto, escenas, movimiento y duración son del tramo; el
+        # aspecto, el audio y el negative prompt (si el tramo no trae el suyo) son del video.
+        fuente = tramo or block
+        negativo = (tramo or {}).get("negative_prompt") or block.get("negative_prompt")
+        # Versión del prompt de video: la compacta existe para herramientas con
+        # tope de caracteres; si el tramo no la trae, se usa la completa y se avisa.
+        texto_prompt = fuente.get("text", "")
+        version_usada = "full"
+        aviso_version = None
+        if tramo and prompt_version == "compact":
+            if tramo.get("text_compact"):
+                texto_prompt = tramo["text_compact"]
+                version_usada = "compact"
+            else:
+                aviso_version = "El tramo no trae versión compacta; se envió la completa."
         send_text = build_send_text(
-            block.get("text", ""), block.get("negative_prompt"), negative_mode, media_type
+            texto_prompt, negativo, negative_mode, media_type
         )
-        ar_pedido = aspect_override or parse_aspect_ratio(block.get("aspect_ratio"), block.get("text"))
+        ar_pedido = aspect_override or parse_aspect_ratio(block.get("aspect_ratio"), fuente.get("text"))
         ar, aviso_ar = snap_aspect_ratio(
             ar_pedido, especificaciones_modelo.get("supported_aspect_ratios")
         )
-        stem = f"{slugify(concept.get('platform') or '')}-{idx:02d}-{slugify(concept.get('concept_title') or '')}-{int(time.time())}"
+        sufijo_tramo = f"-tramo{num_tramo:02d}de{n_tramos:02d}" if tramo else ""
+        stem = f"{slugify(concept.get('platform') or '')}-{idx:02d}{sufijo_tramo}-{slugify(concept.get('concept_title') or '')}-{int(time.time())}"
 
         specs = {
             "concepto": idx,
@@ -1146,10 +1198,28 @@ def generate_from_campaign(
             "persona_objetivo": concept.get("target_persona"),
             "aspect_ratio_prompt": block.get("aspect_ratio"),
             "aspect_ratio_enviado": ar,
-            "negative_prompt": block.get("negative_prompt"),
-            "prompt_original": block.get("text"),
+            "negative_prompt": negativo,
+            "prompt_original": texto_prompt,
             "prompt_enviado": send_text,
         }
+        if tramo:
+            limite = parse_duration(block.get("compact_limit")) or COMPACT_PROMPT_LIMIT
+            specs["version_prompt"] = version_usada
+            specs["caracteres_prompt"] = len(texto_prompt)
+            if aviso_version:
+                specs["aviso_version"] = aviso_version
+            if version_usada == "compact" and len(texto_prompt) > limite:
+                specs["aviso_longitud"] = (
+                    f"La versión compacta tiene {len(texto_prompt)} caracteres y el tope es "
+                    f"{limite}: herramientas como Higgsfield podrían rechazarla."
+                )
+            specs["tramo"] = num_tramo
+            specs["tipo_tramo"] = tramo.get("shot_type")
+            specs["tramos_totales"] = n_tramos
+            specs["rango_tramo"] = tramo.get("time")
+            specs["duracion_total_video"] = block.get("total_duration") or block.get("duration")
+            specs["referencia_entrada"] = tramo.get("reference_input")
+            specs["fotograma_salida"] = tramo.get("exit_frame")
         if aviso_ar:
             specs["aviso_aspect_ratio"] = aviso_ar
 
@@ -1166,12 +1236,17 @@ def generate_from_campaign(
         else:
             # Duración y aspecto se resuelven ANTES de generar para que todo
             # recorte sea visible en --dry-run, no una sorpresa ya pagada.
-            pedida = duration_override or parse_duration(block.get("duration")) or 5
+            if tramo:
+                pedida = duration_override or parse_duration(tramo.get("duration_s")) or 10
+                duracion_prompt = f"{pedida} s"
+            else:
+                pedida = duration_override or parse_duration(block.get("duration")) or 5
+                duracion_prompt = block.get("duration")
             acotada = min(pedida, max_duration)
             dur, aviso_dur = snap_duration(
                 acotada, especificaciones_modelo.get("supported_durations")
             )
-            specs["duracion_prompt"] = block.get("duration")
+            specs["duracion_prompt"] = duracion_prompt
             specs["duracion_enviada_s"] = dur
             avisos = []
             if pedida > acotada:
@@ -1194,12 +1269,13 @@ def generate_from_campaign(
             else:
                 estimacion_incompleta = True
 
-            specs["movimiento_camara"] = block.get("camera_movement")
+            specs["movimiento_camara"] = fuente.get("camera_movement") or block.get("camera_movement")
             specs["audio"] = block.get("audio")
-            specs["escenas"] = block.get("scenes")
+            specs["escenas"] = fuente.get("scenes")
 
         entry = {
             "concepto": idx,
+            "tramo": num_tramo,
             "especificaciones": specs,
             "copy": concept.get("copy"),
             "filter_justification": concept.get("filter_justification"),
@@ -1235,7 +1311,8 @@ def generate_from_campaign(
         "media_type": media_type,
         "model": model,
         "modelo_en_catalogo": bool(especificaciones_modelo),
-        "solicitados": len(targets),
+        "conceptos_solicitados": len(targets),
+        "solicitados": len(unidades),
         "exitosos": len(ok),
         "conceptos_sin_este_medio": sin_medio,
         "costo_estimado_total_usd": round(costo_estimado, 4) if costo_estimado else None,
@@ -1244,6 +1321,23 @@ def generate_from_campaign(
     }
     if aviso_catalogo:
         salida["aviso_catalogo"] = aviso_catalogo
+    if total_tramos_encadenados:
+        salida["tramos_encadenados"] = total_tramos_encadenados
+        salida["aviso_encadenado"] = (
+            f"Se generan {total_tramos_encadenados} tramos de video POR SEPARADO: el "
+            "modelo no recibió el tramo previo como referencia, así que la continuidad "
+            "depende de la biblia de continuidad de cada prompt. Únelos en orden en el "
+            "editor. Para máxima consistencia, los tramos 2 en adelante pueden "
+            "regenerarse en una herramienta que acepte el video anterior como referencia."
+        )
+    if media_type == "video" and total_tramos_encadenados:
+        salida["version_prompt"] = prompt_version
+        largos = [r for r in results if r["especificaciones"].get("aviso_longitud")]
+        if largos:
+            salida["aviso_longitud"] = (
+                f"{len(largos)} tramo(s) superan el tope de la versión compacta; revisa "
+                "`aviso_longitud` en cada resultado antes de usarlos en Higgsfield, Runway o Dreamina."
+            )
     if estimacion_incompleta:
         salida["aviso_costo"] = (
             "La estimación de costo está INCOMPLETA: al menos un modelo no publica "
@@ -1285,6 +1379,12 @@ def main():
                         help="Conceptos a generar: '1,3' o '1-4'. Por defecto, todos los disponibles")
     parser.add_argument("--first", type=int, default=None,
                         help="Generar los primeros N conceptos disponibles")
+    parser.add_argument("--prompt-version", choices=["full", "compact"], default="full",
+                        help=("Video por tramos: versión del prompt a enviar. 'compact' usa "
+                              f"text_compact (tope {COMPACT_PROMPT_LIMIT} caracteres)"))
+    parser.add_argument("--segments", default=None,
+                        help=("Video por tramos: tramos a generar de cada concepto, '1,2' o '2-3'. "
+                              "Por defecto, todos"))
     parser.add_argument("--aspect-ratio", default=None,
                         help="Forzar aspect ratio. Por defecto se toma del prompt")
     parser.add_argument("--duration", type=int, default=None,
@@ -1341,6 +1441,8 @@ def main():
             "total_conceptos": len(conceptos),
             "max_imagenes": sum(1 for c in conceptos if "image" in c["medios_disponibles"]),
             "max_videos": sum(1 for c in conceptos if "video" in c["medios_disponibles"]),
+            "max_tramos_video": sum(c["tramos_video"] for c in conceptos),
+            "conceptos_con_musica": [c["index"] for c in conceptos if c.get("musica")],
             "conceptos": conceptos,
         }, indent=2, ensure_ascii=False))
         return
@@ -1378,6 +1480,7 @@ def main():
                 first=args.first, dirs=dirs, aspect_override=args.aspect_ratio,
                 duration_override=args.duration, max_duration=args.max_duration,
                 negative_mode=args.negative_mode, dry_run=args.dry_run,
+                segments_spec=args.segments, prompt_version=args.prompt_version,
             )
         except Exception as e:
             result = {"status": "error", "code": "BATCH_FAILED", "message": str(e)}
