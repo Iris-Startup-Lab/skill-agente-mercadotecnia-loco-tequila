@@ -65,10 +65,20 @@ La skill entrega el resultado como **texto normal de la conversación** (sin blo
 
 ### 🎨 PROMPT MAESTRO DE IMAGEN — [nombre del concepto]
 
-> 💡 **Nota de fidelidad de producto:** *Para emular fielmente la proporción real del envase y su tipografía discreta (o como primer fotograma en video Image-to-Video), puedes adjuntar en tu herramienta generativa una fotografía oficial de la botella de frente junto con este prompt aprovechando la directiva `ADD` incluida.*
+> **Referencia de entrada:** [@Image1 = foto oficial de la botella · @Image2 = referencia de luz/paleta (opcional) · @Image3 = referencia de encuadre (opcional) · o ninguna]
+>
+> 📎 **Cómo cargar las referencias (paso a paso):**
+> 1. **Sube primero la foto oficial de la botella** (de frente, fondo blanco o neutro). Esa es `@Image1`.
+> 2. Si usas referencias de estilo o encuadre, súbelas **después y en ese orden** (`@Image2`, `@Image3`).
+> 3. **Pega el prompt** en el cuadro de texto, sin borrar la línea `ACTIVE REFERENCES`.
+> 4. **Ajusta el nombre `@Image1` según tu herramienta:**
+>    - **Higgsfield / Kling / Runway:** al subir la imagen te asigna una etiqueta (`@nombre`). Cambia `@Image1` por esa etiqueta.
+>    - **ChatGPT (GPT Image) / Gemini (Nano Banana) / Flux / Seedream:** déjalo como está; la herramienta toma las imágenes en el orden en que las subiste.
+>    - **Midjourney:** sube la botella con `--oref` (referencia de objeto) y la de estilo con `--sref`; borra la línea `ACTIVE REFERENCES` del texto.
+> 5. Si no tienes foto, **borra la línea `ACTIVE REFERENCES` y la directiva `ADD`**; el prompt funciona solo con el texto.
 >
 > **Prompt principal (los 7 campos, en una sola cadena):**
-> [Sujeto: SKU exacto + silueta cónica trapezoidal de cristal macizo + cristalería Riedel + logotipo caligráfico "Loco" en relieve esmaltado rojo cochinilla con fino filete plateado + tipografía secundaria diminuta, sutil y discreta en fino esmalte blanco cerca de la base maciza: "ESPIRITU • ORIGEN" y "TEQUILA {SKU} 100% DE AGAVE AZUL", sin microtextos legales ni letras rojas gigantes] · [Escena y anclaje concreto de la fecha festiva o motivo gastronómico] · [Lente `Nmm f/N` + tipo de plano + profundidad de campo] · [Iluminación nombrada: hora del día o esquema de estudio] · [≥2 colores institucionales por nombre: cochineal crimson / deep wine / bone-ivory / obsidian black / volcanic silver] · [Estilo: referencia fotográfica o artística concreta, no adjetivos genéricos] · [`--ar X:Y`] · `ADD: The added image is the real bottle image, you could use it as an inspiration for the exact bottle geometry, crystal transparency, and small subtle typography placement.`
+> [Sujeto: SKU exacto + silueta cónica trapezoidal de cristal macizo + cristalería Riedel + logotipo caligráfico "Loco" en relieve esmaltado rojo cochinilla sin filete ni contorno + tipografía secundaria diminuta, sutil y discreta en fino esmalte blanco cerca de la base maciza: "ESPIRITU • ORIGEN" y "TEQUILA {SKU} 100% DE AGAVE AZUL", sin microtextos legales ni letras rojas gigantes] · [`ACTIVE REFERENCES: @Image1 as master product reference (exact bottle, do not redesign).` + roles de @Image2/@Image3 si aplican] · [Escena y anclaje concreto de la fecha festiva o motivo gastronómico] · [Lente `Nmm f/N` + tipo de plano + profundidad de campo] · [Iluminación nombrada: hora del día o esquema de estudio] · [≥2 colores institucionales por nombre: cochineal crimson / deep wine / bone-ivory / obsidian black / volcanic silver] · [Estilo: referencia fotográfica o artística concreta, no adjetivos genéricos] · [`--ar X:Y`] · `ADD: @Image1 is the real bottle image, use it as an inspiration for the exact bottle geometry, crystal transparency, and small subtle typography placement.`
 >
 > **Negative prompt (obligatorio, cadena base íntegra):**
 > `underage, minors, drunk, drunkenness, excessive drinking, cheap glass, competitor bottles, Casa Dragones bottle, Clase Azul bottle, text watermark, blurry, low resolution, gibberish text, misspelled words, garbled letters, typo, scrambled typography, fake writing, illegible labels, deformed text, pseudo-letters, nonsense words, oversized text, giant red lettering, large red typography, clunky font, massive font size` + [lo específico del concepto]
@@ -77,7 +87,7 @@ La skill entrega el resultado como **texto normal de la conversación** (sin blo
 > - Lente / cámara: [`85mm f/1.4, ISO 100, 1/250s`]
 > - Paleta declarada: [colores usados]
 > - Estilo/modelo sugerido: [fotografía editorial / render / ilustración]
-> - Imagen de referencia sugerida: [Fotografía oficial de la botella de frente, fondo blanco o neutro]
+> - Imagen de referencia sugerida: [@Image1 = fotografía oficial de la botella de frente, fondo blanco o neutro]
 > - Variaciones: [número de variaciones a generar]
 >
 > **Variantes de encuadre por red** (solo si hay 3+ redes; 1–2 líneas cada una, referidas al maestro):

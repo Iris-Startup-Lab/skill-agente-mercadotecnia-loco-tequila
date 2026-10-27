@@ -71,6 +71,19 @@ Para evitar distorsiones de silueta, cada prompt debe concatenar en sus primeros
 > - *«artfully plated on a deep matte ivory ceramic artisan dish, glossy nogada sauce pooling elegantly on the plate surface, garnished with ruby pomegranate seeds and fresh parsley»*.  
 > - La copa Riedel debe estar apoyada firmemente sobre la mesa o posavasos de cuero/piedra con sombras de contacto reales (`contact shadows`), sin levitar ni inclinarse sin soporte.
 
+### 1.6 Referencias de imagen con mención `@` (mismo criterio que video)
+
+Todo prompt de imagen que use una referencia adjunta la nombra con mención genérica y **rol explícito**, igual que en video (§2.0):
+
+```text
+ACTIVE REFERENCES: @Image1 as master product reference (exact bottle, do not redesign). [@Image2 for lighting and color palette only, do not copy its composition.] [@Image3 for framing and product placement only.]
+```
+
+- `@Image1` es siempre la foto oficial de la botella; la directiva `ADD:` de §1.2 se refiere a ella (`The bottle in @Image1 is the real bottle...`).
+- `@Image2` / `@Image3` son opcionales (estilo/luz y composición). Si no se adjuntan, se omiten del prompt.
+- La línea `ACTIVE REFERENCES` va inmediatamente después del bottle-lock (§1.4).
+- La entrega incluye, para el usuario no técnico, la **guía de carga** de `references/output-template.md` (qué foto subir, en qué orden y cómo renombrar `@Image1` según la herramienta).
+
 ## 2. Campos obligatorios de todo prompt de video
 
 Los siete campos de §1 aplican igual, más tres adicionales:
